@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+        <link rel="stylesheet" href="Game.css" />
+<head>
+        <title>Tanks</title>
+</head>
+
+<body>
+    <script src="Game.js"></script>
+    <div id="ButtonArea" hidden="true">
+        <button id="Pause-Button" onclick="myGameArea.stop()">Pause</button>
+        <button id="Play-Button" onclick="myGameArea.start()">Play</button>
+        <button id="Reset-Button" onclick="Reset()" >Reset</button>
+        <button id="Menu-Button" onclick="Menu()" >Main Menu</button>
+        <text id="wins"></text>
+    </div>
+    <div id="Menu">
+        <button id="VS-Button" class="Menu-Button" onclick="startVSGame()">1 VS. 1</button>
+        <button id="Solo-Button" class="Menu-Button" onclick="LevelSelectorScreen()">SOLO</button>
+        <button id="CoOp-Button" class="Menu-Button" onclick="CoOpLevelSelectorScreen()">CoOp</button>
+        <button id="LevelEditor-Button" class="Menu-Button" onclick="LevelEditor()">Level Editor</button>
+        <button id="Help-Button" class="Menu-Button" onclick="HelpScreen()">Help</button>
+        <button id="Settings-Button" class="Menu-Button" onclick="SettingsScreen()">Settings</button>
+    </div>
+
+    <div id="Solo_Level_List" hidden = "true">
+            <button id="Menu-Button" class="Level-Button" onclick="Menu()" >Main Menu</button>
+            <br><br>
+            <button id="Level1" class="Level-Button" onclick="startSoloGame(1)">1</button>
+            <button id="Level2" class="Level-Button" onclick="startSoloGame(2)" disabled = "true">2</button>
+            <button id="Level3" class="Level-Button" onclick="startSoloGame(3)" disabled = "true">3</button>
+            <button id="Level4" class="Level-Button" onclick="startSoloGame(4)" disabled = "true">4</button>
+            <button id="Level5" class="Level-Button" onclick="startSoloGame(5)" disabled = "true">5</button>
+            <button id="Level6" class="Level-Button" onclick="startSoloGame(6)" disabled = "true">6</button>
+            <button id="Level7" class="Level-Button" onclick="startSoloGame(7)" disabled = "true">7</button>
+            <button id="Level8" class="Level-Button" onclick="startSoloGame(8)" disabled = "true">8</button>
+            <button id="Level9" class="Level-Button" onclick="startSoloGame(9)" disabled = "true">9</button>
+            <button id="Level10" class="Level-Button" onclick="startSoloGame(10)" disabled="true">10</button>
+    </div>
+
+    <div id="CoOp_Level_List" hidden = "true">
+        <button id="Menu-Button" class="Level-Button" onclick="Menu()" >Main Menu</button>
+        <br><br>
+        <button id="CoOpLevel1" class="Level-Button" onclick="StartCoOpGame(1)">1</button>
+        <button id="CoOpLevel2" class="Level-Button" onclick="StartCoOpGame(2)" disabled = "true">2</button>
+        <button id="CoOpLevel3" class="Level-Button" onclick="StartCoOpGame(3)" disabled = "true">3</button>
+        <button id="CoOpLevel4" class="Level-Button" onclick="StartCoOpGame(4)" disabled = "true">4</button>
+        <!-- <button id="CoOpLevel5" class="Level-Button" onclick="StartCoOpGame(5)" disabled = "true">5</button>
+        <button id="CoOpLevel6" class="Level-Button" onclick="StartCoOpGame(6)" disabled = "true">6</button>
+        <button id="CoOpLevel7" class="Level-Button" onclick="StartCoOpGame(7)" disabled = "true">7</button>
+        <button id="CoOpLevel8" class="Level-Button" onclick="StartCoOpGame(8)" disabled = "true">8</button> -->
+    </div>
+
+    <div id="LevelEditorArea" hidden = "true">
+        <button id="Menu-Button" onclick="Menu()" >Main Menu</button>
+        <button id="Save-Button"  >Save</button>
+        <!--  onclick="Save()"  -->
+        <select id="Solo-selector" onchange="LevelEditorSelect('Type')">
+            <option value = 0>Solo</option>
+            <option value = 1>CoOp</option>
+        </select>
+
+        <select id="Movement-selector">
+            <option value = 0>Move</option>
+            <option value = 1>Rotate</option>
+        </select>
+
+        <button id="Wall-Button" onclick="AddWall()" >Add Wall</button>
+        <select id="Wall-selector" onchange="LevelEditorSelect('Wall')">
+            <option value = 0>Black Line</option>
+        </select>
+
+        Width: <input type="number" id= "Wall-Width-Field" name="Width" max="500" min="5" value="15">
+        Height: <input type="number" id= "Wall-Height-Field" name="Width" max="1000" min="5" value="50">
+
+        <button id="Enemy-Button" onclick="AddEnemy()" >Add Enemy</button>
+        <select id="Enemy-selector" onchange="LevelEditorSelect('Enemy')">
+            <option value = 0>Target</option>
+            <option value = 1>Turret</option>
+            <option value = 2>Tank</option>
+        </select>
+
+    </div>
+
+    <div id="Help-Area" hidden = "true">
+        <button id="Menu-Button" onclick="Menu()" >Main Menu</button>
+        <br><br>
+        <text id = "Help-Info">For Solo Mode: <br><br> 
+            Press W to move forwards. S to move backwards. <br><br>
+            A to turn counter clockwise. D to turn clockwise. <br><br> 
+            SpaceBar to shoot.<br><br>
+            For Multi-Player Mode: <br><br>
+            The Left Player uses the above buttons.<br><br>
+            The Right Player uses the arrow keys: <br><br>
+            Up for forwards, Down for backwards, <br><br>
+            Left for counter clockwise, Right for clockwise and Enter to shoot.
+        </text>
+    </div>
+    <div id="Settings-Area" hidden = "true">
+            <button id="Menu-Button" onclick="Menu()" >Main Menu</button>
+            <br><br>
+            <text class="Settings-Text">
+                First Player:<br><br> 
+                &nbsp Tank:
+            </text>
+            <button id="Tank1-1-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',1)" disabled = "true"></button>
+            <button id="Tank1-2-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',2)" ></button>
+            <button id="Tank1-3-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',3)" ></button>
+            <button id="Tank1-4-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',4)" ></button>
+            <button id="Tank1-5-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',5)" ></button>
+            <button id="Tank1-6-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',6)" ></button>
+            <button id="Tank1-7-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',7)" ></button>
+            <br><br>
+            <!-- <text class="Settings-Text">
+                &nbsp Shooting:
+            </text>
+            <button id="Tank1-Space-Button" onclick="TankSelect(1, 'Shoot', 'Space')" disabled = "true">SpaceBar</button>
+            <button id="Tank1-Enter-Button" onclick="TankSelect(1, 'Shoot', 'Enter')" >Enter</button>
+            <br><br> -->
+            <text class="Settings-Text">
+                &nbsp Movement:
+            </text>
+            <button id="Tank1-WASD-Button" onclick="TankSelect(1, 'Move', 'WASD')" disabled = "true">WASD and SpaceBar</button>
+            <button id="Tank1-4568-Button" onclick="TankSelect(1, 'Move', '4568')" >4568 and SpaceBar</button>
+            <button id="Tank1-Arrow-Button" onclick="TankSelect(1, 'Move', 'Arrow')" >Arrow Keys and Enter</button>
+            <br><br>
+            <br><br>
+            <text class="Settings-Text">
+                Second Player: <br><br>
+                &nbsp Tank:
+            </text>
+            <button id="Tank2-1-Button" class= "Tank-Images" onclick="TankSelect(2,'Image',1)" ></button>
+            <button id="Tank2-2-Button" class= "Tank-Images" onclick="TankSelect(2,'Image',2)" disabled = "true"></button>
+            <button id="Tank2-3-Button" class= "Tank-Images" onclick="TankSelect(2,'Image',3)" ></button>
+            <button id="Tank2-4-Button" class= "Tank-Images" onclick="TankSelect(2,'Image',4)" ></button>
+            <button id="Tank2-5-Button" class= "Tank-Images" onclick="TankSelect(2,'Image',5)" ></button>
+            <button id="Tank2-6-Button" class= "Tank-Images" onclick="TankSelect(2,'Image',6)" ></button>
+            <button id="Tank2-7-Button" class= "Tank-Images" onclick="TankSelect(2,'Image',7)" ></button>
+    </div>
+</body>
+
+</html>
