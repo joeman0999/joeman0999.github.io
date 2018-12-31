@@ -3,125 +3,128 @@ Thecanvas = {
     height: 544
 };
 
-Mouse = {
-    x: 0,
-    y: 0,
-    Index: 0,
-    Holds: "Nothing",
-    jump: 0
-};
-PlayersTurn = "Red";
-
 BlackChecker = new Image();
 BlackChecker.src = "images/BlackChecker.png";
 RedChecker = new Image();
 RedChecker.src = "images/RedChecker.png";
-BlackCheckers = [
-    {
-        Queen: false,
-        x: 1,
-        y: 0
-    }, {
-        Queen: false,
-        x: 3,
-        y: 0
-    }, {
-        Queen: false,
-        x: 5,
-        y: 0
-    }, {
-        Queen: false,
-        x: 7,
-        y: 0
-    }, {
-        Queen: false,
+function New_Game() {
+    BlackCheckers = [
+        {
+            Queen: false,
+            x: 1,
+            y: 0
+        }, {
+            Queen: false,
+            x: 3,
+            y: 0
+        }, {
+            Queen: false,
+            x: 5,
+            y: 0
+        }, {
+            Queen: false,
+            x: 7,
+            y: 0
+        }, {
+            Queen: false,
+            x: 0,
+            y: 1
+        }, {
+            Queen: false,
+            x: 2,
+            y: 1
+        }, {
+            Queen: false,
+            x: 4,
+            y: 1
+        }, {
+            Queen: false,
+            x: 6,
+            y: 1
+        }, {
+            Queen: false,
+            x: 1,
+            y: 2
+        }, {
+            Queen: false,
+            x: 3,
+            y: 2
+        }, {
+            Queen: false,
+            x: 5,
+            y: 2
+        }, {
+            Queen: false,
+            x: 7,
+            y: 2
+        }
+    ];
+    RedCheckers = [
+        {
+            Queen: false,
+            x: 0,
+            y: 5
+        }, {
+            Queen: false,
+            x: 2,
+            y: 5
+        }, {
+            Queen: false,
+            x: 4,
+            y: 5
+        }, {
+            Queen: false,
+            x: 6,
+            y: 5
+        }, {
+            Queen: false,
+            x: 1,
+            y: 6
+        }, {
+            Queen: false,
+            x: 3,
+            y: 6
+        }, {
+            Queen: false,
+            x: 5,
+            y: 6
+        }, {
+            Queen: false,
+            x: 7,
+            y: 6
+        }, {
+            Queen: false,
+            x: 0,
+            y: 7
+        }, {
+            Queen: false,
+            x: 2,
+            y: 7
+        }, {
+            Queen: false,
+            x: 4,
+            y: 7
+        }, {
+            Queen: false,
+            x: 6,
+            y: 7
+        }
+    ];
+    Mouse = {
         x: 0,
-        y: 1
-    }, {
-        Queen: false,
-        x: 2,
-        y: 1
-    }, {
-        Queen: false,
-        x: 4,
-        y: 1
-    }, {
-        Queen: false,
-        x: 6,
-        y: 1
-    }, {
-        Queen: false,
-        x: 1,
-        y: 2
-    }, {
-        Queen: false,
-        x: 3,
-        y: 2
-    }, {
-        Queen: false,
-        x: 5,
-        y: 2
-    }, {
-        Queen: false,
-        x: 7,
-        y: 2
-    }
-];
-RedCheckers = [
-    {
-        Queen: false,
-        x: 0,
-        y: 5
-    }, {
-        Queen: false,
-        x: 2,
-        y: 5
-    }, {
-        Queen: false,
-        x: 4,
-        y: 5
-    }, {
-        Queen: false,
-        x: 6,
-        y: 5
-    }, {
-        Queen: false,
-        x: 1,
-        y: 6
-    }, {
-        Queen: false,
-        x: 3,
-        y: 6
-    }, {
-        Queen: false,
-        x: 5,
-        y: 6
-    }, {
-        Queen: false,
-        x: 7,
-        y: 6
-    }, {
-        Queen: false,
-        x: 0,
-        y: 7
-    }, {
-        Queen: false,
-        x: 2,
-        y: 7
-    }, {
-        Queen: false,
-        x: 4,
-        y: 7
-    }, {
-        Queen: false,
-        x: 6,
-        y: 7
-    }
-];
-
+        y: 0,
+        Index: 0,
+        Holds: "Nothing",
+    };
+    PlayersTurn = "Red";
+    jumpagain = false;
+    document.getElementById("Jump_Again-Button").hidden = true;
+    document.getElementById("End_Turn-Button").hidden = true;
+}
 var myGameArea = {
     canvas: document.createElement("canvas"),
     start: function () {
+        New_Game();
         myGameArea.keys = [];
         frame = 0;
 
@@ -181,7 +184,7 @@ function updateGameArea() {
 }
 
 function crashWith(obj, other) {
-    crash = false
+    var crash = false
     if (Math.floor(other.x / 68) == obj.x && Math.floor(other.y / 68) == obj.y) {
         crash = true;
     }
@@ -231,7 +234,7 @@ function mousedownhandler(e) {
         }
     } else {
         if (Mouse.x >= 0 && Mouse.x <= 544 && Mouse.y >= 0 && Mouse.y <= 544) {
-            var Newplacex, Newplacey, Oldplacex, Oldplacey, Overlap
+            var Newplacex, Newplacey, Oldplacex, Oldplacey, Overlap, jumpposition
             Overlap = false;
             Newplacex = Math.floor(Mouse.x / 68);
             Newplacey = Math.floor(Mouse.y / 68);
@@ -240,8 +243,10 @@ function mousedownhandler(e) {
                 Oldplacey = RedCheckers[Mouse.Index].y;
                 for (i = 0; i < RedCheckers.length; i++) {
                     if (crashWith(RedCheckers[i], Mouse)) {
-                        Overlap = true;
-                        Mouse.Index = i;
+                        if (!jumpagain) {
+                            Overlap = true;
+                            Mouse.Index = i;
+                        }
                         break;
                     }
                 }
@@ -262,16 +267,17 @@ function mousedownhandler(e) {
                 }
                 for (i = 0; i < BlackCheckers.length; i++) {
                     if (crashWith(BlackCheckers[i], Mouse)) {
-                        Overlap = true;
-                        Mouse.Index = i;
+                        if (!jumpagain) {
+                            Overlap = true;
+                            Mouse.Index = i;
+                        }
                         break;
                     }
                 }
             }
             if (!Overlap) {
                 if (((Newplacex + Newplacey) / 2 != Math.round((Newplacex + Newplacey) / 2))) {
-                    if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 2 && Mouse.jump == 0) {
-
+                    if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 2 && !jumpagain) {
                         if (Mouse.Holds == "Red") {
                             if (Newplacey < Oldplacey) {
                                 if (Newplacey == 0) {
@@ -308,53 +314,96 @@ function mousedownhandler(e) {
                             x: (Oldplacex + (Newplacex - Oldplacex) / 2) * 68,
                             y: (Oldplacey + (Newplacey - Oldplacey) / 2) * 68
                         };
-                        jump = false;
                         if (Mouse.Holds == "Red") {
                             for (i = 0; i < BlackCheckers.length; i++) {
                                 if (crashWith(BlackCheckers[i], jumpposition)) {
-                                    BlackCheckers.splice(i, 1);
-                                    jump = true;
-                                    break;
-                                }
-                            }
-                            if (jump) {
-                                if (Newplacey < Oldplacey) {
-                                    if (Newplacey == 0) {
-                                        RedCheckers[Mouse.Index].Queen = true;
+                                    if (Newplacey < Oldplacey) {
+                                        RedCheckers[Mouse.Index].x = Newplacex;
+                                        RedCheckers[Mouse.Index].y = Newplacey;
+                                        if (Newplacey == 0 && !RedCheckers[Mouse.Index].Queen) {
+                                            RedCheckers[Mouse.Index].Queen = true;
+                                            jumpagain = false;
+                                            Mouse.Holds = "Nothing";
+                                            PlayersTurn = "Black";
+                                            document.getElementById("Jump_Again-Button").hidden = true;
+                                            document.getElementById("End_Turn-Button").hidden = true;
+                                            BlackCheckers.splice(i, 1);
+                                        } else {
+                                            BlackCheckers.splice(i, 1);
+                                            if (Checkforjump("Red", RedCheckers[Mouse.Index])) {
+                                                jumpagain = true;
+                                                jumpagainoption();
+                                            } else {
+                                                jumpagain = false;
+                                                Mouse.Holds = "Nothing";
+                                                PlayersTurn = "Black";
+                                                document.getElementById("Jump_Again-Button").hidden = true;
+                                                document.getElementById("End_Turn-Button").hidden = true;
+                                            }
+                                        }
+                                    } else if (RedCheckers[Mouse.Index].Queen) {
+                                        RedCheckers[Mouse.Index].x = Newplacex;
+                                        RedCheckers[Mouse.Index].y = Newplacey;
+                                        BlackCheckers.splice(i, 1);
+                                        if (Checkforjump("Red", RedCheckers[Mouse.Index])) {
+                                            jumpagain = true;
+                                            jumpagainoption();
+                                        } else {
+                                            jumpagain = false;
+                                            Mouse.Holds = "Nothing";
+                                            PlayersTurn = "Black";
+                                            document.getElementById("Jump_Again-Button").hidden = true;
+                                            document.getElementById("End_Turn-Button").hidden = true;
+                                        }
                                     }
-                                    RedCheckers[Mouse.Index].x = Newplacex;
-                                    RedCheckers[Mouse.Index].y = Newplacey;
-                                    Mouse.Holds = "Nothing";
-                                    PlayersTurn = "Black";
-                                } else if (RedCheckers[Mouse.Index].Queen) {
-                                    RedCheckers[Mouse.Index].x = Newplacex;
-                                    RedCheckers[Mouse.Index].y = Newplacey;
-                                    Mouse.Holds = "Nothing";
-                                    PlayersTurn = "Black";
+                                    
+                                    break;
                                 }
                             }
                         } else if (Mouse.Holds == "Black") {
                             for (i = 0; i < RedCheckers.length; i++) {
                                 if (crashWith(RedCheckers[i], jumpposition)) {
-                                    jump = true;
-                                    RedCheckers.splice(i,1);
-                                    break;
-                                }
-                            }
-                            if (jump) {
-                                if (Newplacey > Oldplacey) {
-                                    if (Newplacey == 7) {
-                                        BlackCheckers[Mouse.Index].Queen = true;
+                                    if (Newplacey > Oldplacey) {
+                                        BlackCheckers[Mouse.Index].x = Newplacex;
+                                        BlackCheckers[Mouse.Index].y = Newplacey;
+                                        if (Newplacey == 7) {
+                                            BlackCheckers[Mouse.Index].Queen = true;
+                                            jumpagain = false;
+                                            Mouse.Holds = "Nothing";
+                                            PlayersTurn = "Red";
+                                            document.getElementById("Jump_Again-Button").hidden = true;
+                                            document.getElementById("End_Turn-Button").hidden = true;
+                                            RedCheckers.splice(i, 1);
+                                        } else {
+                                            RedCheckers.splice(i, 1);
+                                            if (Checkforjump("Black", BlackCheckers[Mouse.Index])) {
+                                                jumpagain = true;
+                                                jumpagainoption();
+                                            } else {
+                                                jumpagain = false;
+                                                document.getElementById("Jump_Again-Button").hidden = true;
+                                                document.getElementById("End_Turn-Button").hidden = true;
+                                                Mouse.Holds = "Nothing";
+                                                PlayersTurn = "Red";
+                                            }
+                                        }
+                                    } else if (BlackCheckers[Mouse.Index].Queen) {
+                                        BlackCheckers[Mouse.Index].x = Newplacex;
+                                        BlackCheckers[Mouse.Index].y = Newplacey;
+                                        RedCheckers.splice(i, 1);
+                                        if (Checkforjump("Black", BlackCheckers[Mouse.Index])) {
+                                            jumpagain = true;
+                                            jumpagainoption();
+                                        } else {
+                                            jumpagain = false;
+                                            document.getElementById("Jump_Again-Button").hidden = true;
+                                            document.getElementById("End_Turn-Button").hidden = true;
+                                            Mouse.Holds = "Nothing";
+                                            PlayersTurn = "Red";
+                                        }
                                     }
-                                    BlackCheckers[Mouse.Index].x = Newplacex;
-                                    BlackCheckers[Mouse.Index].y = Newplacey;
-                                    Mouse.Holds = "Nothing";
-                                    PlayersTurn = "Red";
-                                } else if (BlackCheckers[Mouse.Index].Queen) {
-                                    BlackCheckers[Mouse.Index].x = Newplacex;
-                                    BlackCheckers[Mouse.Index].y = Newplacey;
-                                    Mouse.Holds = "Nothing";
-                                    PlayersTurn = "Red";
+                                    
+                                    break;
                                 }
                             }
                         }
@@ -363,4 +412,179 @@ function mousedownhandler(e) {
             }
         }
     }
-} 
+}
+
+function Checkforjump(playercolor, piece) {
+    var overlap, i
+    var jump = false;
+    var jumpposition = {
+        x: 0,
+        y: 0
+    };
+    if (piece.Queen || playercolor == "Red") {
+        if (piece.y > 1) {
+            if (piece.x > 1) {
+                jumpposition.x = (piece.x - 2) * 68;
+                jumpposition.y = (piece.y - 2) * 68;
+                for (i = 0; i < RedCheckers.length; i++) {
+                    if (crashWith(RedCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                for (i = 0; i < BlackCheckers.length; i++) {
+                    if (crashWith(BlackCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                if (!overlap) {
+                    jumpposition.x = (piece.x - 1) * 68;
+                    jumpposition.y = (piece.y - 1) * 68;
+                    if (playercolor == "Red") {
+                        for (i = 0; i < BlackCheckers.length; i++) {
+                            if (crashWith(BlackCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    } else if (playercolor == "Black") {
+                        for (i = 0; i < RedCheckers.length; i++) {
+                            if (crashWith(RedCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    }
+                }
+            }
+            overlap = false;
+            if (piece.x < 6) {
+                jumpposition.x = (piece.x + 2) * 68;
+                jumpposition.y = (piece.y - 2) * 68;
+                for (i = 0; i < RedCheckers.length; i++) {
+                    if (crashWith(RedCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                for (i = 0; i < BlackCheckers.length; i++) {
+                    if (crashWith(BlackCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                if (!overlap) {
+                    jumpposition.x = (piece.x + 1) * 68;
+                    jumpposition.y = (piece.y - 1) * 68;
+                    if (playercolor == "Red") {
+                        for (i = 0; i < BlackCheckers.length; i++) {
+                            if (crashWith(BlackCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    } else if (playercolor == "Black") {
+                        for (i = 0; i < RedCheckers.length; i++) {
+                            if (crashWith(RedCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    overlap = false;
+    if (piece.Queen || playercolor == "Black") {
+        if (piece.y < 6) {
+            if (piece.x > 1) {
+                jumpposition.x = (piece.x - 2) * 68;
+                jumpposition.y = (piece.y + 2) * 68;
+                for (i = 0; i < RedCheckers.length; i++) {
+                    if (crashWith(RedCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                for (i = 0; i < BlackCheckers.length; i++) {
+                    if (crashWith(BlackCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                if (!overlap) {
+                    jumpposition.x = (piece.x - 1) * 68;
+                    jumpposition.y = (piece.y + 1) * 68;
+                    if (playercolor == "Red") {
+                        for (i = 0; i < BlackCheckers.length; i++) {
+                            if (crashWith(BlackCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    } else if (playercolor == "Black") {
+                        for (i = 0; i < RedCheckers.length; i++) {
+                            if (crashWith(RedCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    }
+                }
+            }
+            overlap = false;
+            if (piece.x < 6) {
+                jumpposition.x = (piece.x + 2) * 68;
+                jumpposition.y = (piece.y + 2) * 68;
+                for (i = 0; i < RedCheckers.length; i++) {
+                    if (crashWith(RedCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                for (i = 0; i < BlackCheckers.length; i++) {
+                    if (crashWith(BlackCheckers[i], jumpposition)) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                if (!overlap) {
+                    jumpposition.x = (piece.x + 1) * 68;
+                    jumpposition.y = (piece.y + 1) * 68;
+                    if (playercolor == "Red") {
+                        for (i = 0; i < BlackCheckers.length; i++) {
+                            if (crashWith(BlackCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    } else if (playercolor == "Black") {
+                        for (i = 0; i < RedCheckers.length; i++) {
+                            if (crashWith(RedCheckers[i], jumpposition)) {
+                                return jump = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return jump
+}
+
+function jumpagainoption() {
+    document.getElementById("Jump_Again-Button").hidden = false;
+    document.getElementById("End_Turn-Button").hidden = false;
+}
+
+function jump_again(e) {
+    if (e) {
+        jumpagain = true;
+    } else {
+        jumpagain = false;
+        if (Mouse.Holds == "Black") {
+            Mouse.Holds = "Nothing";
+            PlayersTurn = "Red";
+        } else {
+            Mouse.Holds = "Nothing";
+            PlayersTurn = "Black";
+        }
+    }
+    document.getElementById("Jump_Again-Button").hidden = true;
+    document.getElementById("End_Turn-Button").hidden = true;
+}
