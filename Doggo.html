@@ -1,17 +1,18 @@
 <html>
-<link rel="stylesheet" href="Doggo.css" />
+
 
 <head>
+    <script src="Doggo.js"></script>
+    <link rel="stylesheet" href="Doggo.css" />
     <title>Doggo</title>
 </head>
 
 <body>
     <div id="Menu">
-        <div id="Menu">
-            <button id="Start-Button" class="Menu-Button" onclick="StartGame()">Start</button>
-            <button class="Menu-Button" onclick="location.href='index.html'">Exit Game</button>
-        </div>
-        <script src="Doggo.js"></script>
+
+        <button id="Start-Button" class="Menu-Button" onclick="StartGame()">Start</button>
+        <button class="Menu-Button" onclick="location.href='index.html'">Exit Game</button>
+
         <select id="Character-selector" onchange="CharacterSelect()">
             <option value=0>Old Man</option>
             <option value=1>Boy</option>

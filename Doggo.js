@@ -26,18 +26,15 @@ var myGameArea = {
 
 		this.interval = setInterval(updateGameArea, 20);
 
-		window.addEventListener('keydown', function (e) {
-			myGameArea.keys = (myGameArea.keys || []);
-			myGameArea.keys[e.keyCode] = (e.type == "keydown");
-		})
-		window.addEventListener('keyup', function (e) {
-			myGameArea.keys[e.keyCode] = (e.type == "keydown");
-		})
+		window.addEventListener('keydown', keydownhandler)
+		window.addEventListener('keyup', keyuphandler)
 
 	},
 	stop: function () {
 		myGameArea.keys = [];
 		clearInterval(this.interval);
+		window.removeEventListener('keydown',keydownhandler);
+		window.removeEventListener('keyup',keyuphandler);
 	},
 	clear: function () {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -54,8 +51,7 @@ function StartGame() {
 }
 
 function Menu() {
-	clearInterval(myGameArea.interval);
-	myGameArea.keys = [];
+	myGameArea.stop();
 	myGameArea.clear;
 	document.getElementById("ButtonArea").hidden = true;
 	if (document.getElementById("GameArea")) {
@@ -587,6 +583,14 @@ function Collision(obj1, obj2) {
 	}
 }
 
+function keydownhandler(e) {
+	myGameArea.keys = (myGameArea.keys || []);
+	myGameArea.keys[e.keyCode] = (e.type == "keydown");
+}
+
+function keyuphandler(e) {
+	myGameArea.keys[e.keyCode] = (e.type == "keydown");
+}
 
 /*
 Fix the gray around the characters

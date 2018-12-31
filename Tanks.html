@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html>
-        <link rel="stylesheet" href="Tanks.css" />
+        
 <head>
-        <title>Tanks</title>
+    <link rel="stylesheet" href="Tanks.css" />
+    <script src="Tanks.js"></script>
+    <title>Tanks</title>
 </head>
 
 <body>
-    <script src="Tanks.js"></script>
     <div id="ButtonArea" hidden="true">
         <button id="Pause-Button" onclick="myGameArea.stop()">Pause</button>
-        <button id="Play-Button" onclick="myGameArea.start()">Play</button>
+        <button id="Play-Button" onclick="myGameArea.unpause()">Play</button>
         <button id="Reset-Button" onclick="Reset()" >Reset</button>
         <button id="Menu-Button" onclick="Menu()" >Main Menu</button>
         <text id="wins"></text>

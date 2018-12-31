@@ -42,6 +42,13 @@ function Menu() {
     clearInterval(myGameArea.interval);
     myGameArea.keys = [];
     myGameArea.clear;
+
+    document.getElementById("GameArea").removeEventListener('mousedown', mousedownhandler);
+    document.getElementById("GameArea").removeEventListener('mouseup', mouseuphandler);
+    document.getElementById("GameArea").removeEventListener('mousemove', mousemovehandler);
+    window.removeEventListener('keydown', keydownhandler);
+    window.removeEventListener('keyup', keyuphandler);
+
     document.getElementById("Solo_Level_List").hidden = true;
     document.getElementById("CoOp_Level_List").hidden = true;
     document.getElementById("ButtonArea").hidden = true;
@@ -147,6 +154,8 @@ var myGameArea = {
             document.getElementById("wins").innerHTML = "Level: " + Level;
         } else if (Level_Editor) {
             this.interval = setInterval(updateLevelEditorArea, 20);
+            document.getElementById("GameArea").addEventListener('mousedown', mousedownhandler)
+
             document.getElementById("GameArea").addEventListener('mousedown', function(e) {
                 myGameArea.mousedown = true;
                 myGameArea.mouseGrab = true;
@@ -168,13 +177,8 @@ var myGameArea = {
             })
         }
 
-            window.addEventListener('keydown', function(e) {
-                myGameArea.keys = (myGameArea.keys || []);
-                myGameArea.keys[e.keyCode] = (e.type == "keydown");
-            }) 
-            window.addEventListener('keyup', function(e) {
-                myGameArea.keys[e.keyCode] = (e.type == "keydown");
-            })
+        window.addEventListener('keydown', keydownhandler)
+        window.addEventListener('keyup', keyuphandler)
 
     },
     stop: function() {
@@ -184,8 +188,52 @@ var myGameArea = {
         clearInterval(this.interval);
         this.interval = setInterval(TrackReset, 20);
     },
+    unpause: function() {
+        document.getElementById("Play-Button").disabled = true;
+        document.getElementById("Pause-Button").disabled = false;
+            if (VsGame) {
+                this.interval = setInterval(updateVsGameArea, 20);
+            } else if (SoloGame) {
+                this.interval = setInterval(updateSoloGameArea, 20);
+            } else if (CoOpGame) {
+                this.interval = setInterval(updateCoOpGameArea, 20);
+            } else if (Level_Editor) {
+                this.interval = setInterval(updateLevelEditorArea, 20);
+            }
+    },
     clear: function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+function keydownhandler(e) {
+    myGameArea.keys = (myGameArea.keys || []);
+    myGameArea.keys[e.keyCode] = (e.type == "keydown");
+}
+
+function keyuphandler(e) {
+    myGameArea.keys[e.keyCode] = (e.type == "keydown");
+}
+
+function mousedownhandler(e) {
+    myGameArea.mousedown = true;
+    myGameArea.mouseGrab = true;
+    Mouse[0].x = e.clientX;
+    Mouse[0].y = e.clientY;
+    Mouse[0].OriginalX = e.clientX;
+    Mouse[0].OriginalY = e.clientY;
+}
+
+function mouseuphandler(e) {
+    myGameArea.mousedown = false;
+    myGameArea.mouseGrab = false;
+    Mouse[0].Holds = "Nothing";
+}
+
+function mousemovehandler(e) {
+    if (myGameArea.mousedown) {
+        Mouse[0].x = e.clientX;
+        Mouse[0].y = e.clientY;
     }
 }
 
@@ -2646,7 +2694,7 @@ function LevelEditor() {
     SoloGame = false; // Game type
     CoOpGame = false; // Game type
     Level_Editor = true; // Game type
-    LevelEditor = {
+    LevelEditorInfo = {
         Type: "Solo", // defines the number of friendly tanks to create
         Wall: "BlackLine", // defines the type of wall to create
         Enemy: "Target", // defines the type of enemy to create
@@ -2723,7 +2771,7 @@ function updateLevelEditorArea() {
 
     Tank1Data = update(Tank1Data);
     drawTank(Tank1, Tank1Data)
-    if (LevelEditor.Type == "CoOp") {
+    if (LevelEditorInfo.Type == "CoOp") {
         Tank2Data.moveAngle = 0;
         Tank2Data.speed = 0;
         if (myGameArea.keys && myGameArea.keys[37]) {
@@ -2745,19 +2793,19 @@ function updateLevelEditorArea() {
         myGameArea.mouseGrab = false;
         if (crashWith(Tank1Data, Mouse[0])) {
             Mouse[0].Holds = "Tank1";
-            LevelEditor.x = Tank1Data.x;
-            LevelEditor.y = Tank1Data.y;
-        } else if (LevelEditor.Type == "CoOp" && crashWith(Tank2Data, Mouse[0])) {
+            LevelEditorInfo.x = Tank1Data.x;
+            LevelEditorInfo.y = Tank1Data.y;
+        } else if (LevelEditorInfo.Type == "CoOp" && crashWith(Tank2Data, Mouse[0])) {
             Mouse[0].Holds = "Tank2";
-            LevelEditor.x = Tank2Data.x;
-            LevelEditor.y = Tank2Data.y;
+            LevelEditorInfo.x = Tank2Data.x;
+            LevelEditorInfo.y = Tank2Data.y;
         }
         for (i = 0; i < walls.length; i ++) {
             if ( crashWith(walls[i], Mouse[0])) {
                 Mouse[0].Holds = "Wall";
                 Mouse[0].Index = i;
-                LevelEditor.x = walls[i].x;
-                LevelEditor.y = walls[i].y;
+                LevelEditorInfo.x = walls[i].x;
+                LevelEditorInfo.y = walls[i].y;
                 break;
             }
         }
@@ -2765,8 +2813,8 @@ function updateLevelEditorArea() {
             if (crashWith(AIEnemyData[i], Mouse[0])) {
                 Mouse[0].Holds = "AI";
                 Mouse[0].Index = i;
-                LevelEditor.x = AIEnemyData[i].x;
-                LevelEditor.y = AIEnemyData[i].y;
+                LevelEditorInfo.x = AIEnemyData[i].x;
+                LevelEditorInfo.y = AIEnemyData[i].y;
                 break;
             }
         }
@@ -2775,19 +2823,19 @@ function updateLevelEditorArea() {
         var Type = document.getElementById("Movement-selector").value
         if (Type == 0) {
             if (Mouse[0].Holds == "Tank1") {
-                Tank1Data.x = LevelEditor.x - (Mouse[0].OriginalX - Mouse[0].x);
-                Tank1Data.y = LevelEditor.y - (Mouse[0].OriginalY - Mouse[0].y);
+                Tank1Data.x = LevelEditorInfo.x - (Mouse[0].OriginalX - Mouse[0].x);
+                Tank1Data.y = LevelEditorInfo.y - (Mouse[0].OriginalY - Mouse[0].y);
             } else if (Mouse[0].Holds == "Tank2") {
-                Tank2Data.x = LevelEditor.x - (Mouse[0].OriginalX - Mouse[0].x);
-                Tank2Data.y = LevelEditor.y - (Mouse[0].OriginalY - Mouse[0].y);
+                Tank2Data.x = LevelEditorInfo.x - (Mouse[0].OriginalX - Mouse[0].x);
+                Tank2Data.y = LevelEditorInfo.y - (Mouse[0].OriginalY - Mouse[0].y);
             } else if (Mouse[0].Holds == "Wall") {
-                walls[Mouse[0].Index].x = LevelEditor.x - (Mouse[0].OriginalX - Mouse[0].x);
+                walls[Mouse[0].Index].x = LevelEditorInfo.x - (Mouse[0].OriginalX - Mouse[0].x);
                 WALL[Mouse[0].Index].x = walls[Mouse[0].Index].x;
-                walls[Mouse[0].Index].y = LevelEditor.y - (Mouse[0].OriginalY - Mouse[0].y);
+                walls[Mouse[0].Index].y = LevelEditorInfo.y - (Mouse[0].OriginalY - Mouse[0].y);
                 WALL[Mouse[0].Index].y = walls[Mouse[0].Index].y;
             } else if (Mouse[0].Holds == "AI") {
-                AIEnemyData[Mouse[0].Index].x = LevelEditor.x - (Mouse[0].OriginalX - Mouse[0].x);
-                AIEnemyData[Mouse[0].Index].y = LevelEditor.y - (Mouse[0].OriginalY - Mouse[0].y);
+                AIEnemyData[Mouse[0].Index].x = LevelEditorInfo.x - (Mouse[0].OriginalX - Mouse[0].x);
+                AIEnemyData[Mouse[0].Index].y = LevelEditorInfo.y - (Mouse[0].OriginalY - Mouse[0].y);
             }
 
         } else if (Type == 1) {
@@ -2823,12 +2871,12 @@ function LevelEditorSelect(Option) {
         Selector = document.getElementById("Solo-selector");
         value = Selector.value;
         if (value == 0) {
-            LevelEditor.Type = "Solo";
+            LevelEditorInfo.Type = "Solo";
             Tank2Data.Alive = false;
             SoloGame = true; // Game type
             CoOpGame = false; // Game type
         } else if (value == 1) {
-            LevelEditor.Type = "CoOp";
+            LevelEditorInfo.Type = "CoOp";
             Tank2Data.Alive = true;
             SoloGame = false; // Game type
             CoOpGame = true; // Game type
@@ -2837,23 +2885,23 @@ function LevelEditorSelect(Option) {
         Selector = document.getElementById("Wall-selector");
         value = Selector.value;
         if (value == 0) {
-            LevelEditor.Wall = "BlackLine";
+            LevelEditorInfo.Wall = "BlackLine";
         }
     } else if (Option == "Enemy") {
         Selector = document.getElementById("Enemy-selector");
         value = Selector.value;
         if (value == 0) {
-            LevelEditor.Enemy = "Target";
+            LevelEditorInfo.Enemy = "Target";
         } else if (value == 1) {
-            LevelEditor.Enemy = "Turret";
+            LevelEditorInfo.Enemy = "Turret";
         } else if (value == 2) {
-            LevelEditor.Enemy = "Tank";
+            LevelEditorInfo.Enemy = "Tank";
         }
     }
 }
 
 function AddWall() {
-    if (LevelEditor.Wall == "BlackLine") {
+    if (LevelEditorInfo.Wall == "BlackLine") {
         var Width = Number(document.getElementById("Wall-Width-Field").value)
         var Height = Number(document.getElementById("Wall-Height-Field").value)
         var newWall = {
@@ -2880,7 +2928,7 @@ function AddEnemy() {
         AIEnemy: true,
         frame: 0,
     }
-    if (LevelEditor.Enemy == "Target") {
+    if (LevelEditorInfo.Enemy == "Target") {
 
         NewEnemy.radius = 22;
         NewEnemy.Tank = false;
@@ -2891,7 +2939,7 @@ function AddEnemy() {
         AIEnemyData.push(NewEnemy);
         AIEnemy.push(new Image());
         AIEnemy[AIEnemyData.length - 1].src = "images/Target.png" 
-    } else if (LevelEditor.Enemy == "Turret") {
+    } else if (LevelEditorInfo.Enemy == "Turret") {
         NewEnemy.radius = 30;
         NewEnemy.Tank = false;
         NewEnemy.AIType = "Turret";
@@ -2903,7 +2951,7 @@ function AddEnemy() {
         AIEnemyData.push(NewEnemy);
         AIEnemy.push(new Image());
         AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png" 
-    } else if (LevelEditor.Enemy == "Tank") {
+    } else if (LevelEditorInfo.Enemy == "Tank") {
         NewEnemy.Lw = 15;
         NewEnemy.Rw = 15;
         NewEnemy.Th = 15;
