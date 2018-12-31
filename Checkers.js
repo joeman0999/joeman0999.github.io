@@ -7,6 +7,10 @@ BlackChecker = new Image();
 BlackChecker.src = "images/BlackChecker.png";
 RedChecker = new Image();
 RedChecker.src = "images/RedChecker.png";
+BlackCheckerQueen = new Image();
+BlackCheckerQueen.src = "images/BlackCheckerQueen.png";
+RedCheckerQueen = new Image();
+RedCheckerQueen.src = "images/RedCheckerQueen.png";
 function New_Game() {
     BlackCheckers = [
         {
@@ -176,10 +180,18 @@ function updateGameArea() {
     var i
     myGameArea.clear();
     for (i = 0; i < RedCheckers.length; i++) {
-        draw(RedChecker, RedCheckers[i])
+        if (RedCheckers[i].Queen) {
+            draw(RedCheckerQueen, RedCheckers[i])
+        } else {
+            draw(RedChecker, RedCheckers[i])
+        }
     }
     for (i = 0; i < BlackCheckers.length; i++) {
-        draw(BlackChecker, BlackCheckers[i])
+        if (BlackCheckers[i].Queen) {
+            draw(BlackCheckerQueen, BlackCheckers[i])
+        } else {
+            draw(BlackChecker, BlackCheckers[i])
+        }
     }
 }
 
@@ -277,7 +289,7 @@ function mousedownhandler(e) {
             }
             if (!Overlap) {
                 if (((Newplacex + Newplacey) / 2 != Math.round((Newplacex + Newplacey) / 2))) {
-                    if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 2 && !jumpagain) {
+                    if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 2 && Newplacex != Oldplacex && Newplacey != Oldplacey && !jumpagain) {
                         if (Mouse.Holds == "Red") {
                             if (Newplacey < Oldplacey) {
                                 if (Newplacey == 0) {
