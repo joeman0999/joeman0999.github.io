@@ -141,12 +141,12 @@ var myGameArea = {
         
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
-        document.getElementById("GameArea").addEventListener('mousedown', mousedownhandler);
+        document.getElementById("GameArea").addEventListener('click', clickhandler);
         this.interval = setInterval(updateGameArea, 20);
     },
     stop: function () {
         clearInterval(this.interval);
-        document.getElementById("GameArea").removeEventListener('mousedown', mousedownhandler);
+        document.getElementById("GameArea").removeEventListener('click', clickhandler);
         myGameArea.clear;
     },
     clear: function () {
@@ -222,7 +222,7 @@ function draw(image, Info) {
     myGameArea.context.restore();
 }
 
-function mousedownhandler(e) {
+function clickhandler(e) {
     var i, Overlap, jump
     Mouse.x = e.clientX - 10;
     Mouse.y = e.clientY - 10;
