@@ -7,7 +7,7 @@
 <body>
     <div id="Menu">
         <button id="Start-Button" class="Menu-Button" onclick="TwoPlayer()">2 Player</button>
-        <button id="Start-Button" class="Menu-Button" hidden="true" onclick="OnePlayer()">1 Player</button>
+        <button id="Start-Button" class="Menu-Button"  onclick="OnePlayerMenu()">1 Player</button>
         <button class="Menu-Button" onclick="location.href='index.html'">Exit Game</button>
 
 
@@ -17,6 +17,11 @@
         <button id="New_Game-Button" onclick="New_Game()">New Game</button>
         <button id="Jump_Again-Button" hidden="true" onclick="jump_again(true)">Jump Again</button>
         <button id="End_Turn-Button" hidden="true" onclick="jump_again(false)">End Turn</button>
+    </div>
+    <div id="OnePlayerMenu" hidden="true">
+        <button id="Red-Button" class="Menu-Button" onclick="OnePlayerColor('Red')">Red</button>
+        <button id="Black-Button" class="Menu-Button" onclick="OnePlayerColor('Black')">Black</button>
+        <button id="Menu-Button" class="Menu-Button" onclick="Menu()">Main Menu</button>
     </div>
 </body>
 

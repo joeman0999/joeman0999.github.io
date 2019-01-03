@@ -2,7 +2,9 @@ Thecanvas = {
     width: 544,
     height: 544
 };
-
+Computer = "None";
+Timedout = false;
+ComputersMoveList = [];
 TypeOnePlayer = false;
 TypeTwoPlayer = false;
 BlackChecker = new Image();
@@ -13,6 +15,7 @@ BlackCheckerQueen = new Image();
 BlackCheckerQueen.src = "images/BlackCheckerQueen.png";
 RedCheckerQueen = new Image();
 RedCheckerQueen.src = "images/RedCheckerQueen.png";
+
 function New_Game() {
     BlackCheckers = [
         {
@@ -141,7 +144,7 @@ var myGameArea = {
         this.canvas.width = Thecanvas.width;
         this.canvas.height = Thecanvas.height;
         this.context = this.canvas.getContext("2d");
-        
+
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         if (TypeOnePlayer) {
@@ -149,13 +152,13 @@ var myGameArea = {
         } else {
             document.getElementById("GameArea").addEventListener('click', clickhandler2P);
         }
-        this.interval = setInterval(updateGameArea, 20);
+        this.interval = setInterval(updateGameArea, 60);
     },
     stop: function () {
         clearInterval(this.interval);
         if (TypeOnePlayer) {
             document.getElementById("GameArea").removeEventListener('click', clickhandler1P);
-        } else {
+        } else if (Computer != "None") {
             document.getElementById("GameArea").removeEventListener('click', clickhandler2P);
         }
         myGameArea.clear;
@@ -177,7 +180,7 @@ function TwoPlayer() {
 
 function OnePlayer() {
     TypeOnePlayer = true;
-    document.getElementById("Menu").hidden = true;
+    document.getElementById("OnePlayerMenu").hidden = true;
     if (document.getElementById("GameArea")) {
         document.getElementById("GameArea").hidden = false;
     }
@@ -185,11 +188,27 @@ function OnePlayer() {
     document.getElementById("ButtonArea").hidden = false;
 }
 
+function OnePlayerMenu() {
+    document.getElementById("Menu").hidden = true;
+    document.getElementById("OnePlayerMenu").hidden = false;
+}
+
+function OnePlayerColor(Color) {
+    if (Color == "Red") {
+        Computer = "Black";
+    } else {
+        Computer = "Red";
+    }
+    OnePlayer()
+}
+
 function Menu() {
     myGameArea.stop();
+    Computer = "None";
     TypeOnePlayer = false;
     TypeTwoPlayer = false;
     document.getElementById("ButtonArea").hidden = true;
+    document.getElementById("OnePlayerMenu").hidden = true;
     if (document.getElementById("GameArea")) {
         document.getElementById("GameArea").hidden = true;
     }
@@ -215,6 +234,12 @@ function updateGameArea() {
             draw(BlackCheckerQueen, BlackCheckers[i])
         } else {
             draw(BlackChecker, BlackCheckers[i])
+        }
+    }
+    if ((PlayersTurn == "Red" && Computer == "Red") || (PlayersTurn == "Black" && Computer == "Black")) {
+        if (!Timedout) {
+            Timedout = true;
+            setTimeout(RunComputersTurn, 500);
         }
     }
 }
@@ -399,7 +424,7 @@ function clickhandler2P(e) {
                                             checkforwin();
                                         }
                                     }
-                                    
+
                                     break;
                                 }
                             }
@@ -448,7 +473,7 @@ function clickhandler2P(e) {
                                             checkforwin();
                                         }
                                     }
-                                    
+
                                     break;
                                 }
                             }
@@ -461,124 +486,146 @@ function clickhandler2P(e) {
 }
 
 function clickhandler1P(e) {
-    var i, Overlap, jump
-    Mouse.x = e.clientX - 10;
-    Mouse.y = e.clientY - 10;
-    if (Mouse.Holds == "Nothing") {
-        if (PlayersTurn == "Red") {
-            for (i = 0; i < RedCheckers.length; i++) {
-                if (crashWith(RedCheckers[i], Mouse)) {
-                    Mouse.Holds = "Red";
-                    Mouse.Index = i;
-                    break;
-                }
-            }
-        } else if (PlayersTurn == "Black") {
-            for (i = 0; i < BlackCheckers.length; i++) {
-                if (crashWith(BlackCheckers[i], Mouse)) {
-                    Mouse.Holds = "Black";
-                    Mouse.Index = i;
-                    break;
-                }
-            }
-        }
-    } else {
-        if (Mouse.x >= 0 && Mouse.x <= 544 && Mouse.y >= 0 && Mouse.y <= 544) {
-            var Newplacex, Newplacey, Oldplacex, Oldplacey, Overlap, jumpposition
-            Overlap = false;
-            Newplacex = Math.floor(Mouse.x / 68);
-            Newplacey = Math.floor(Mouse.y / 68);
-            if (Mouse.Holds == "Red") {
-                Oldplacex = RedCheckers[Mouse.Index].x;
-                Oldplacey = RedCheckers[Mouse.Index].y;
+    if ((PlayersTurn == "Red" && Computer == "Black") || (PlayersTurn == "Black" && Computer == "Red")) {
+        var i, Overlap, jump
+        Mouse.x = e.clientX - 10;
+        Mouse.y = e.clientY - 10;
+        if (Mouse.Holds == "Nothing") {
+            if (PlayersTurn == "Red") {
                 for (i = 0; i < RedCheckers.length; i++) {
                     if (crashWith(RedCheckers[i], Mouse)) {
-                        if (!jumpagain) {
-                            Overlap = true;
-                            Mouse.Index = i;
-                        }
+                        Mouse.Holds = "Red";
+                        Mouse.Index = i;
                         break;
                     }
                 }
+            } else if (PlayersTurn == "Black") {
                 for (i = 0; i < BlackCheckers.length; i++) {
                     if (crashWith(BlackCheckers[i], Mouse)) {
-                        Overlap = true;
-                        break;
-                    }
-                }
-            } else if (Mouse.Holds == "Black") {
-                Oldplacex = BlackCheckers[Mouse.Index].x;
-                Oldplacey = BlackCheckers[Mouse.Index].y;
-                for (i = 0; i < RedCheckers.length; i++) {
-                    if (crashWith(RedCheckers[i], Mouse)) {
-                        Overlap = true;
-                        break;
-                    }
-                }
-                for (i = 0; i < BlackCheckers.length; i++) {
-                    if (crashWith(BlackCheckers[i], Mouse)) {
-                        if (!jumpagain) {
-                            Overlap = true;
-                            Mouse.Index = i;
-                        }
+                        Mouse.Holds = "Black";
+                        Mouse.Index = i;
                         break;
                     }
                 }
             }
-            if (!Overlap) {
-                if (((Newplacex + Newplacey) / 2 != Math.round((Newplacex + Newplacey) / 2))) {
-                    if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 2 && Newplacex != Oldplacex && Newplacey != Oldplacey && !jumpagain) {
-                        if (Mouse.Holds == "Red") {
-                            if (Newplacey < Oldplacey) {
-                                if (Newplacey == 0) {
-                                    RedCheckers[Mouse.Index].Queen = true;
-                                }
-                                RedCheckers[Mouse.Index].x = Newplacex;
-                                RedCheckers[Mouse.Index].y = Newplacey;
-                                Mouse.Holds = "Nothing";
-                                PlayersTurn = "Black";
-                            } else if (RedCheckers[Mouse.Index].Queen) {
-                                RedCheckers[Mouse.Index].x = Newplacex;
-                                RedCheckers[Mouse.Index].y = Newplacey;
-                                Mouse.Holds = "Nothing";
-                                PlayersTurn = "Black";
+        } else {
+            if (Mouse.x >= 0 && Mouse.x <= 544 && Mouse.y >= 0 && Mouse.y <= 544) {
+                var Newplacex, Newplacey, Oldplacex, Oldplacey, Overlap, jumpposition
+                Overlap = false;
+                Newplacex = Math.floor(Mouse.x / 68);
+                Newplacey = Math.floor(Mouse.y / 68);
+                if (Mouse.Holds == "Red") {
+                    Oldplacex = RedCheckers[Mouse.Index].x;
+                    Oldplacey = RedCheckers[Mouse.Index].y;
+                    for (i = 0; i < RedCheckers.length; i++) {
+                        if (crashWith(RedCheckers[i], Mouse)) {
+                            if (!jumpagain) {
+                                Overlap = true;
+                                Mouse.Index = i;
                             }
-                        } else if (Mouse.Holds == "Black") {
-                            if (Newplacey > Oldplacey) {
-                                if (Newplacey == 7) {
-                                    BlackCheckers[Mouse.Index].Queen = true;
-                                }
-                                BlackCheckers[Mouse.Index].x = Newplacex;
-                                BlackCheckers[Mouse.Index].y = Newplacey;
-                                Mouse.Holds = "Nothing";
-                                PlayersTurn = "Red";
-                            } else if (BlackCheckers[Mouse.Index].Queen) {
-                                BlackCheckers[Mouse.Index].x = Newplacex;
-                                BlackCheckers[Mouse.Index].y = Newplacey;
-                                Mouse.Holds = "Nothing";
-                                PlayersTurn = "Red";
-                            }
+                            break;
                         }
-                    } else if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 4 && Oldplacex != Newplacex && Oldplacey != Newplacey) {
-                        jumpposition = {
-                            x: (Oldplacex + (Newplacex - Oldplacex) / 2) * 68,
-                            y: (Oldplacey + (Newplacey - Oldplacey) / 2) * 68
-                        };
-                        if (Mouse.Holds == "Red") {
-                            for (i = 0; i < BlackCheckers.length; i++) {
-                                if (crashWith(BlackCheckers[i], jumpposition)) {
-                                    if (Newplacey < Oldplacey) {
-                                        RedCheckers[Mouse.Index].x = Newplacex;
-                                        RedCheckers[Mouse.Index].y = Newplacey;
-                                        if (Newplacey == 0 && !RedCheckers[Mouse.Index].Queen) {
-                                            RedCheckers[Mouse.Index].Queen = true;
-                                            jumpagain = false;
-                                            Mouse.Holds = "Nothing";
-                                            PlayersTurn = "Black";
-                                            document.getElementById("Jump_Again-Button").hidden = true;
-                                            document.getElementById("End_Turn-Button").hidden = true;
-                                            BlackCheckers.splice(i, 1);
-                                        } else {
+                    }
+                    for (i = 0; i < BlackCheckers.length; i++) {
+                        if (crashWith(BlackCheckers[i], Mouse)) {
+                            Overlap = true;
+                            break;
+                        }
+                    }
+                } else if (Mouse.Holds == "Black") {
+                    Oldplacex = BlackCheckers[Mouse.Index].x;
+                    Oldplacey = BlackCheckers[Mouse.Index].y;
+                    for (i = 0; i < RedCheckers.length; i++) {
+                        if (crashWith(RedCheckers[i], Mouse)) {
+                            Overlap = true;
+                            break;
+                        }
+                    }
+                    for (i = 0; i < BlackCheckers.length; i++) {
+                        if (crashWith(BlackCheckers[i], Mouse)) {
+                            if (!jumpagain) {
+                                Overlap = true;
+                                Mouse.Index = i;
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!Overlap) {
+                    if (((Newplacex + Newplacey) / 2 != Math.round((Newplacex + Newplacey) / 2))) {
+                        if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 2 && Newplacex != Oldplacex && Newplacey != Oldplacey && !jumpagain) {
+                            if (Mouse.Holds == "Red") {
+                                if (Newplacey < Oldplacey) {
+                                    if (Newplacey == 0) {
+                                        RedCheckers[Mouse.Index].Queen = true;
+                                    }
+                                    RedCheckers[Mouse.Index].x = Newplacex;
+                                    RedCheckers[Mouse.Index].y = Newplacey;
+                                    Mouse.Holds = "Nothing";
+                                    PlayersTurn = "Black";
+                                    checkforwin();
+                                } else if (RedCheckers[Mouse.Index].Queen) {
+                                    RedCheckers[Mouse.Index].x = Newplacex;
+                                    RedCheckers[Mouse.Index].y = Newplacey;
+                                    Mouse.Holds = "Nothing";
+                                    PlayersTurn = "Black";
+                                    checkforwin();
+                                }
+                            } else if (Mouse.Holds == "Black") {
+                                if (Newplacey > Oldplacey) {
+                                    if (Newplacey == 7) {
+                                        BlackCheckers[Mouse.Index].Queen = true;
+                                    }
+                                    BlackCheckers[Mouse.Index].x = Newplacex;
+                                    BlackCheckers[Mouse.Index].y = Newplacey;
+                                    Mouse.Holds = "Nothing";
+                                    PlayersTurn = "Red";
+                                    checkforwin();
+                                } else if (BlackCheckers[Mouse.Index].Queen) {
+                                    BlackCheckers[Mouse.Index].x = Newplacex;
+                                    BlackCheckers[Mouse.Index].y = Newplacey;
+                                    Mouse.Holds = "Nothing";
+                                    PlayersTurn = "Red";
+                                    checkforwin();
+                                }
+                            }
+                        } else if (Math.abs(Oldplacex - Newplacex) + Math.abs(Oldplacey - Newplacey) == 4 && Oldplacex != Newplacex && Oldplacey != Newplacey) {
+                            jumpposition = {
+                                x: (Oldplacex + (Newplacex - Oldplacex) / 2) * 68,
+                                y: (Oldplacey + (Newplacey - Oldplacey) / 2) * 68
+                            };
+                            if (Mouse.Holds == "Red") {
+                                for (i = 0; i < BlackCheckers.length; i++) {
+                                    if (crashWith(BlackCheckers[i], jumpposition)) {
+                                        if (Newplacey < Oldplacey) {
+                                            RedCheckers[Mouse.Index].x = Newplacex;
+                                            RedCheckers[Mouse.Index].y = Newplacey;
+                                            if (Newplacey == 0 && !RedCheckers[Mouse.Index].Queen) {
+                                                RedCheckers[Mouse.Index].Queen = true;
+                                                jumpagain = false;
+                                                Mouse.Holds = "Nothing";
+                                                PlayersTurn = "Black";
+                                                document.getElementById("Jump_Again-Button").hidden = true;
+                                                document.getElementById("End_Turn-Button").hidden = true;
+                                                BlackCheckers.splice(i, 1);
+                                                checkforwin();
+                                            } else {
+                                                BlackCheckers.splice(i, 1);
+                                                if (Checkforjump("Red", RedCheckers[Mouse.Index])) {
+                                                    jumpagain = true;
+                                                    jumpagainoption();
+                                                } else {
+                                                    jumpagain = false;
+                                                    Mouse.Holds = "Nothing";
+                                                    PlayersTurn = "Black";
+                                                    document.getElementById("Jump_Again-Button").hidden = true;
+                                                    document.getElementById("End_Turn-Button").hidden = true;
+                                                    checkforwin();
+                                                }
+                                            }
+                                        } else if (RedCheckers[Mouse.Index].Queen) {
+                                            RedCheckers[Mouse.Index].x = Newplacex;
+                                            RedCheckers[Mouse.Index].y = Newplacey;
                                             BlackCheckers.splice(i, 1);
                                             if (Checkforjump("Red", RedCheckers[Mouse.Index])) {
                                                 jumpagain = true;
@@ -589,42 +636,45 @@ function clickhandler1P(e) {
                                                 PlayersTurn = "Black";
                                                 document.getElementById("Jump_Again-Button").hidden = true;
                                                 document.getElementById("End_Turn-Button").hidden = true;
+                                                checkforwin();
                                             }
                                         }
-                                    } else if (RedCheckers[Mouse.Index].Queen) {
-                                        RedCheckers[Mouse.Index].x = Newplacex;
-                                        RedCheckers[Mouse.Index].y = Newplacey;
-                                        BlackCheckers.splice(i, 1);
-                                        if (Checkforjump("Red", RedCheckers[Mouse.Index])) {
-                                            jumpagain = true;
-                                            jumpagainoption();
-                                        } else {
-                                            jumpagain = false;
-                                            Mouse.Holds = "Nothing";
-                                            PlayersTurn = "Black";
-                                            document.getElementById("Jump_Again-Button").hidden = true;
-                                            document.getElementById("End_Turn-Button").hidden = true;
-                                        }
-                                    }
 
-                                    break;
+                                        break;
+                                    }
                                 }
-                            }
-                        } else if (Mouse.Holds == "Black") {
-                            for (i = 0; i < RedCheckers.length; i++) {
-                                if (crashWith(RedCheckers[i], jumpposition)) {
-                                    if (Newplacey > Oldplacey) {
-                                        BlackCheckers[Mouse.Index].x = Newplacex;
-                                        BlackCheckers[Mouse.Index].y = Newplacey;
-                                        if (Newplacey == 7) {
-                                            BlackCheckers[Mouse.Index].Queen = true;
-                                            jumpagain = false;
-                                            Mouse.Holds = "Nothing";
-                                            PlayersTurn = "Red";
-                                            document.getElementById("Jump_Again-Button").hidden = true;
-                                            document.getElementById("End_Turn-Button").hidden = true;
-                                            RedCheckers.splice(i, 1);
-                                        } else {
+                            } else if (Mouse.Holds == "Black") {
+                                for (i = 0; i < RedCheckers.length; i++) {
+                                    if (crashWith(RedCheckers[i], jumpposition)) {
+                                        if (Newplacey > Oldplacey) {
+                                            BlackCheckers[Mouse.Index].x = Newplacex;
+                                            BlackCheckers[Mouse.Index].y = Newplacey;
+                                            if (Newplacey == 7) {
+                                                BlackCheckers[Mouse.Index].Queen = true;
+                                                jumpagain = false;
+                                                Mouse.Holds = "Nothing";
+                                                PlayersTurn = "Red";
+                                                document.getElementById("Jump_Again-Button").hidden = true;
+                                                document.getElementById("End_Turn-Button").hidden = true;
+                                                RedCheckers.splice(i, 1);
+                                                checkforwin();
+                                            } else {
+                                                RedCheckers.splice(i, 1);
+                                                if (Checkforjump("Black", BlackCheckers[Mouse.Index])) {
+                                                    jumpagain = true;
+                                                    jumpagainoption();
+                                                } else {
+                                                    jumpagain = false;
+                                                    document.getElementById("Jump_Again-Button").hidden = true;
+                                                    document.getElementById("End_Turn-Button").hidden = true;
+                                                    Mouse.Holds = "Nothing";
+                                                    PlayersTurn = "Red";
+                                                    checkforwin();
+                                                }
+                                            }
+                                        } else if (BlackCheckers[Mouse.Index].Queen) {
+                                            BlackCheckers[Mouse.Index].x = Newplacex;
+                                            BlackCheckers[Mouse.Index].y = Newplacey;
                                             RedCheckers.splice(i, 1);
                                             if (Checkforjump("Black", BlackCheckers[Mouse.Index])) {
                                                 jumpagain = true;
@@ -635,25 +685,12 @@ function clickhandler1P(e) {
                                                 document.getElementById("End_Turn-Button").hidden = true;
                                                 Mouse.Holds = "Nothing";
                                                 PlayersTurn = "Red";
+                                                checkforwin();
                                             }
                                         }
-                                    } else if (BlackCheckers[Mouse.Index].Queen) {
-                                        BlackCheckers[Mouse.Index].x = Newplacex;
-                                        BlackCheckers[Mouse.Index].y = Newplacey;
-                                        RedCheckers.splice(i, 1);
-                                        if (Checkforjump("Black", BlackCheckers[Mouse.Index])) {
-                                            jumpagain = true;
-                                            jumpagainoption();
-                                        } else {
-                                            jumpagain = false;
-                                            document.getElementById("Jump_Again-Button").hidden = true;
-                                            document.getElementById("End_Turn-Button").hidden = true;
-                                            Mouse.Holds = "Nothing";
-                                            PlayersTurn = "Red";
-                                        }
-                                    }
 
-                                    break;
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -1048,6 +1085,470 @@ function checkforwin() {
 
         if (!move) {
             alert('Red Wins.')
+        }
+    }
+}
+
+function RunComputersTurn() {
+    var i, option, newx, newy
+    var movements = [];
+    var jumps = [];
+    Timedout = false;
+    if (ComputersMoveList.length == 0) {
+        FindMoves();
+        for (i = 0; i < ComputersMoveList.length; i++) {
+            if (ComputersMoveList[i].type == "move") {
+                movements.push(i);
+            } else {
+                jumps.push(i);
+            }
+        }
+        if (jumps.length != 0) {
+            option = Math.round(Math.random() * (jumps.length - 1));
+            option = jumps[option];
+            if (PlayersTurn == "Red") {
+                newx = ComputersMoveList[option].positions[0];
+                newy = ComputersMoveList[option].positions[1];
+                for (i = 0; i < BlackCheckers.length; i++) {
+                    if (BlackCheckers[i].x == RedCheckers[ComputersMoveList[option].index].x + (newx - RedCheckers[ComputersMoveList[option].index].x)/2 && BlackCheckers[i].y == RedCheckers[ComputersMoveList[option].index].y + (newy - RedCheckers[ComputersMoveList[option].index].y)/2) {
+                        BlackCheckers.splice(i, 1);
+                        break;
+                    }
+                }
+                RedCheckers[ComputersMoveList[option].index].x = newx;
+                RedCheckers[ComputersMoveList[option].index].y = newy;
+                if (RedCheckers[ComputersMoveList[option].index].y == 0) {
+                    RedCheckers[ComputersMoveList[option].index].Queen = true;
+                }
+            } else {
+                newx = ComputersMoveList[option].positions[0];
+                newy = ComputersMoveList[option].positions[1];
+                for (i = 0; i < RedCheckers.length; i++) {
+                    if (RedCheckers[i].x == BlackCheckers[ComputersMoveList[option].index].x + (newx - BlackCheckers[ComputersMoveList[option].index].x)/2 && RedCheckers[i].y == BlackCheckers[ComputersMoveList[option].index].y + (newy - BlackCheckers[ComputersMoveList[option].index].y)/2) {
+                        RedCheckers.splice(i, 1);
+                    }
+                }
+                BlackCheckers[ComputersMoveList[option].index].x = newx;
+                BlackCheckers[ComputersMoveList[option].index].y = newy;
+                if (BlackCheckers[ComputersMoveList[option].index].y == 7) {
+                    BlackCheckers[ComputersMoveList[option].index].Queen = true;
+                }
+            }
+            ComputersMoveList = ComputersMoveList[option].next;
+        } else {
+            option = Math.round(Math.random() * (movements.length - 1));
+            if (PlayersTurn == "Red") {
+                RedCheckers[ComputersMoveList[option].index].x = ComputersMoveList[option].positions[0];
+                RedCheckers[ComputersMoveList[option].index].y = ComputersMoveList[option].positions[1];
+                if (RedCheckers[ComputersMoveList[option].index].y == 0) {
+                    RedCheckers[ComputersMoveList[option].index].Queen = true;
+                }
+            } else {
+                BlackCheckers[ComputersMoveList[option].index].x = ComputersMoveList[option].positions[0];
+                BlackCheckers[ComputersMoveList[option].index].y = ComputersMoveList[option].positions[1];
+                if (BlackCheckers[ComputersMoveList[option].index].y == 7) {
+                    BlackCheckers[ComputersMoveList[option].index].Queen = true;
+                }
+            }
+            ComputersMoveList = ComputersMoveList[option].next;
+        }
+        if (PlayersTurn == "Red") {
+            PlayersTurn = "Black";
+        } else {
+            PlayersTurn = "Red";
+        }
+    } else {
+        // if I calculated other moves in this move chain
+    }
+}
+
+class Move {
+    constructor(index, type, positions, next) {
+        this.index = index;
+        this.type = type;
+        this.positions = positions;
+        this.next = next;
+    }
+}
+
+function FindMoves() {
+    var i, j, k
+    var overlap = false;
+    var overlap2 = false;
+    var jumpposition = {
+        x: 0,
+        y: 0
+    };
+
+    if (PlayersTurn == "Red") {
+
+        for (i = 0; i < RedCheckers.length; i++) {
+
+            if (RedCheckers[i].y > 0) {
+                if (RedCheckers[i].x > 0) {
+                    jumpposition.x = (RedCheckers[i].x - 1) * 68;
+                    jumpposition.y = (RedCheckers[i].y - 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (RedCheckers[i].y > 1 && RedCheckers[i].x > 1) {
+                                jumpposition.x = (RedCheckers[i].x - 2) * 68;
+                                jumpposition.y = (RedCheckers[i].y - 2) * 68;
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [RedCheckers[i].x - 2, RedCheckers[i].y - 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [RedCheckers[i].x - 1, RedCheckers[i].y - 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+                if (RedCheckers[i].x < 7) {
+                    jumpposition.x = (RedCheckers[i].x + 1) * 68;
+                    jumpposition.y = (RedCheckers[i].y - 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (RedCheckers[i].y > 1 && RedCheckers[i].x < 6) {
+                                jumpposition.x = (RedCheckers[i].x + 2) * 68;
+                                jumpposition.y = (RedCheckers[i].y - 2) * 68;
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [RedCheckers[i].x + 2, RedCheckers[i].y - 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [RedCheckers[i].x + 1, RedCheckers[i].y - 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+            }
+            if (RedCheckers[i].Queen && RedCheckers[i].y < 7) {
+                if (RedCheckers[i].x > 0) {
+                    jumpposition.x = (RedCheckers[i].x - 1) * 68;
+                    jumpposition.y = (RedCheckers[i].y + 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (RedCheckers[i].y < 6 && RedCheckers[i].x > 1) {
+                                jumpposition.x = (RedCheckers[i].x - 2) * 68;
+                                jumpposition.y = (RedCheckers[i].y + 2) * 68;
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [RedCheckers[i].x - 2, RedCheckers[i].y + 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [RedCheckers[i].x - 1, RedCheckers[i].y + 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+                if (RedCheckers[i].x < 7) {
+                    jumpposition.x = (RedCheckers[i].x + 1) * 68;
+                    jumpposition.y = (RedCheckers[i].y + 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (RedCheckers[i].y < 6 && RedCheckers[i].x < 6) {
+                                jumpposition.x = (RedCheckers[i].x + 2) * 68;
+                                jumpposition.y = (RedCheckers[i].y + 2) * 68;
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [RedCheckers[i].x + 2, RedCheckers[i].y + 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [RedCheckers[i].x + 1, RedCheckers[i].y + 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+            }
+
+        }
+
+    } else {
+        for (i = 0; i < BlackCheckers.length; i++) {
+
+            if (BlackCheckers[i].y > 0 && BlackCheckers[i].Queen) {
+                if (BlackCheckers[i].x > 0) {
+                    jumpposition.x = (BlackCheckers[i].x - 1) * 68;
+                    jumpposition.y = (BlackCheckers[i].y - 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (BlackCheckers[i].y > 1 && BlackCheckers[i].x > 1) {
+                                jumpposition.x = (BlackCheckers[i].x - 2) * 68;
+                                jumpposition.y = (BlackCheckers[i].y - 2) * 68;
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [BlackCheckers[i].x - 2, BlackCheckers[i].y - 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [BlackCheckers[i].x - 1, BlackCheckers[i].y - 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+                if (BlackCheckers[i].x < 7) {
+                    jumpposition.x = (BlackCheckers[i].x + 1) * 68;
+                    jumpposition.y = (BlackCheckers[i].y - 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (BlackCheckers[i].y > 1 && BlackCheckers[i].x < 6) {
+                                jumpposition.x = (BlackCheckers[i].x + 2) * 68;
+                                jumpposition.y = (BlackCheckers[i].y - 2) * 68;
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [BlackCheckers[i].x + 2, BlackCheckers[i].y - 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [BlackCheckers[i].x + 1, BlackCheckers[i].y - 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+            }
+            if (BlackCheckers[i].y < 7) {
+                if (BlackCheckers[i].x > 0) {
+                    jumpposition.x = (BlackCheckers[i].x - 1) * 68;
+                    jumpposition.y = (BlackCheckers[i].y + 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (BlackCheckers[i].y < 6 && BlackCheckers[i].x > 1) {
+                                jumpposition.x = (BlackCheckers[i].x - 2) * 68;
+                                jumpposition.y = (BlackCheckers[i].y + 2) * 68;
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [BlackCheckers[i].x - 2, BlackCheckers[i].y + 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [BlackCheckers[i].x - 1, BlackCheckers[i].y + 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+                if (BlackCheckers[i].x < 7) {
+                    jumpposition.x = (BlackCheckers[i].x + 1) * 68;
+                    jumpposition.y = (BlackCheckers[i].y + 1) * 68;
+                    overlap = false;
+                    overlap2 = false;
+                    for (j = 0; j < BlackCheckers.length; j++) {
+                        if (crashWith(BlackCheckers[j], jumpposition)) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    for (j = 0; j < RedCheckers.length; j++) {
+                        if (crashWith(RedCheckers[j], jumpposition)) {
+                            overlap = true;
+                            if (BlackCheckers[i].y < 6 && BlackCheckers[i].x < 6) {
+                                jumpposition.x = (BlackCheckers[i].x + 2) * 68;
+                                jumpposition.y = (BlackCheckers[i].y + 2) * 68;
+                                for (k = 0; k < BlackCheckers.length; k++) {
+                                    if (crashWith(BlackCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                for (k = 0; k < RedCheckers.length; k++) {
+                                    if (crashWith(RedCheckers[k], jumpposition)) {
+                                        overlap2 = true;
+                                        break;
+                                    }
+                                }
+                                if (!overlap2) {
+                                    move = new Move(i, "jump", [BlackCheckers[i].x + 2, BlackCheckers[i].y + 2], []);
+                                    ComputersMoveList.push(move);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    if (!overlap) {
+                        move = new Move(i, "move", [BlackCheckers[i].x + 1, BlackCheckers[i].y + 1], [])
+                        ComputersMoveList.push(move);
+                    }
+                }
+            }
+
         }
     }
 }
