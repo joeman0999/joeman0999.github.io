@@ -4,16 +4,12 @@ Thecanvas = {
 };
 
 HighScore = 0;
-fruit = {
-    x: 1,
-    y: 1
-};
+
 keyup = true;
 SnakeDirection = 'up';
 SnakeImage = new Image();
 SnakeImage.src = "images/Snake.png";
-fruitImage = new Image();
-fruitImage.src = "images/fruit1.png";
+
 
 function CreateNewSnake(x, y) {
     var variable = {
@@ -74,6 +70,21 @@ var myGameArea = {
     }
 }
 
+fruitImage = new Image();
+fruitImage.src = "images/fruit.png";
+fruit = {
+    x: 1,
+    y: 1,
+    image: fruitImage,
+    width: 60,
+    height: 100,
+    xFrame: 0,
+    yFrame: 0,
+    numberOfXFrames: 3,
+    numberOfYFrames: 5,
+    context: myGameArea.canvas.getContext("2d")
+};
+
 function updateGameArea() {
     var i, x, y, crashed
     crashed = false;
@@ -112,11 +123,12 @@ function updateGameArea() {
         }
     }
 
+    render(fruit);
+
     for (i = 0; i < Snake.length; i++) {
         draw(SnakeImage, Snake[i])
     }
 
-    draw(fruitImage, fruit);
 }
 
 function draw(image, Info) {
@@ -139,20 +151,18 @@ function draw(image, Info) {
 
 function keydownhandler(e) {
 
-    if (keyup) {
-        if (e.keyCode == 38) {
-            SnakeDirection = 'up';
-            keyup = false;
-        } else if (e.keyCode == 40) {
-            SnakeDirection = 'down';
-            keyup = false;
-        } else if (e.keyCode == 39) {
-            SnakeDirection = 'right';
-            keyup = false;
-        } else if (e.keyCode == 37) {
-            SnakeDirection = 'left';
-            keyup = false;
-        }
+    if (e.keyCode == 38) {
+        SnakeDirection = 'up';
+        keyup = false;
+    } else if (e.keyCode == 40) {
+        SnakeDirection = 'down';
+        keyup = false;
+    } else if (e.keyCode == 39) {
+        SnakeDirection = 'right';
+        keyup = false;
+    } else if (e.keyCode == 37) {
+        SnakeDirection = 'left';
+        keyup = false;
     }
 }
 
@@ -161,13 +171,75 @@ function keyuphandler(e) {
 }
 
 function spawnfruit() {
-    var grid = "?".repeat(25).split("").map(() => 1);
+    var i, j, randomval
+    var grid = [
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+        [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
+    ];
     var xlist = [];
     var ylist = [];
     for (i = 0; i < Snake.length; i++) {
-        xlist.push(Snake[i].x);
-        ylist.push(Snake[i].y);
+        grid[Snake[i].x][Snake[i].y] = true;
     }
-    fruit.x = Math.round(Math.random() * 24);
-    fruit.y = Math.round(Math.random() * 24);
+    for(i = 0; i < 25; i++) {
+        for (j = 0; j < 25; j++) {
+            if (!grid[i][j]) {
+                xlist.push(i);
+                ylist.push(j)
+            }
+        }
+    }
+    if (xlist.length != 0) {
+        randomval = Math.round(Math.random() * xlist.length)
+        fruit.x = xlist[randomval];
+        fruit.y = ylist[randomval];
+        fruit.xFrame = Math.round(Math.random() * (fruit.numberOfXFrames - 1));
+        fruit.yFrame = Math.round(Math.random() * (fruit.numberOfYFrames - 1));
+    } else {
+        myGameArea.stop()
+        if (Snake.length > HighScore) {
+            HighScore = Snake.length;
+        }
+        alert('GAME OVER YOU WIN!!!!!!!. Your score is ' + Snake.length + '! The HighScore is ' + HighScore + '!!!!');
+    }
 }
+
+function render(Data) {
+
+    // Draw the animation
+    // Data.context.drawImage
+    Data.context.drawImage(
+        Data.image,
+        Data.xFrame * Data.width / Data.numberOfXFrames,
+        Data.yFrame * Data.height / Data.numberOfYFrames,
+        Data.width / Data.numberOfXFrames,
+        Data.height / Data.numberOfYFrames,
+        (Data.x * 20 + 10) - ((Data.width / Data.numberOfXFrames) / 2),
+        (Data.y * 20 + 10) - ((Data.height / Data.numberOfYFrames) / 2),
+        Data.width / Data.numberOfXFrames,
+        Data.height / Data.numberOfYFrames);
+
+};
