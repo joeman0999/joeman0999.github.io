@@ -213,10 +213,6 @@ function Menu() {
         document.getElementById("GameArea").hidden = true;
     }
     document.getElementById("Menu").hidden = false;
-    Thecanvas = {
-        width: 544,
-        height: 544
-    };
 }
 
 function updateGameArea() {
@@ -1162,13 +1158,14 @@ function RunComputersTurn() {
     }
 }
 
-class Move {
-    constructor(index, type, positions, next) {
-        this.index = index;
-        this.type = type;
-        this.positions = positions;
-        this.next = next;
+function CreateNewMove(index, type, positions, next) {
+    var variable = {
+        index: index,
+        type: type,
+        positions: positions,
+        next: next
     }
+    return variable
 }
 
 function FindMoves() {
@@ -1215,7 +1212,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [RedCheckers[i].x - 2, RedCheckers[i].y - 2], []);
+                                    move = CreateNewMove(i, "jump", [RedCheckers[i].x - 2, RedCheckers[i].y - 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1225,7 +1222,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [RedCheckers[i].x - 1, RedCheckers[i].y - 1], [])
+                        move = CreateNewMove(i, "move", [RedCheckers[i].x - 1, RedCheckers[i].y - 1], [])
                         ComputersMoveList.push(move);
                     }
                 }
@@ -1259,7 +1256,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [RedCheckers[i].x + 2, RedCheckers[i].y - 2], []);
+                                    move = CreateNewMove(i, "jump", [RedCheckers[i].x + 2, RedCheckers[i].y - 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1269,7 +1266,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [RedCheckers[i].x + 1, RedCheckers[i].y - 1], [])
+                        move = CreateNewMove(i, "move", [RedCheckers[i].x + 1, RedCheckers[i].y - 1], [])
                         ComputersMoveList.push(move);
                     }
                 }
@@ -1305,7 +1302,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [RedCheckers[i].x - 2, RedCheckers[i].y + 2], []);
+                                    move = CreateNewMove(i, "jump", [RedCheckers[i].x - 2, RedCheckers[i].y + 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1315,7 +1312,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [RedCheckers[i].x - 1, RedCheckers[i].y + 1], [])
+                        move = CreateNewMove(i, "move", [RedCheckers[i].x - 1, RedCheckers[i].y + 1], [])
                         ComputersMoveList.push(move);
                     }
                 }
@@ -1349,7 +1346,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [RedCheckers[i].x + 2, RedCheckers[i].y + 2], []);
+                                    move = CreateNewMove(i, "jump", [RedCheckers[i].x + 2, RedCheckers[i].y + 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1358,7 +1355,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [RedCheckers[i].x + 1, RedCheckers[i].y + 1], [])
+                        move = CreateNewMove(i, "move", [RedCheckers[i].x + 1, RedCheckers[i].y + 1], [])
                         ComputersMoveList.push(move);
                     }
                 }
@@ -1400,7 +1397,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [BlackCheckers[i].x - 2, BlackCheckers[i].y - 2], []);
+                                    move = CreateNewMove(i, "jump", [BlackCheckers[i].x - 2, BlackCheckers[i].y - 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1410,7 +1407,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [BlackCheckers[i].x - 1, BlackCheckers[i].y - 1], [])
+                        move = CreateNewMove(i, "move", [BlackCheckers[i].x - 1, BlackCheckers[i].y - 1], [])
                         ComputersMoveList.push(move);
                     }
                 }
@@ -1444,7 +1441,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [BlackCheckers[i].x + 2, BlackCheckers[i].y - 2], []);
+                                    move = CreateNewMove(i, "jump", [BlackCheckers[i].x + 2, BlackCheckers[i].y - 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1454,7 +1451,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [BlackCheckers[i].x + 1, BlackCheckers[i].y - 1], [])
+                        move = CreateNewMove(i, "move", [BlackCheckers[i].x + 1, BlackCheckers[i].y - 1], [])
                         ComputersMoveList.push(move);
                     }
                 }
@@ -1490,7 +1487,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [BlackCheckers[i].x - 2, BlackCheckers[i].y + 2], []);
+                                    move = CreateNewMove(i, "jump", [BlackCheckers[i].x - 2, BlackCheckers[i].y + 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1500,7 +1497,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [BlackCheckers[i].x - 1, BlackCheckers[i].y + 1], [])
+                        move = CreateNewMove(i, "move", [BlackCheckers[i].x - 1, BlackCheckers[i].y + 1], [])
                         ComputersMoveList.push(move);
                     }
                 }
@@ -1534,7 +1531,7 @@ function FindMoves() {
                                     }
                                 }
                                 if (!overlap2) {
-                                    move = new Move(i, "jump", [BlackCheckers[i].x + 2, BlackCheckers[i].y + 2], []);
+                                    move = CreateNewMove(i, "jump", [BlackCheckers[i].x + 2, BlackCheckers[i].y + 2], []);
                                     ComputersMoveList.push(move);
                                     break;
                                 }
@@ -1543,7 +1540,7 @@ function FindMoves() {
                         }
                     }
                     if (!overlap) {
-                        move = new Move(i, "move", [BlackCheckers[i].x + 1, BlackCheckers[i].y + 1], [])
+                        move = CreateNewMove(i, "move", [BlackCheckers[i].x + 1, BlackCheckers[i].y + 1], [])
                         ComputersMoveList.push(move);
                     }
                 }

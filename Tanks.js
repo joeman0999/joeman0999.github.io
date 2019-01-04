@@ -42,12 +42,26 @@ function Menu() {
     clearInterval(myGameArea.interval);
     myGameArea.keys = [];
     myGameArea.clear;
-
-    document.getElementById("GameArea").removeEventListener('mousedown', mousedownhandler);
-    document.getElementById("GameArea").removeEventListener('mouseup', mouseuphandler);
-    document.getElementById("GameArea").removeEventListener('mousemove', mousemovehandler);
-    window.removeEventListener('keydown', keydownhandler);
-    window.removeEventListener('keyup', keyuphandler);
+    try {
+        document.getElementById("GameArea").removeEventListener('mousedown', mousedownhandler);
+    } catch (err) {
+    }
+    try {
+        document.getElementById("GameArea").removeEventListener('mouseup', mouseuphandler);
+    } catch (err) {
+    }
+    try {
+        document.getElementById("GameArea").removeEventListener('mousemove', mousemovehandler);
+    } catch (err) {
+    }
+    try {
+        window.removeEventListener('keydown', keydownhandler);
+    } catch (err) {
+    }
+    try {
+        window.removeEventListener('keyup', keyuphandler);
+    } catch (err) {
+    }
 
     document.getElementById("Solo_Level_List").hidden = true;
     document.getElementById("CoOp_Level_List").hidden = true;
@@ -154,7 +168,7 @@ var myGameArea = {
             document.getElementById("wins").innerHTML = "Level: " + Level;
         } else if (Level_Editor) {
             this.interval = setInterval(updateLevelEditorArea, 20);
-            document.getElementById("GameArea").addEventListener('mousedown', mousedownhandler)
+            document.getElementById("GameArea").addEventListener('mousedown', mousedownhandler);
 
             document.getElementById("GameArea").addEventListener('mousedown', function (e) {
                 myGameArea.mousedown = true;
@@ -177,8 +191,8 @@ var myGameArea = {
             })
         }
 
-        window.addEventListener('keydown', keydownhandler)
-        window.addEventListener('keyup', keyuphandler)
+        window.addEventListener('keydown', keydownhandler);
+        window.addEventListener('keyup', keyuphandler);
 
     },
     stop: function () {
