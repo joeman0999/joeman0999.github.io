@@ -24,13 +24,17 @@ function New_Game() {
         x: 12,
         y: 12,
     }];
+    GameSpeed = 10;
+    NumberofFruit = 3;
     spawnfruit();
     document.getElementById("Menu").hidden = true;
     document.getElementById("ButtonArea").hidden = false;
     if (document.getElementById("GameArea")) {
         document.getElementById("GameArea").hidden = false;
     }
+    myGameArea.stop();
     myGameArea.start();
+    document.getElementById("wins").innerHTML = "Score: " + Snake.length;
 }
 
 function Menu() {
@@ -56,7 +60,7 @@ var myGameArea = {
         this.frameNo = 0;
 
         this.interval = setInterval(updateGameArea, 20);
-        
+
 
         window.addEventListener('keydown', keydownhandler);
         window.addEventListener('keyup', keyuphandler);
@@ -72,26 +76,17 @@ var myGameArea = {
 
 fruitImage = new Image();
 fruitImage.src = "images/fruit.png";
-fruit = {
-    x: 1,
-    y: 1,
-    image: fruitImage,
-    width: 60,
-    height: 100,
-    xFrame: 0,
-    yFrame: 0,
-    numberOfXFrames: 3,
-    numberOfYFrames: 5,
-    context: myGameArea.canvas.getContext("2d")
-};
+
+fruit = [];
 
 function updateGameArea() {
-    var i, x, y, crashed
+    var i, x, y, crashed, hitfruit
+    hitfruit = false;
     crashed = false;
     myGameArea.frameNo += 1;
     myGameArea.clear();
-    if (Math.round(myGameArea.frameNo/7) == myGameArea.frameNo/7) {
-        x = Snake[Snake.length-1].x;
+    if (Math.round(myGameArea.frameNo / GameSpeed) == myGameArea.frameNo / GameSpeed) {
+        x = Snake[Snake.length - 1].x;
         y = Snake[Snake.length - 1].y;
         if (SnakeDirection == 'up') {
             y -= 1;
@@ -108,23 +103,48 @@ function updateGameArea() {
                 break;
             }
         }
+        for (i = 0; i < fruit.length; i++) {
+            if (fruit[i].x == x && fruit[i].y == y) {
+                hitfruit = true;
+                fruit.splice(i,1);
+                break;
+            }
+        }
+
         if (x < 0 || x > 24 || y < 0 || y > 24 || crashed) {
             myGameArea.stop()
             if (Snake.length > HighScore) {
                 HighScore = Snake.length;
             }
             alert('Game Over. Your score is ' + Snake.length + '! The HighScore is ' + HighScore);
-        } else if(fruit.x == x && fruit.y == y) {
+        } else if (hitfruit) {
             Snake.push(CreateNewSnake(x, y));
+            document.getElementById("wins").innerHTML = "Score: " + Snake.length;
+            if (Snake.length > 200) {
+                GameSpeed = 4;
+            } else if (Snake.length > 150) {
+                GameSpeed = 5;
+            } else if (Snake.length > 100) {
+                GameSpeed = 6;
+            }
+            else if (Snake.length > 75) {
+                GameSpeed = 7;
+            }
+            else if (Snake.length > 50) {
+                GameSpeed = 8;
+            }
+            else if (Snake.length > 25) {
+                GameSpeed = 9;
+            }
             spawnfruit();
         } else {
             Snake.push(CreateNewSnake(x, y));
             Snake.shift();
         }
     }
-
-    render(fruit);
-
+    for (i = 0; i < fruit.length; i++) {
+        renderFruit(fruit[i]);
+    }
     for (i = 0; i < Snake.length; i++) {
         draw(SnakeImage, Snake[i])
     }
@@ -204,7 +224,11 @@ function spawnfruit() {
     for (i = 0; i < Snake.length; i++) {
         grid[Snake[i].x][Snake[i].y] = true;
     }
-    for(i = 0; i < 25; i++) {
+    for (i = 0; i < fruit.length; i++) {
+        grid[fruit[i].x][fruit[i].y] = true;
+    }
+
+    for (i = 0; i < 25; i++) {
         for (j = 0; j < 25; j++) {
             if (!grid[i][j]) {
                 xlist.push(i);
@@ -212,22 +236,23 @@ function spawnfruit() {
             }
         }
     }
-    if (xlist.length != 0) {
-        randomval = Math.round(Math.random() * (xlist.length-1))
-        fruit.x = xlist[randomval];
-        fruit.y = ylist[randomval];
-        fruit.xFrame = Math.round(Math.random() * (fruit.numberOfXFrames - 1));
-        fruit.yFrame = Math.round(Math.random() * (fruit.numberOfYFrames - 1));
-    } else {
+    if (xlist.length == 0 && fruit.length == 0) {
         myGameArea.stop()
         if (Snake.length > HighScore) {
             HighScore = Snake.length;
         }
         alert('GAME OVER YOU WIN!!!!!!!. Your score is ' + Snake.length + '! The HighScore is ' + HighScore + '!!!!');
     }
+    while (fruit.length < NumberofFruit && xlist.length != 0) {
+
+        randomval = Math.round(Math.random() * (xlist.length - 1))
+        fruit.push(createnewfruit(xlist[randomval], ylist[randomval], Math.round(Math.random() * 2), Math.round(Math.random() * 4)));
+        xlist.splice(randomval,1);
+        ylist.splice(randomval,1);
+    }
 }
 
-function render(Data) {
+function renderFruit(Data) {
 
     // Draw the animation
     // Data.context.drawImage
@@ -243,3 +268,19 @@ function render(Data) {
         Data.height / Data.numberOfYFrames);
 
 };
+
+function createnewfruit(x,y,xFrame,yFrame) {
+    var fruitData = {
+        x: x,
+        y: y,
+        xFrame: xFrame,
+        yFrame: yFrame,
+        image: fruitImage,
+        width: 60,
+        height: 100,
+        numberOfXFrames: 3,
+        numberOfYFrames: 5,
+        context: myGameArea.canvas.getContext("2d")
+    }
+    return fruitData;
+}
