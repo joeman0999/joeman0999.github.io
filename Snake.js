@@ -213,7 +213,7 @@ function spawnfruit() {
         }
     }
     if (xlist.length != 0) {
-        randomval = Math.round(Math.random() * xlist.length)
+        randomval = Math.round(Math.random() * (xlist.length-1))
         fruit.x = xlist[randomval];
         fruit.y = ylist[randomval];
         fruit.xFrame = Math.round(Math.random() * (fruit.numberOfXFrames - 1));
