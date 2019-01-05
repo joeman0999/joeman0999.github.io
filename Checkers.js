@@ -1,19 +1,19 @@
-Thecanvas = {
+var Thecanvas = {
     width: 544,
     height: 544
 };
-Computer = "None";
-Timedout = false;
-ComputersMoveList = [];
-TypeOnePlayer = false;
-TypeTwoPlayer = false;
-BlackChecker = new Image();
+var Computer = "None";
+var Timedout = false;
+var ComputersMoveList = [];
+var TypeOnePlayer = false;
+var TypeTwoPlayer = false;
+var BlackChecker = new Image();
 BlackChecker.src = "images/BlackChecker.png";
-RedChecker = new Image();
+var RedChecker = new Image();
 RedChecker.src = "images/RedChecker.png";
-BlackCheckerQueen = new Image();
+var BlackCheckerQueen = new Image();
 BlackCheckerQueen.src = "images/BlackCheckerQueen.png";
-RedCheckerQueen = new Image();
+var RedCheckerQueen = new Image();
 RedCheckerQueen.src = "images/RedCheckerQueen.png";
 
 function New_Game() {

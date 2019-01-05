@@ -1,12 +1,12 @@
-Thecanvas = {
+var Thecanvas = {
     width: 500,
     height: 500
 };
 
-HighScore = 0;
+var HighScore = 0;
 
-keyup = true;
-SnakeImage = new Image();
+var keyup = true;
+var SnakeImage = new Image();
 SnakeImage.src = "images/Snake.png";
 
 
@@ -76,7 +76,7 @@ var myGameArea = {
     }
 }
 
-fruitImage = new Image();
+var fruitImage = new Image();
 fruitImage.src = "images/fruit.png";
 
 function updateGameArea() {

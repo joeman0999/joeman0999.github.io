@@ -3,7 +3,7 @@ var PersonData,
 	canvas;
 
 // Get canvas
-Thecanvas = {
+var Thecanvas = {
 	width: 900,
 	height: 600
 }
