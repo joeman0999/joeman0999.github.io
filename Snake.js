@@ -26,7 +26,7 @@ function New_Game() {
     SnakeDirection = 'up';
     OldSnakeDirection = 'up';
     GameSpeed = 10;
-    NumberofFruit = 100;
+    NumberofFruit = 3;
     fruit = [];
     spawnfruit();
     document.getElementById("Menu").hidden = true;
