@@ -6,7 +6,8 @@
 
 <body>
     <div id="Menu">
-        <button id="Start-Button" class="Menu-Button" onclick="New_Game()">Start</button>
+        <button id="Start-Button" class="Menu-Button" onclick="New_Game('one')">One Player</button>
+        <button id="Start-Button" class="Menu-Button" onclick="New_Game('two')">Two Player</button>
         <button class="Menu-Button" onclick="location.href='index.html'">Exit Game</button>
 
 
@@ -14,8 +15,8 @@
     <div id="ButtonArea" hidden="true">
         <button id="Menu-Button" onclick="Menu()">Main Menu</button>
         <button id="New_Game-Button" onclick="New_Game()">New Game</button>
-        <text id="wins"></text>
     </div>
+    <text id="wins"></text>
 </body>
 
 </html>

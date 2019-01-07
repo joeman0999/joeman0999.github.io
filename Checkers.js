@@ -235,7 +235,7 @@ function updateGameArea() {
     if ((PlayersTurn == "Red" && Computer == "Red") || (PlayersTurn == "Black" && Computer == "Black")) {
         if (!Timedout) {
             Timedout = true;
-            setTimeout(RunComputersTurn, 500);
+            setTimeout(RunComputersRandomTurn, 500);
         }
     }
 }
@@ -268,7 +268,7 @@ function draw(image, Info) {
 }
 
 function clickhandler2P(e) {
-    var i, Overlap, jump
+    var i, Overlap
     Mouse.x = e.clientX - 10;
     Mouse.y = e.clientY - 10;
     if (Mouse.Holds == "Nothing") {
@@ -1085,11 +1085,13 @@ function checkforwin() {
     }
 }
 
-function RunComputersTurn() {
-    var i, option, newx, newy
+function RunComputersRandomTurn() {
+    var i, k, option, newx, newy, oldindex
+    var AIjumpagain = true;
     var movements = [];
     var jumps = [];
     Timedout = false;
+
     if (ComputersMoveList.length == 0) {
         FindMoves();
         for (i = 0; i < ComputersMoveList.length; i++) {
@@ -1113,8 +1115,42 @@ function RunComputersTurn() {
                 }
                 RedCheckers[ComputersMoveList[option].index].x = newx;
                 RedCheckers[ComputersMoveList[option].index].y = newy;
-                if (RedCheckers[ComputersMoveList[option].index].y == 0) {
-                    RedCheckers[ComputersMoveList[option].index].Queen = true;
+                while (AIjumpagain == true) {
+                    oldindex = ComputersMoveList[option].index;
+                    jumps = [];
+                    if (RedCheckers[oldindex].y == 0) {
+                        RedCheckers[oldindex].Queen = true;
+                        AIjumpagain = false;
+                        ComputersMoveList = ComputersMoveList[option].next;
+                    } else if (Math.random() > .5 && Checkforjump('Red', RedCheckers[oldindex])) {
+                        ComputersMoveList = ComputersMoveList[option].next;
+                        FindMoves();
+                        for (i = 0; i < ComputersMoveList.length; i++) {
+                            if (ComputersMoveList[i].type == "jump") {
+                                jumps.push(i);
+                            }
+                        }
+                        for (k = 0; k < jumps.length; k++) {
+                            if (ComputersMoveList[jumps[k]].index == oldindex) {
+                                newx = ComputersMoveList[jumps[k]].positions[0];
+                                newy = ComputersMoveList[jumps[k]].positions[1];
+                                for (i = 0; i < BlackCheckers.length; i++) {
+                                    if (BlackCheckers[i].x == RedCheckers[ComputersMoveList[jumps[k]].index].x + (newx - RedCheckers[ComputersMoveList[jumps[k]].index].x) / 2 && BlackCheckers[i].y == RedCheckers[ComputersMoveList[jumps[k]].index].y + (newy - RedCheckers[ComputersMoveList[jumps[k]].index].y) / 2) {
+                                        BlackCheckers.splice(i, 1);
+                                        break;
+                                    }
+                                }
+                                option = jumps[k];
+                                RedCheckers[ComputersMoveList[jumps[k]].index].x = newx;
+                                RedCheckers[ComputersMoveList[jumps[k]].index].y = newy;
+                                break;
+                            }
+                        }
+                        AIjumpagain = true;
+                    } else {
+                        AIjumpagain = false;
+                        ComputersMoveList = ComputersMoveList[option].next;
+                    }
                 }
             } else {
                 newx = ComputersMoveList[option].positions[0];
@@ -1129,8 +1165,8 @@ function RunComputersTurn() {
                 if (BlackCheckers[ComputersMoveList[option].index].y == 7) {
                     BlackCheckers[ComputersMoveList[option].index].Queen = true;
                 }
+                ComputersMoveList = ComputersMoveList[option].next;
             }
-            ComputersMoveList = ComputersMoveList[option].next;
         } else {
             option = Math.round(Math.random() * (movements.length - 1));
             if (PlayersTurn == "Red") {

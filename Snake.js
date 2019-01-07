@@ -4,11 +4,11 @@ var Thecanvas = {
 };
 
 var HighScore = 0;
-
-var keyup = true;
+var TwoPlayers = false;
 var SnakeImage = new Image();
 SnakeImage.src = "images/Snake.png";
-
+var SnakeImage2 = new Image();
+SnakeImage2.src = "images/Snake2.png";
 
 function CreateNewSnake(x, y) {
     var variable = {
@@ -18,15 +18,59 @@ function CreateNewSnake(x, y) {
     return variable
 }
 
-function New_Game() {
+function One_Player() {
+    TwoPlayers = false;
     Snake = [{
         x: 12,
-        y: 12,
+        y: 12
     }];
     SnakeDirection = 'up';
     OldSnakeDirection = 'up';
     GameSpeed = 10;
     NumberofFruit = 3;
+    fruit = [];
+    spawnfruit();
+    document.getElementById("Menu").hidden = true;
+    document.getElementById("ButtonArea").hidden = false;
+    if (document.getElementById("GameArea")) {
+        document.getElementById("GameArea").hidden = false;
+    }
+    myGameArea.stop();
+    myGameArea.start();
+    document.getElementById("wins").innerHTML = "Score: " + Snake.length;
+}
+
+function New_Game(type) {
+    if (type == 'two') {
+        Two_Player();
+    } else if (type == 'one') {
+        One_Player();
+    }else {
+        if (TwoPlayers) {
+            Two_Player();
+        } else {
+            One_Player();
+        }
+    }
+}
+
+function Two_Player() {
+    TwoPlayers = true;
+    Snake = [{
+        x: 17,
+        y: 6
+    }];
+    Snake2 = [{
+        x: 6,
+        y: 6
+    }]
+    SnakeDirection = 'up';
+    SnakeDirection2 = 'up';
+    OldSnakeDirection = 'up';
+    OldSnakeDirection2 = 'up';
+    GameSpeed = 10;
+    GameSpeed2 = 10;
+    NumberofFruit = 5;
     fruit = [];
     spawnfruit();
     document.getElementById("Menu").hidden = true;
@@ -60,12 +104,14 @@ var myGameArea = {
 
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
-
-        this.interval = setInterval(updateGameArea, 20);
+        if (TwoPlayers == false) {
+            this.interval = setInterval(updateGameArea, 20);
+        } else {
+            this.interval = setInterval(updateGameArea2, 20);
+        }
 
 
         window.addEventListener('keydown', keydownhandler);
-        window.addEventListener('keyup', keyuphandler);
 
     },
     stop: function () {
@@ -171,6 +217,195 @@ function updateGameArea() {
 
 }
 
+function updateGameArea2() {
+    var i, x, y, crashed, hitfruit, hitfruit2, Dead1, Dead2
+    Dead1 = false;
+    Dead2 = false;
+    hitfruit = false;
+    hitfuit2 = false;
+    crashed = false;
+    crashed2 = false;
+    myGameArea.frameNo += 1;
+    myGameArea.clear();
+    spawnfruit();
+    if (Math.round(myGameArea.frameNo / GameSpeed) == myGameArea.frameNo / GameSpeed) {
+        x = Snake[Snake.length - 1].x;
+        y = Snake[Snake.length - 1].y;
+        if (SnakeDirection == 'up') {
+            if (OldSnakeDirection != 'down') {
+                y -= 1;
+                OldSnakeDirection = 'up';
+            } else {
+                y += 1;
+            }
+        } else if (SnakeDirection == 'down') {
+            if (OldSnakeDirection != 'up') {
+                y += 1;
+                OldSnakeDirection = 'down';
+            } else {
+                y -= 1;
+            }
+        } else if (SnakeDirection == 'right') {
+            if (OldSnakeDirection != 'left') {
+                x += 1;
+                OldSnakeDirection = 'right';
+            } else {
+                x -= 1;
+            }
+        } else if (SnakeDirection == 'left') {
+            if (OldSnakeDirection != 'right') {
+                x -= 1;
+                OldSnakeDirection = 'left';
+            } else {
+                x += 1;
+            }
+        }
+        for (i = 0; i < Snake.length; i++) {
+            if (Snake[i].x == x && Snake[i].y == y) {
+                crashed = true;
+                break;
+            }
+        }
+        for (i = 0; i < Snake2.length; i++) {
+            if (Snake2[i].x == x && Snake2[i].y == y) {
+                crashed = true;
+                break;
+            }
+        }
+        for (i = 0; i < fruit.length; i++) {
+            if (fruit[i].x == x && fruit[i].y == y) {
+                hitfruit = true;
+                fruit.splice(i, 1);
+                break;
+            }
+        }
+
+        if (x < 0 || x > 24 || y < 0 || y > 24 || crashed) {
+            myGameArea.stop();
+            Dead1 = true;
+            
+        } else if (hitfruit) {
+            Snake.push(CreateNewSnake(x, y));
+            document.getElementById("wins").innerHTML = "Score Player 1: " + Snake.length + " Score Player 2: " + Snake2.length;
+            if (Snake.length > 199) {
+                GameSpeed = 4;
+            } else if (Snake.length > 149) {
+                GameSpeed = 5;
+            } else if (Snake.length > 99) {
+                GameSpeed = 6;
+            }
+            else if (Snake.length > 74) {
+                GameSpeed = 7;
+            }
+            else if (Snake.length > 49) {
+                GameSpeed = 8;
+            }
+            else if (Snake.length > 24) {
+                GameSpeed = 9;
+            }
+        } else {
+            Snake.push(CreateNewSnake(x, y));
+            Snake.shift();
+        }
+    }
+    if (Math.round(myGameArea.frameNo / GameSpeed2) == myGameArea.frameNo / GameSpeed2) {
+        x = Snake2[Snake2.length - 1].x;
+        y = Snake2[Snake2.length - 1].y;
+        if (SnakeDirection2 == 'up') {
+            if (OldSnakeDirection2 != 'down') {
+                y -= 1;
+                OldSnakeDirection2 = 'up';
+            } else {
+                y += 1;
+            }
+        } else if (SnakeDirection2 == 'down') {
+            if (OldSnakeDirection2 != 'up') {
+                y += 1;
+                OldSnakeDirection2 = 'down';
+            } else {
+                y -= 1;
+            }
+        } else if (SnakeDirection2 == 'right') {
+            if (OldSnakeDirection2 != 'left') {
+                x += 1;
+                OldSnakeDirection2 = 'right';
+            } else {
+                x -= 1;
+            }
+        } else if (SnakeDirection2 == 'left') {
+            if (OldSnakeDirection2 != 'right') {
+                x -= 1;
+                OldSnakeDirection2 = 'left';
+            } else {
+                x += 1;
+            }
+        }
+        for (i = 0; i < Snake.length; i++) {
+            if (Snake[i].x == x && Snake[i].y == y) {
+                crashed2 = true;
+                break;
+            }
+        }
+        for (i = 0; i < Snake2.length; i++) {
+            if (Snake2[i].x == x && Snake2[i].y == y) {
+                crashed2 = true;
+                break;
+            }
+        }
+        for (i = 0; i < fruit.length; i++) {
+            if (fruit[i].x == x && fruit[i].y == y) {
+                hitfruit2 = true;
+                fruit.splice(i, 1);
+                break;
+            }
+        }
+
+        if (x < 0 || x > 24 || y < 0 || y > 24 || crashed2) {
+            myGameArea.stop();
+            Dead2 = true;
+        } else if (hitfruit2) {
+            Snake2.push(CreateNewSnake(x, y));
+            document.getElementById("wins").innerHTML = "Score Player 1: " + Snake.length + " Score Player 2: " + Snake2.length;
+            if (Snake2.length > 199) {
+                GameSpeed = 4;
+            } else if (Snake2.length > 149) {
+                GameSpeed = 5;
+            } else if (Snake2.length > 99) {
+                GameSpeed = 6;
+            }
+            else if (Snake2.length > 74) {
+                GameSpeed = 7;
+            }
+            else if (Snake2.length > 49) {
+                GameSpeed = 8;
+            }
+            else if (Snake2.length > 24) {
+                GameSpeed = 9;
+            }
+        } else {
+            Snake2.push(CreateNewSnake(x, y));
+            Snake2.shift();
+        }
+    }
+    if (Dead1 && Dead2) {
+        alert("Game Over. It's a tie. Length of Player 1: " + Snake.length + ' Length of Player 2: ' + Snake2.length);
+    } else if (Dead1) {
+        alert('Game Over. Player two wins. Length of Player 1: ' + Snake.length + ' Length of Player 2: ' + Snake2.length);
+    } else if (Dead2) {
+        alert('Game Over. Player one wins. Length of Player 1: ' + Snake.length + ' Length of Player 2: ' + Snake2.length);
+    }
+    for (i = 0; i < fruit.length; i++) {
+        renderFruit(fruit[i]);
+    }
+    for (i = 0; i < Snake2.length; i++) {
+        draw(SnakeImage2, Snake2[i])
+    }
+    for (i = 0; i < Snake.length; i++) {
+        draw(SnakeImage, Snake[i])
+    }
+
+}
+
 function draw(image, Info) {
     // works on any image given height width angle and position
 
@@ -193,21 +428,21 @@ function keydownhandler(e) {
 
     if (e.keyCode == 38) {
         SnakeDirection = 'up';
-        keyup = false;
     } else if (e.keyCode == 40) {
         SnakeDirection = 'down';
-        keyup = false;
     } else if (e.keyCode == 39) {
         SnakeDirection = 'right';
-        keyup = false;
     } else if (e.keyCode == 37) {
         SnakeDirection = 'left';
-        keyup = false;
+    } else if (e.keyCode == 87) {
+        SnakeDirection2 = 'up';
+    } else if (e.keyCode == 83) {
+        SnakeDirection2 = 'down';
+    } else if (e.keyCode == 68) {
+        SnakeDirection2 = 'right';
+    } else if (e.keyCode == 65) {
+        SnakeDirection2 = 'left';
     }
-}
-
-function keyuphandler(e) {
-    keyup = true;
 }
 
 function spawnfruit() {
@@ -243,6 +478,11 @@ function spawnfruit() {
     var ylist = [];
     for (i = 0; i < Snake.length; i++) {
         grid[Snake[i].x][Snake[i].y] = true;
+    }
+    if (TwoPlayers) {
+        for (i = 0; i < Snake2.length; i++) {
+            grid[Snake2[i].x][Snake2[i].y] = true;
+        }
     }
     for (i = 0; i < fruit.length; i++) {
         grid[fruit[i].x][fruit[i].y] = true;
