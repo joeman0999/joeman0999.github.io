@@ -419,7 +419,7 @@ function startSoloGame(n) {
         frame: 0
     }
     SoloLevelSelector();
-    myGameArea.start()
+    myGameArea.start();
     document.getElementById("GameArea").hidden = false;
 }
 
@@ -642,7 +642,9 @@ function updateSoloGameArea() {
         alert("Level " + Level + " Completed")
         Level = Level + 1;
         try {
-            localStorage.Max_Level = Level;
+            if (Max_Level < Level) {
+                localStorage.Max_Level = Level;
+            }
         } catch (err) {
             if (Max_Level < Level) {
                 Max_Level = Level;
@@ -2389,6 +2391,7 @@ function CoOpLevelSelector() {
 }
 
 function LevelSelectorScreen() {
+    var i, k
     try {
         if (localStorage.Max_Level) {
             Max_Level = localStorage.Max_Level;
@@ -2403,6 +2406,26 @@ function LevelSelectorScreen() {
     }
     document.getElementById("Menu").hidden = true;
     document.getElementById("Solo_Level_List").hidden = false;
+    
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = localStorage.SavedLevels;
+        }
+        k = 1;
+        for (i = 0; i < SavedLevels.length; i++) {
+            if (SavedLevels.Type == "Solo") {
+                var newButton = document.createElement("BUTTON");
+                var t = document.createTextNode("Saved Level " + k);
+                newButton.appendChild(t);
+                newButton.setAttribute("id", 'PlayerButton_' + k);
+                document.getElementById("Solo_Level_List").appendChild(newButton);
+                document.getElementById("PlayerButton_" + k).onclick = function () { PlayerCreatedLevel(i) };
+                k += 1;
+            }
+        }
+    } catch (err) {
+
+    }
 
     for (i = 2; i <= Max_Level && Max_Level <= 10; i++) {
         document.getElementById("Level" + i).disabled = false;
@@ -2421,6 +2444,26 @@ function CoOpLevelSelectorScreen() {
         if (typeof CoOpMax_Level == "undefined") {
             CoOpMax_Level = 4;
         }
+    }
+
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = localStorage.SavedLevels;
+        }
+        k = 1;
+        for (i = 0; i < SavedLevels.length; i++) {
+            if (SavedLevels.Type == "CoOp") {
+                var newButton = document.createElement("BUTTON");
+                var t = document.createTextNode("Saved Level " + k);
+                newButton.appendChild(t);
+                newButton.setAttribute("id", 'PlayerButton_' + k);
+                document.getElementById("CoOp_Level_List").appendChild(newButton);
+                document.getElementById("PlayerButton_" + k).onclick = function () { PlayerCreatedLevel(i) };
+                k += 1;
+            }
+        }
+    } catch (err) {
+
     }
     document.getElementById("Menu").hidden = true;
     document.getElementById("CoOp_Level_List").hidden = false;
@@ -2769,7 +2812,7 @@ function LevelEditor() {
 }
 
 function updateLevelEditorArea() {
-    var index, Hit, i
+    var i
     frame = frame + 1;
     myGameArea.clear();
     Tank1Data.moveAngle = 0;
@@ -3697,6 +3740,47 @@ function search(grid, start, end, diagonal, heuristic) {
 
     // No result was found - empty array signifies failure to find path.
     return [];
+}
+
+function PlayerCreatedLevel(index) {
+    AIEnemyData = SavedLevels[index].AIEnemyData;
+    AIEnemy = SavedLevels[index].AIEnemy;
+    WALL = SavedLevels[index].WALL;
+    walls = SavedLevels[index].walls;
+    Tank2Data = SavedLevels[index].Tank2Data;
+    Tank1Data = SavedLevels[index].Tank1Data;
+
+    myGameArea.start();
+}
+
+function SaveLevel() {
+    var NewLevel = {
+        Type: LevelEditorInfo.Type,
+        AIEnemyData: AIEnemyData,
+        AIEnemy: AIEnemy,
+        WALL: WALL,
+        walls: walls,
+        Tank2Data: Tank2Data,
+        Tank1Data: Tank1Data
+    }
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = localStorage.SavedLevels;
+            if (SavedLevels.length < 3) {
+                SavedLevels.push(NewLevel);
+                localStorage.SavedLevels = SavedLevels;
+            } else {
+                alert("Max number of levels reached delete a level from the help menu.");
+            }
+        } else {
+            SavedLevels = [];
+            SavedLevels.push(NewLevel);
+            localStorage.SavedLevels = SavedLevels;
+        }
+        alert("Level Saved.")
+    } catch (err) {
+        alert("Level can not be Saved.")
+    }
 }
 
 /*
