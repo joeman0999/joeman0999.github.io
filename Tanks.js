@@ -18,6 +18,8 @@ var Thecanvas = {
     height: 600
 };
 
+var Level_Editor = false;
+
 var Player1Tank = {
     Tank: "images/Tank1.png",
     Move: "WASD",
