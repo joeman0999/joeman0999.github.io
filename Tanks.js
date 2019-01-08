@@ -3811,6 +3811,7 @@ function PlayerLevel(index) {
     VsGame = false;
     CoOpGame = false;
     SoloGame = false;
+    SavedLevels = JSON.parse(localStorage.SavedLevels);
     if (Level_Editor) {
         Level_Editor = true;
     } else if(SavedLevels[index].Type == "Solo") {
