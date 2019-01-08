@@ -341,7 +341,7 @@ function HelpScreen() {
     document.getElementById("Help-Area").hidden = false;
     try {
         if (localStorage.SavedLevels) {
-            SavedLevels = localStorage.SavedLevels;
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
         }
         k = 1;
         for (i = 0; i < SavedLevels.length; i++) {
@@ -2439,7 +2439,7 @@ function LevelSelectorScreen() {
     
     try {
         if (localStorage.SavedLevels) {
-            SavedLevels = localStorage.SavedLevels;
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
         }
         k = 1;
         for (i = 0; i < SavedLevels.length; i++) {
@@ -2478,7 +2478,7 @@ function CoOpLevelSelectorScreen() {
 
     try {
         if (localStorage.SavedLevels) {
-            SavedLevels = localStorage.SavedLevels;
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
         }
         k = 1;
         for (i = 0; i < SavedLevels.length; i++) {
@@ -3796,17 +3796,17 @@ function SaveLevel() {
     }
     try {
         if (localStorage.SavedLevels) {
-            SavedLevels = localStorage.SavedLevels;
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
             if (SavedLevels.length < 3) {
                 SavedLevels.push(NewLevel);
-                localStorage.SavedLevels = SavedLevels;
+                localStorage.SavedLevels = JSON.stringify(SavedLevels);
             } else {
                 alert("Max number of levels reached delete a level from the help menu.");
             }
         } else {
             SavedLevels = [];
             SavedLevels.push(NewLevel);
-            localStorage.SavedLevels = SavedLevels;
+            localStorage.SavedLevels = JSON.stringify(SavedLevels);
         }
         alert("Level Saved.")
     } catch (err) {
@@ -3816,7 +3816,7 @@ function SaveLevel() {
 
 function LevelDelete() {
     SavedLevels.splice(HelpLevel, 1);
-    localStorage.SavedLevels = SavedLevels;
+    localStorage.SavedLevels = JSON.stringify(SavedLevels);
 }
 
 /*
