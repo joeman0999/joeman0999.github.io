@@ -354,13 +354,24 @@ function HelpScreen() {
             document.getElementById("PlayerButton_" + k).onclick = function (e) {
                 HelpLevel = this.value;
                 AIEnemyData = SavedLevels[this.value].AIEnemyData;
-                AIEnemy = SavedLevels[this.value].AIEnemy;
+                AIEnemy = [];
                 WALL = SavedLevels[this.value].WALL;
                 walls = SavedLevels[this.value].walls;
                 Tank2Data = SavedLevels[this.value].Tank2Data;
                 Tank1Data = SavedLevels[this.value].Tank1Data;
-
-                myGameArea.start(); };
+                for (j = 0; j < AIEnemyData.length; j++) {
+                    if (AIEnemyData[j].AIType == "Target") {
+                        AIEnemy.push(new Image());
+                        AIEnemy[AIEnemyData.length - 1].src = "images/Target.png"
+                    } else if (AIEnemyData[j].AIType == "Turret") {
+                        AIEnemy.push(new Image());
+                        AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png"
+                    } else if (AIEnemyData[j].AIType == "Tank") {
+                        AIEnemy.push(new Image());
+                        AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png"
+                    }
+                }
+            }
             k += 1;
         }
         if (k>1) {
@@ -3808,7 +3819,6 @@ function SaveLevel() {
     var NewLevel = {
         Type: LevelEditorInfo.Type,
         AIEnemyData: AIEnemyData,
-        AIEnemy: AIEnemy,
         WALL: WALL,
         walls: walls,
         Tank2Data: Tank2Data,
