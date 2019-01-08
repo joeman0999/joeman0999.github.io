@@ -305,9 +305,11 @@ function TankSelect(Tank, Property, Option) {
 }
 
 function HelpScreen() {
+    HelpLevel = 0;
     Level = 0;
     VsGame = false;
     SoloGame = true;
+    CoOpGame = false;
     Bullets = [];
     Thecanvas = {
         width: 800,
@@ -337,6 +339,32 @@ function HelpScreen() {
     myGameArea.start()
     document.getElementById("GameArea").hidden = false;
     document.getElementById("Help-Area").hidden = false;
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = localStorage.SavedLevels;
+        }
+        k = 1;
+        for (i = 0; i < SavedLevels.length; i++) {
+            var newButton = document.createElement("BUTTON");
+            var t = document.createTextNode("Saved Level " + k);
+            newButton.appendChild(t);
+            newButton.setAttribute("id", 'PlayerButton_' + k);
+            document.getElementById("Help-Area").appendChild(newButton);
+            document.getElementById("PlayerButton_" + k).onclick = function () { PlayerCreatedLevel(i) };
+            k += 1;
+        }
+        if (k>1) {
+            var newButton = document.createElement("BUTTON");
+            var t = document.createTextNode("Delete Level");
+            newButton.appendChild(t);
+            newButton.setAttribute("id", 'Delete_Level');
+            document.getElementById("Help-Area").appendChild(newButton);
+            document.getElementById("Delete_Level").onclick = function () { LevelDelete() };
+            k += 1;
+        }
+    } catch (err) {
+
+    }
 }
 
 function startVSGame() {
@@ -3743,6 +3771,7 @@ function search(grid, start, end, diagonal, heuristic) {
 }
 
 function PlayerCreatedLevel(index) {
+    HelpLevel = index;
     AIEnemyData = SavedLevels[index].AIEnemyData;
     AIEnemy = SavedLevels[index].AIEnemy;
     WALL = SavedLevels[index].WALL;
@@ -3781,6 +3810,11 @@ function SaveLevel() {
     } catch (err) {
         alert("Level can not be Saved.")
     }
+}
+
+function LevelDelete() {
+    SavedLevels.splice(HelpLevel, 1);
+    localStorage.SavedLevels = SavedLevels;
 }
 
 /*
