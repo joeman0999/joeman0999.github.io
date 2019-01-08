@@ -635,21 +635,25 @@ function updateSoloGameArea() {
         }
     }
 
-    if (AIEnemy.length == 0 && Level > 0) {
+    if (AIEnemy.length == 0 && Level != 0) {
         myGameArea.keys = [];
         myGameArea.stop();
         myGameArea.clear();
         document.getElementById("Play-Button").disabled = true;
-        alert("Level " + Level + " Completed")
-        Level = Level + 1;
-        try {
-            if (Max_Level < Level) {
-                localStorage.Max_Level = Level;
+        if (Level > 0) {
+            alert("Level " + Level + " Completed");
+            Level = Level + 1;
+            try {
+                if (Max_Level < Level) {
+                    localStorage.Max_Level = Level;
+                }
+            } catch (err) {
+                if (Max_Level < Level) {
+                    Max_Level = Level;
+                }
             }
-        } catch (err) {
-            if (Max_Level < Level) {
-                Max_Level = Level;
-            }
+        } else {
+            alert("Level Completed");
         }
         return;
     }
@@ -755,21 +759,25 @@ function updateCoOpGameArea() {
         }
     }
 
-    if (AIEnemy.length == 0 && Level > 0) {
+    if (AIEnemy.length == 0 && Level != 0) {
         myGameArea.keys = [];
         myGameArea.stop();
         myGameArea.clear();
         document.getElementById("Play-Button").disabled = true;
-        alert("Level " + Level + " Completed")
-        Level = Level + 1;
-        try {
-            if (localStorage.CoOpMax_Level < Level) {
-                localStorage.CoOpMax_Level = Level;
+        if (Level > 0) {
+            alert("Level " + Level + " Completed");
+            Level = Level + 1;
+            try {
+                if (CoOpMax_Level < Level) {
+                    localStorage.CoOpMax_Level = Level;
+                }
+            } catch (err) {
+                if (CoOpMax_Level < Level) {
+                    CoOpMax_Level = Level;
+                }
             }
-        } catch (err) {
-            if (CoOpMax_Level < Level) {
-                CoOpMax_Level = Level;
-            }
+        } else {
+            alert("Level Completed");
         }
         return;
     }
@@ -3759,7 +3767,7 @@ function SaveLevel() {
                 SavedLevels.push(NewLevel);
                 localStorage.SavedLevels = JSON.stringify(SavedLevels);
             } else {
-                alert("Max number of levels reached delete a level from the help menu.");
+                alert("Max number of levels reached delete a level to save.");
             }
         } else {
             SavedLevels = [];
@@ -3793,15 +3801,16 @@ function PlayerLevel(index) {
     var j
     Level = -1;
     VsGame = false;
-    Level_Editor = false;
     CoOpGame = false;
     SoloGame = false;
-    if (SavedLevels[index].Type == "Solo") {
+    if (Level_Editor) {
+        Level_Editor = true;
+    } else if(SavedLevels[index].Type == "Solo") {
         SoloGame = true;
+        Level_Editor = false;
     } else if (SavedLevels[index].Type == "CoOp") {
         CoOpGame = true;
-    } else {
-        Level_Editor = true;
+        Level_Editor = false;
     }
 
     Bullets = [];
@@ -3821,6 +3830,12 @@ function PlayerLevel(index) {
     walls = SavedLevels[index].walls;
     Tank2Data = SavedLevels[index].Tank2Data;
     Tank1Data = SavedLevels[index].Tank1Data;
+
+    for (j = 0; j < walls.length; j++) {
+        WALL.push(new Image())
+        WALL[walls.length - 1].src = "images/Wall.png";
+    }
+
     if (Level_Editor) {
         for (j = 0; j < AIEnemyData.length; j++) {
             if (AIEnemyData[j].AIType == "Target") {
@@ -3849,13 +3864,9 @@ function PlayerLevel(index) {
                 AIEnemyData[j].Fireframe = 5;
             }
         }
-    }
-    for (j = 0; j < walls.length; j++) {
-        WALL.push(new Image())
-        WALL[walls.length - 1].src = "images/Wall.png";
+        myGameArea.start();
     }
 
-    myGameArea.start();
     document.getElementById("GameArea").hidden = false;
 }
 
