@@ -3792,8 +3792,15 @@ function LevelDelete(index) {
 function PlayerLevel(index) {
     var j
     VsGame = false;
-    CoOpGame = false;
-    SoloGame = true;
+    Level_Editor = false;
+    if (SavedLevels[index].Type == "Solo") {
+        CoOpGame = false;
+        SoloGame = true;
+    } else {
+        CoOpGame = true;
+        SoloGame = false;
+    }
+
     Bullets = [];
 
     document.getElementById("Menu").hidden = true;
