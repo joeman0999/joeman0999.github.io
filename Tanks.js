@@ -3781,6 +3781,7 @@ function SaveLevel() {
             SavedLevels = [];
             SavedLevels.push(NewLevel);
             localStorage.SavedLevels = JSON.stringify(SavedLevels);
+            alert("Level Saved.");
         }
         for (i = 0; i < 3; i++) {
             document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
@@ -3792,7 +3793,7 @@ function SaveLevel() {
             document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
             document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
         }
-        alert("Level Saved.");
+        
     } catch (err) {
         alert("Level can not be Saved.")
     }
@@ -3890,6 +3891,13 @@ function PlayerLevel(index) {
     document.getElementById("GameArea").hidden = false;
 }
 
+function ResetData() {
+    try {
+        localStorage.clear();
+    } catch (err) {
+    
+    }
+}
 
 /*
 Things to Add:
