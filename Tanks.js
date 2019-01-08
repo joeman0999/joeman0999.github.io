@@ -3808,17 +3808,18 @@ function PlayerLevel(index) {
     } else if(SavedLevels[index].Type == "Solo") {
         SoloGame = true;
         Level_Editor = false;
+        document.getElementById("ButtonArea").hidden = false;
     } else if (SavedLevels[index].Type == "CoOp") {
         CoOpGame = true;
         Level_Editor = false;
+        document.getElementById("ButtonArea").hidden = false;
     }
 
     Bullets = [];
-
     document.getElementById("Menu").hidden = true;
     document.getElementById("Solo_Level_List").hidden = true;
     document.getElementById("CoOp_Level_List").hidden = true;
-    document.getElementById("ButtonArea").hidden = false;
+    
     Tank1 = new Image();
     Tank1.src = Player1Tank.Tank;
     Tank2 = new Image();
