@@ -3822,13 +3822,15 @@ function PlayerLevel(index) {
     for (j = 0; j < AIEnemyData.length; j++) {
         if (AIEnemyData[j].AIType == "Target") {
             AIEnemy.push(new Image());
-            AIEnemy[AIEnemyData.length - 1].src = "images/Target.png"
+            AIEnemy[AIEnemyData.length - 1].src = "images/Target.png";
         } else if (AIEnemyData[j].AIType == "Turret") {
             AIEnemy.push(new Image());
-            AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png"
+            AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png";
+            AIEnemyData[j].Fireframe = 5;
         } else if (AIEnemyData[j].AIType == "Tank") {
             AIEnemy.push(new Image());
-            AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png"
+            AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png";
+            AIEnemyData[j].Fireframe = 5;
         }
     }
     for (j = 0; j < walls.length; j++) {
