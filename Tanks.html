@@ -38,6 +38,9 @@
             <button id="Level8" class="Level-Button" onclick="startSoloGame(8)" disabled = "true">8</button>
             <button id="Level9" class="Level-Button" onclick="startSoloGame(9)" disabled = "true">9</button>
             <button id="Level10" class="Level-Button" onclick="startSoloGame(10)" disabled="true">10</button>
+            <button id="SoloPlayerLevel1" class="Level-Button" onclick="PlayerLevel(0)" hidden = "true">Player Level 1</button>
+            <button id="SoloPlayerLevel2" class="Level-Button" onclick="PlayerLevel(1)" hidden="true">Player Level 2</button>
+            <button id="SoloPlayerLevel3" class="Level-Button" onclick="PlayerLevel(2)" hidden="true">Player Level 3</button>
     </div>
 
     <div id="CoOp_Level_List" hidden = "true">
@@ -47,6 +50,9 @@
         <button id="CoOpLevel2" class="Level-Button" onclick="StartCoOpGame(2)" disabled = "true">2</button>
         <button id="CoOpLevel3" class="Level-Button" onclick="StartCoOpGame(3)" disabled = "true">3</button>
         <button id="CoOpLevel4" class="Level-Button" onclick="StartCoOpGame(4)" disabled = "true">4</button>
+        <button id="CoOpPlayerLevel1" class="Level-Button" onclick="PlayerLevel(0)" hidden="true">Player Level 1</button>
+        <button id="CoOpPlayerLevel2" class="Level-Button" onclick="PlayerLevel(1)" hidden="true">Player Level 2</button>
+        <button id="CoOpPlayerLevel3" class="Level-Button" onclick="PlayerLevel(2)" hidden="true">Player Level 3</button>
         <!-- <button id="CoOpLevel5" class="Level-Button" onclick="StartCoOpGame(5)" disabled = "true">5</button>
         <button id="CoOpLevel6" class="Level-Button" onclick="StartCoOpGame(6)" disabled = "true">6</button>
         <button id="CoOpLevel7" class="Level-Button" onclick="StartCoOpGame(7)" disabled = "true">7</button>
@@ -81,7 +87,12 @@
             <option value = 1>Turret</option>
             <option value = 2>Tank</option>
         </select>
-
+        <button id="EditPlayerLevel1" class="Level-Button" onclick="PlayerLevel(0)" hidden="true">Load Player Level 1</button>
+        <button id="EditPlayerLevel2" class="Level-Button" onclick="PlayerLevel(1)" hidden="true">Load Player Level 2</button>
+        <button id="EditPlayerLevel3" class="Level-Button" onclick="PlayerLevel(2)" hidden="true">Load Player Level 3</button>
+        <button id="DeletePlayerLevel1" class="Level-Button" onclick="LevelDelete(0)" hidden="true">Delete Players Level 1</button>
+        <button id="DeletelayerLevel2" class="Level-Button" onclick="LevelDelete(1)" hidden="true">Delete Players Level 2</button>
+        <button id="DeletePlayerLevel3" class="Level-Button" onclick="LevelDelete(2)" hidden="true">Delete Players Level 3</button>
     </div>
 
     <div id="Help-Area" hidden = "true">

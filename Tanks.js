@@ -305,7 +305,6 @@ function TankSelect(Tank, Property, Option) {
 }
 
 function HelpScreen() {
-    HelpLevel = 0;
     Level = 0;
     VsGame = false;
     SoloGame = true;
@@ -339,53 +338,6 @@ function HelpScreen() {
     myGameArea.start()
     document.getElementById("GameArea").hidden = false;
     document.getElementById("Help-Area").hidden = false;
-    try {
-        if (localStorage.SavedLevels) {
-            SavedLevels = JSON.parse(localStorage.SavedLevels);
-        }
-        k = 1;
-        for (i = 0; i < SavedLevels.length; i++) {
-            var newButton = document.createElement("BUTTON");
-            var t = document.createTextNode("Saved Level " + k);
-            newButton.appendChild(t);
-            newButton.setAttribute("id", 'PlayerButton_' + k);
-            document.getElementById("Help-Area").appendChild(newButton);
-            document.getElementById("PlayerButton_" + k).value = i;
-            document.getElementById("PlayerButton_" + k).onclick = function (e) {
-                HelpLevel = this.value;
-                AIEnemyData = SavedLevels[this.value].AIEnemyData;
-                AIEnemy = [];
-                WALL = SavedLevels[this.value].WALL;
-                walls = SavedLevels[this.value].walls;
-                Tank2Data = SavedLevels[this.value].Tank2Data;
-                Tank1Data = SavedLevels[this.value].Tank1Data;
-                for (j = 0; j < AIEnemyData.length; j++) {
-                    if (AIEnemyData[j].AIType == "Target") {
-                        AIEnemy.push(new Image());
-                        AIEnemy[AIEnemyData.length - 1].src = "images/Target.png"
-                    } else if (AIEnemyData[j].AIType == "Turret") {
-                        AIEnemy.push(new Image());
-                        AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png"
-                    } else if (AIEnemyData[j].AIType == "Tank") {
-                        AIEnemy.push(new Image());
-                        AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png"
-                    }
-                }
-            }
-            k += 1;
-        }
-        if (k>1) {
-            var newButton = document.createElement("BUTTON");
-            var t = document.createTextNode("Delete Level");
-            newButton.appendChild(t);
-            newButton.setAttribute("id", 'Delete_Level');
-            document.getElementById("Help-Area").appendChild(newButton);
-            document.getElementById("Delete_Level").onclick = function () { LevelDelete() };
-            k += 1;
-        }
-    } catch (err) {
-
-    }
 }
 
 function startVSGame() {
@@ -2464,25 +2416,8 @@ function LevelSelectorScreen() {
         }
         k = 1;
         for (i = 0; i < SavedLevels.length; i++) {
-            if (SavedLevels.Type == "Solo") {
-                var newButton = document.createElement("BUTTON");
-                var t = document.createTextNode("Saved Level " + k);
-                newButton.appendChild(t);
-                newButton.setAttribute("id", 'PlayerButton_' + k);
-                document.getElementById("Solo_Level_List").appendChild(newButton);
-                document.getElementById("PlayerButton_" + k).value = i;
-                document.getElementById("PlayerButton_" + k).onclick = function (e) {
-                    HelpLevel = this.value;
-                    AIEnemyData = SavedLevels[this.value].AIEnemyData;
-                    AIEnemy = SavedLevels[this.value].AIEnemy;
-                    WALL = SavedLevels[this.value].WALL;
-                    walls = SavedLevels[this.value].walls;
-                    Tank2Data = SavedLevels[this.value].Tank2Data;
-                    Tank1Data = SavedLevels[this.value].Tank1Data;
-
-                    myGameArea.start();
-                };
-                k += 1;
+            if (SavedLevels[i].Type == "Solo") {
+                document.getElementById("SoloPlayerLevel" + (i+1)).hidden = false;
             }
         }
     } catch (err) {
@@ -2514,25 +2449,8 @@ function CoOpLevelSelectorScreen() {
         }
         k = 1;
         for (i = 0; i < SavedLevels.length; i++) {
-            if (SavedLevels.Type == "CoOp") {
-                var newButton = document.createElement("BUTTON");
-                var t = document.createTextNode("Saved Level " + k);
-                newButton.appendChild(t);
-                newButton.setAttribute("id", 'PlayerButton_' + k);
-                document.getElementById("CoOp_Level_List").appendChild(newButton);
-                document.getElementById("PlayerButton_" + k).value = i;
-                document.getElementById("PlayerButton_" + k).onclick = function (e) {
-                    HelpLevel = this.value;
-                    AIEnemyData = SavedLevels[this.value].AIEnemyData;
-                    AIEnemy = SavedLevels[this.value].AIEnemy;
-                    WALL = SavedLevels[this.value].WALL;
-                    walls = SavedLevels[this.value].walls;
-                    Tank2Data = SavedLevels[this.value].Tank2Data;
-                    Tank1Data = SavedLevels[this.value].Tank1Data;
-
-                    myGameArea.start();
-                };
-                k += 1;
+            if (SavedLevels[i].Type == "CoOp") {
+                document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = false;
             }
         }
     } catch (err) {
@@ -2879,6 +2797,17 @@ function LevelEditor() {
         Shape: "Rect",
         frame: 0,
         Alive: false
+    }
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
+        }
+        for (i = 0; i < SavedLevels.length; i++) {
+            document.getElementById("EditlayerLevel" + (i + 1)).hidden = false;
+            document.getElementById("DeletelayerLevel" + (i + 1)).hidden = false;
+        }
+    } catch (err) {
+
     }
     myGameArea.start() // starts the game loop and initializes more data
     document.getElementById("GameArea").hidden = false; // ensures the game area is not hidden
@@ -3819,7 +3748,6 @@ function SaveLevel() {
     var NewLevel = {
         Type: LevelEditorInfo.Type,
         AIEnemyData: AIEnemyData,
-        WALL: WALL,
         walls: walls,
         Tank2Data: Tank2Data,
         Tank1Data: Tank1Data
@@ -3844,10 +3772,66 @@ function SaveLevel() {
     }
 }
 
-function LevelDelete() {
-    SavedLevels.splice(HelpLevel, 1);
+function LevelDelete(index) {
+    var i
+    SavedLevels.splice(index, 1);
     localStorage.SavedLevels = JSON.stringify(SavedLevels);
+    for (i = 0; i < 3; i++) {
+        document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
+        document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = true;
+        document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = true;
+        document.getElementById("EditlayerLevel" + (i + 1)).hidden = true;
+    }
+    for (i = 0; i < SavedLevels.length; i++) {
+        document.getElementById("EditlayerLevel" + (i + 1)).hidden = false;
+        document.getElementById("DeletelayerLevel" + (i + 1)).hidden = false;
+    }
+    
 }
+
+function PlayerLevel(index) {
+    var j
+    VsGame = false;
+    CoOpGame = false;
+    SoloGame = true;
+    Bullets = [];
+
+    document.getElementById("Menu").hidden = true;
+    document.getElementById("Solo_Level_List").hidden = true;
+    document.getElementById("CoOp_Level_List").hidden = true;
+    document.getElementById("ButtonArea").hidden = false;
+    Tank1 = new Image();
+    Tank1.src = Player1Tank.Tank;
+    Tank2 = new Image();
+    Tank2.src = Player2Tank.Tank;
+
+    AIEnemyData = SavedLevels[index].AIEnemyData;
+    AIEnemy = [];
+    WALL = [];
+    walls = SavedLevels[index].walls;
+    Tank2Data = SavedLevels[index].Tank2Data;
+    Tank1Data = SavedLevels[index].Tank1Data;
+    for (j = 0; j < AIEnemyData.length; j++) {
+        if (AIEnemyData[j].AIType == "Target") {
+            AIEnemy.push(new Image());
+            AIEnemy[AIEnemyData.length - 1].src = "images/Target.png"
+        } else if (AIEnemyData[j].AIType == "Turret") {
+            AIEnemy.push(new Image());
+            AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png"
+        } else if (AIEnemyData[j].AIType == "Tank") {
+            AIEnemy.push(new Image());
+            AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png"
+        }
+    }
+    for (j = 0; j < walls.length; j++) {
+        WALL.push(new Image())
+        WALL[walls.length - 1].src = "images/Wall.png";
+    }
+
+    myGameArea.start();
+    document.getElementById("GameArea").hidden = false;
+}
+
 
 /*
 Things to Add:
@@ -3855,6 +3839,7 @@ Things to Add:
 Walls:
     add more types like buildings
     add water, bridges, different shaped walls
+    When loading saved walls they are all black lines
  
 AI:
     add different classes
@@ -3870,5 +3855,6 @@ AI:
 All
     add more levels
     Turrets and targets can be run over
+    image saving for walls and turets and targets to draw based soley off the data to save memory. one instance of the image redrawn in other locations
 */
 
