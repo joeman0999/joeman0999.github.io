@@ -3791,6 +3791,7 @@ function LevelDelete(index) {
 
 function PlayerLevel(index) {
     var j
+    Level = 0;
     VsGame = false;
     Level_Editor = false;
     if (SavedLevels[index].Type == "Solo") {
