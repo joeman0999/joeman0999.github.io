@@ -3782,7 +3782,17 @@ function SaveLevel() {
             SavedLevels.push(NewLevel);
             localStorage.SavedLevels = JSON.stringify(SavedLevels);
         }
-        alert("Level Saved.")
+        for (i = 0; i < 3; i++) {
+            document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
+            document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = true;
+            document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = true;
+            document.getElementById("EditPlayerLevel" + (i + 1)).hidden = true;
+        }
+        for (i = 0; i < SavedLevels.length; i++) {
+            document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
+            document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
+        }
+        alert("Level Saved.");
     } catch (err) {
         alert("Level can not be Saved.")
     }
@@ -3802,7 +3812,7 @@ function LevelDelete(index) {
         document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
         document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
     }
-    
+    alert("Level Deleted.");
 }
 
 function PlayerLevel(index) {
