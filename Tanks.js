@@ -790,7 +790,9 @@ function updateCoOpGameArea() {
         alert("Level " + Level + " Completed")
         Level = Level + 1;
         try {
-            localStorage.CoOpMax_Level = Level;
+            if (localStorage.CoOpMax_Level < Level) {
+                localStorage.CoOpMax_Level = Level;
+            }
         } catch (err) {
             if (CoOpMax_Level < Level) {
                 CoOpMax_Level = Level;
