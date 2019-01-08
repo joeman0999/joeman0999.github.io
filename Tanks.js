@@ -350,7 +350,17 @@ function HelpScreen() {
             newButton.appendChild(t);
             newButton.setAttribute("id", 'PlayerButton_' + k);
             document.getElementById("Help-Area").appendChild(newButton);
-            document.getElementById("PlayerButton_" + k).onclick = function () { PlayerCreatedLevel(i) };
+            document.getElementById("PlayerButton_" + k).value = i;
+            document.getElementById("PlayerButton_" + k).onclick = function (e) {
+                HelpLevel = this.value;
+                AIEnemyData = SavedLevels[this.value].AIEnemyData;
+                AIEnemy = SavedLevels[this.value].AIEnemy;
+                WALL = SavedLevels[this.value].WALL;
+                walls = SavedLevels[this.value].walls;
+                Tank2Data = SavedLevels[this.value].Tank2Data;
+                Tank1Data = SavedLevels[this.value].Tank1Data;
+
+                myGameArea.start(); };
             k += 1;
         }
         if (k>1) {
@@ -2449,7 +2459,18 @@ function LevelSelectorScreen() {
                 newButton.appendChild(t);
                 newButton.setAttribute("id", 'PlayerButton_' + k);
                 document.getElementById("Solo_Level_List").appendChild(newButton);
-                document.getElementById("PlayerButton_" + k).onclick = function () { PlayerCreatedLevel(i) };
+                document.getElementById("PlayerButton_" + k).value = i;
+                document.getElementById("PlayerButton_" + k).onclick = function (e) {
+                    HelpLevel = this.value;
+                    AIEnemyData = SavedLevels[this.value].AIEnemyData;
+                    AIEnemy = SavedLevels[this.value].AIEnemy;
+                    WALL = SavedLevels[this.value].WALL;
+                    walls = SavedLevels[this.value].walls;
+                    Tank2Data = SavedLevels[this.value].Tank2Data;
+                    Tank1Data = SavedLevels[this.value].Tank1Data;
+
+                    myGameArea.start();
+                };
                 k += 1;
             }
         }
@@ -2488,7 +2509,18 @@ function CoOpLevelSelectorScreen() {
                 newButton.appendChild(t);
                 newButton.setAttribute("id", 'PlayerButton_' + k);
                 document.getElementById("CoOp_Level_List").appendChild(newButton);
-                document.getElementById("PlayerButton_" + k).onclick = function () { PlayerCreatedLevel(i) };
+                document.getElementById("PlayerButton_" + k).value = i;
+                document.getElementById("PlayerButton_" + k).onclick = function (e) {
+                    HelpLevel = this.value;
+                    AIEnemyData = SavedLevels[this.value].AIEnemyData;
+                    AIEnemy = SavedLevels[this.value].AIEnemy;
+                    WALL = SavedLevels[this.value].WALL;
+                    walls = SavedLevels[this.value].walls;
+                    Tank2Data = SavedLevels[this.value].Tank2Data;
+                    Tank1Data = SavedLevels[this.value].Tank1Data;
+
+                    myGameArea.start();
+                };
                 k += 1;
             }
         }
@@ -3770,18 +3802,6 @@ function search(grid, start, end, diagonal, heuristic) {
 
     // No result was found - empty array signifies failure to find path.
     return [];
-}
-
-function PlayerCreatedLevel(index) {
-    HelpLevel = index;
-    AIEnemyData = SavedLevels[index].AIEnemyData;
-    AIEnemy = SavedLevels[index].AIEnemy;
-    WALL = SavedLevels[index].WALL;
-    walls = SavedLevels[index].walls;
-    Tank2Data = SavedLevels[index].Tank2Data;
-    Tank1Data = SavedLevels[index].Tank1Data;
-
-    myGameArea.start();
 }
 
 function SaveLevel() {
