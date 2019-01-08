@@ -669,7 +669,7 @@ function updateSoloGameArea() {
     Tank1Data.moveAngle = 0;
     Tank1Data.speed = 0;
 
-    if (myGameArea.keys && myGameArea.keys[80] && Level > 0) {
+    if (myGameArea.keys && myGameArea.keys[80] && Level != 0) {
         myGameArea.stop();
     }
 
@@ -694,7 +694,7 @@ function updateSoloGameArea() {
         Tank1Data.speed = -3;
     }
 
-    if (myGameArea.keys && myGameArea.keys[78] && Level > 0) {
+    if (myGameArea.keys && myGameArea.keys[78] && Level != 0) {
         Reset();
     }
 
