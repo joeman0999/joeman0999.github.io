@@ -3796,11 +3796,11 @@ function LevelDelete(index) {
         document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
         document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = true;
         document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = true;
-        document.getElementById("EditlayerLevel" + (i + 1)).hidden = true;
+        document.getElementById("EditPlayerLevel" + (i + 1)).hidden = true;
     }
     for (i = 0; i < SavedLevels.length; i++) {
-        document.getElementById("EditlayerLevel" + (i + 1)).hidden = false;
-        document.getElementById("DeletelayerLevel" + (i + 1)).hidden = false;
+        document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
+        document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
     }
     
 }
