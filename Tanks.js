@@ -107,7 +107,9 @@ function Reset() {
     document.getElementById("Play-Button").disabled = true;
     document.getElementById("Pause-Button").disabled = false;
     myGameArea.keys[78] = false;
-    if (VsGame) {
+    if (Level<0) {
+        PlayerLevel((Level*-1)-1)
+    } else if (VsGame) {
         Tank2Data = {
             x: 1200,
             y: 300,
@@ -3805,7 +3807,7 @@ function LevelDelete(index) {
 
 function PlayerLevel(index) {
     var j
-    Level = -1;
+    Level = -1 * (index + 1);
     VsGame = false;
     CoOpGame = false;
     SoloGame = false;
