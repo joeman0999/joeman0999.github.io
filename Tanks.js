@@ -2803,8 +2803,8 @@ function LevelEditor() {
             SavedLevels = JSON.parse(localStorage.SavedLevels);
         }
         for (i = 0; i < SavedLevels.length; i++) {
-            document.getElementById("EditlayerLevel" + (i + 1)).hidden = false;
-            document.getElementById("DeletelayerLevel" + (i + 1)).hidden = false;
+            document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
+            document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
         }
     } catch (err) {
 
@@ -3791,15 +3791,17 @@ function LevelDelete(index) {
 
 function PlayerLevel(index) {
     var j
-    Level = 0;
+    Level = -1;
     VsGame = false;
     Level_Editor = false;
+    CoOpGame = false;
+    SoloGame = false;
     if (SavedLevels[index].Type == "Solo") {
-        CoOpGame = false;
         SoloGame = true;
-    } else {
+    } else if (SavedLevels[index].Type == "CoOp") {
         CoOpGame = true;
-        SoloGame = false;
+    } else {
+        Level_Editor = true;
     }
 
     Bullets = [];
@@ -3819,18 +3821,33 @@ function PlayerLevel(index) {
     walls = SavedLevels[index].walls;
     Tank2Data = SavedLevels[index].Tank2Data;
     Tank1Data = SavedLevels[index].Tank1Data;
-    for (j = 0; j < AIEnemyData.length; j++) {
-        if (AIEnemyData[j].AIType == "Target") {
-            AIEnemy.push(new Image());
-            AIEnemy[AIEnemyData.length - 1].src = "images/Target.png";
-        } else if (AIEnemyData[j].AIType == "Turret") {
-            AIEnemy.push(new Image());
-            AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png";
-            AIEnemyData[j].Fireframe = 5;
-        } else if (AIEnemyData[j].AIType == "Tank") {
-            AIEnemy.push(new Image());
-            AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png";
-            AIEnemyData[j].Fireframe = 5;
+    if (Level_Editor) {
+        for (j = 0; j < AIEnemyData.length; j++) {
+            if (AIEnemyData[j].AIType == "Target") {
+                AIEnemy.push(new Image());
+                AIEnemy[AIEnemyData.length - 1].src = "images/Target.png";
+            } else if (AIEnemyData[j].AIType == "Turret") {
+                AIEnemy.push(new Image());
+                AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png";
+            } else if (AIEnemyData[j].AIType == "Tank") {
+                AIEnemy.push(new Image());
+                AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png";
+            }
+        }
+    } else {
+        for (j = 0; j < AIEnemyData.length; j++) {
+            if (AIEnemyData[j].AIType == "Target") {
+                AIEnemy.push(new Image());
+                AIEnemy[AIEnemyData.length - 1].src = "images/Target.png";
+            } else if (AIEnemyData[j].AIType == "Turret") {
+                AIEnemy.push(new Image());
+                AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png";
+                AIEnemyData[j].Fireframe = 5;
+            } else if (AIEnemyData[j].AIType == "Tank") {
+                AIEnemy.push(new Image());
+                AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png";
+                AIEnemyData[j].Fireframe = 5;
+            }
         }
     }
     for (j = 0; j < walls.length; j++) {
