@@ -201,6 +201,8 @@ var myGameArea = {
         myGameArea.keys = [];
         document.getElementById("Play-Button").disabled = false;
         document.getElementById("Pause-Button").disabled = true;
+        document.getElementById("Play2-Button").disabled = false;
+        document.getElementById("Pause2-Button").disabled = true;
         clearInterval(this.interval);
         this.interval = setInterval(TrackReset, 20);
     },
@@ -215,6 +217,8 @@ var myGameArea = {
             this.interval = setInterval(updateCoOpGameArea, 20);
         } else if (Level_Editor) {
             this.interval = setInterval(updateLevelEditorArea, 20);
+            document.getElementById("Play2-Button").disabled = true;
+            document.getElementById("Pause2-Button").disabled = false;
         }
     },
     clear: function () {
