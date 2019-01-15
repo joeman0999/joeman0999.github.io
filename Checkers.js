@@ -136,11 +136,7 @@ var myGameArea = {
     start: function () {
         New_Game();
         myGameArea.keys = [];
-        frame = 0;
-
         this.canvas.setAttribute("id", "GameArea")
-        this.canvas.setAttribute("width", Thecanvas.width);
-        this.canvas.setAttribute("height", Thecanvas.height);
         this.canvas.width = Thecanvas.width;
         this.canvas.height = Thecanvas.height;
         this.context = this.canvas.getContext("2d");

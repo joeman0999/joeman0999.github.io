@@ -151,15 +151,12 @@ var myGameArea = {
         document.getElementById("Play-Button").disabled = true;
         document.getElementById("Pause-Button").disabled = false;
         frame = 0;
-        this.canvas.setAttribute("id", "GameArea")
-        this.canvas.setAttribute("width", Thecanvas.width);
-        this.canvas.setAttribute("height", Thecanvas.height);
+        this.canvas.setAttribute("id", "GameArea");
         this.canvas.width = Thecanvas.width;
         this.canvas.height = Thecanvas.height;
         this.context = this.canvas.getContext("2d");
 
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-        this.frameNo = 0;
         if (VsGame) {
             AIEnemy = [];
             this.interval = setInterval(updateVsGameArea, 20);
@@ -3449,12 +3446,11 @@ function DetermineGridMap() { // Determines the grid state for the walls to gene
 }
 
 function FindConnectingPath(Point1, Point2) {
-    var nextBoxes = [];
     var end = {
         x: Math.round(Point2.x / 50),
         y: Math.round(Point2.y / 50),
     }
-    start = {
+    var start = {
         x: Math.round(Point1.x / 50),
         y: Math.round(Point1.y / 50),
         cost: 1,
@@ -3482,12 +3478,13 @@ function InitializeGrid() {
                 g: 0, // g = how long it took to get here
                 h: 0, // h = how far away the end is
                 cost: 1,
-                visited: false,
+                visited: false, // has this square been visited 
+                closed: false, // is the square closed
                 parent: null
             }
 
-            node.visited = false; // has this square been visited 
-            node.closed = false; // is the square closed
+            node.visited = false; 
+            node.closed = false; 
             for (var k = 0, kl = 10; k < kl; k++) {
                 for (var i = 0, il = 10; i < il; i++) {
                     var value = GridMap[x * 10 + k][y * 10 + i];

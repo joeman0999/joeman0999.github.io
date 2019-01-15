@@ -1,7 +1,10 @@
 canvas {
   border: 1px solid #d3d3d3;
+  background-image: url(images/Grass.png);
 }
-
+#ButtonArea{
+  float: right;
+}
 button {
   background: #222  repeat-x;
   font: 20px Helvetica Neue;

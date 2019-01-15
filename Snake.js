@@ -9,6 +9,7 @@ var SnakeImage = new Image();
 SnakeImage.src = "images/Snake.png";
 var SnakeImage2 = new Image();
 SnakeImage2.src = "images/Snake2.png";
+var SnakeDirection2, SnakeDirection, GameSpeed, GameSpeed2, Snake, Snake2, OldSnakeDirection, OldSnakeDirection2, NumberofFruit, fruit
 
 function CreateNewSnake(x, y) {
     var variable = {
@@ -96,8 +97,6 @@ var myGameArea = {
     canvas: document.createElement("canvas"),
     start: function () {
         this.canvas.setAttribute("id", "GameArea")
-        this.canvas.setAttribute("width", Thecanvas.width);
-        this.canvas.setAttribute("height", Thecanvas.height);
         this.canvas.width = Thecanvas.width;
         this.canvas.height = Thecanvas.height;
         this.context = this.canvas.getContext("2d");
@@ -218,11 +217,11 @@ function updateGameArea() {
 }
 
 function updateGameArea2() {
-    var i, x, y, crashed, hitfruit, hitfruit2, Dead1, Dead2
+    var i, x, y, crashed, crashed2, hitfruit, hitfruit2, Dead1, Dead2
     Dead1 = false;
     Dead2 = false;
     hitfruit = false;
-    hitfuit2 = false;
+    hitfruit2 = false;
     crashed = false;
     crashed2 = false;
     myGameArea.frameNo += 1;

@@ -1,6 +1,4 @@
-var PersonData,
-	Person,
-	canvas;
+var PersonData, Person, canvas
 
 // Get canvas
 var Thecanvas = {
@@ -13,19 +11,12 @@ var myGameArea = {
 	start: function () {
 		myGameArea.keys = [];
 		frame = 0;
-
 		this.canvas.setAttribute("id", "GameArea")
-		this.canvas.setAttribute("width", Thecanvas.width);
-		this.canvas.setAttribute("height", Thecanvas.height);
 		this.canvas.width = Thecanvas.width;
 		this.canvas.height = Thecanvas.height;
 		this.context = this.canvas.getContext("2d");
-
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-		this.frameNo = 0;
-
 		this.interval = setInterval(updateGameArea, 20);
-
 		window.addEventListener('keydown', keydownhandler)
 		window.addEventListener('keyup', keyuphandler)
 
