@@ -97,7 +97,7 @@ var myGameArea = {
 }
 
 function updateGameArea() {
-    var i, j, k, x, y, crashed, move, fail
+    var i, j, k, x, y, kk, crashed, move, fail, CatMove, Used, CatList, Options, newOptions, pick, Path, Wall
     fail = false;
     move = false;
     crashed = false;
@@ -214,7 +214,7 @@ function updateGameArea() {
         for (i = 0; i < 25; i++) {
             for (j = 0; j < 25; j++) {
                 if (BigGrid[i][j]) {
-                    var Wall = {
+                    Wall = {
                         x: i,
                         y: j
                     }
@@ -228,49 +228,123 @@ function updateGameArea() {
                 crashed = true;
                 break;
             } else {
+                CatMove = true;
+                CatList = [];
                 GridNodes = InitializeGrid();
-                var Path = FindConnectingPath(Cat[i], Mouse);
+                Path = FindConnectingPath(Cat[i], Mouse);
                 if (Path.length > 0) {
-                    Cat[i].x = Path[0].x;
-                    Cat[i].y = Path[0].y;
-                    if (Cat[i].x == Mouse.x && Cat[i].y == Mouse.y) {
-                        crashed = true;
-                        break;
+                    
+                    for (j = 0; j < Cat.length; j++) {
+                        if (Cat[j].x == Path[0].x && Cat[j].y == Path[0].y) {
+                            CatMove = false;
+                            break;
+                        }
+                    }
+
+                    if (CatMove) {
+                        Cat[i].x = Path[0].x;
+                        Cat[i].y = Path[0].y;
+                        if (Cat[i].x == Mouse.x && Cat[i].y == Mouse.y) {
+                            crashed = true;
+                            break;
+                        }
                     }
                 } else {
                     GridNodes = InitializeGrid();
-                    var Options = Neighbors(GridNodes, Cat[i], false);
-                    var newOptions = [];
+                    Options = Neighbors(GridNodes, Cat[i], false);
+                    newOptions = [];
                     for (j = 0; j < Options.length; j++) {
                         if (!Options[j].visited) {
-                            newOptions.push(Options[j]);
+                            Used = false;
+                            for (k = 0; k < Cat.length; k++) {
+                                if (Options[j].x == Cat[k].x && Options[j].y == Cat[k].y) {
+                                    Used = true;
+                                    break;
+                                }
+                            }
+                            if (!Used) {
+                                newOptions.push(Options[j]);
+                            }
                         }
                     }
                     if (newOptions.length > 0) {
-                        var pick = Math.round(Math.random() * (newOptions.length - 1));
+                        pick = Math.round(Math.random() * (newOptions.length - 1));
                         Cat[i].x = newOptions[pick].x;
                         Cat[i].y = newOptions[pick].y;
                     } else {
-                        Cheese.push(Cat[i]);
-                        Cat.splice(i, 1);
+                        CatList = [];
+                        CatList.push(i);
+
+                        for (j = 0; j < CatList.length; j++) {
+                            for (kk = 0; kk < 4; kk++) {
+                                Used = false;
+                                if (kk == 0) {
+                                    x = Cat[CatList[j]].x + 1;
+                                    y = Cat[CatList[j]].y;
+                                } else if (kk == 1) {
+                                    x = Cat[CatList[j]].x - 1;
+                                    y = Cat[CatList[j]].y;
+                                } else if (kk == 2) {
+                                    x = Cat[CatList[j]].x;
+                                    y = Cat[CatList[j]].y + 1;
+                                } else {
+                                    x = Cat[CatList[j]].x;
+                                    y = Cat[CatList[j]].y - 1;
+                                }
+
+                                if (x > -1 && x < 25 && y > -1 && y < 25 && !BigGrid[x][y]) {
+                                    for (k = 0; k < Cat.length; k++) {
+                                        if (Cat[k].x == x && Cat[k].y == y) {
+                                            Used = true;
+                                            CatList.push(k);
+                                            CatList = CatList.filter(function (item, m, ar) { return ar.indexOf(item) === m; });
+                                            break;
+                                        }
+                                    }
+                                    for (k = 0; k < Cheese.length; k++) {
+                                        if (Cheese[k].x == x && Cheese[k].y == y) {
+                                            Used = true;
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    Used = true;
+                                }
+
+                                if (!Used) {
+                                    CatList = [];
+                                    break;
+                                }
+                            }
+                        }
+
+                        CatList.sort(function (a, b) { return b - a });
+                        for (j = 0; j < CatList.length; j++) {
+                            Cheese.push(Cat[CatList[j]]);
+                            Cat.splice(CatList[j], 1);
+                        }
+
                         SpawnCat();
-                        Score += 100;
+                        Score += 100*CatList.length;
                         document.getElementById("wins").innerHTML = "Score: " + Score;
                     }
                 }
             }
-            draw(CatImage, Cat[i]);
         }
+
         for (i = 0; i < Cheese.length; i++) {
             if (Mouse.x == Cheese[i].x && Mouse.y == Cheese[i].y) {
                 Cheese.splice(i, 1);
                 Score += 100;
                 document.getElementById("wins").innerHTML = "Score: " + Score;
-                continue;
+            } else {
+                draw(CheeseImage, Cheese[i]);
             }
-            draw(CheeseImage, Cheese[i]);
         }
+        for (j = 0; j < Cat.length; j++) {
+            draw(CatImage, Cat[j]);
 
+        }
         draw(MouseImage, Mouse);
         
         if (crashed) {
@@ -324,24 +398,27 @@ function LevelSelect() {
 }
 
 function SpawnCat() {
+    var i, j, k
     var Used = false;
     var xlist = [];
     var ylist = [];
     if (Score/100 >= CATS*2) {
         CATS += 1;
     }
-    for (var i = 0; i < 25; i++) {
-        for (var j = 0; j < 25; j++) {
+    for (i = 0; i < 25; i++) {
+        for (j = 0; j < 25; j++) {
             Used = false;
             if (!BigGrid[i][j]) {
-                for (var k = 0; i < Cat.length; i++) {
+                for (k = 0; k < Cat.length; k++) {
                     if (Cat[k].x == i && Cat[k].y == j) {
                         Used = true;
+                        break;
                     }
                 }
-                for (var k = 0; i < Cheese.length; i++) {
+                for (k = 0; k < Cheese.length; k++) {
                     if (Cheese[k].x == i && Cheese[k].y == j) {
                         Used = true;
+                        break;
                     }
                 }
                 if (Mouse.x == i && Mouse.y == j) {
@@ -415,10 +492,11 @@ function FindConnectingPath(Point1, Point2) {
 }
 
 function InitializeGrid() {
+    var x, y, k
     var GridNodes = [];
-    for (var x = 0; x < 25; x++) {
+    for (x = 0; x < 25; x++) {
         GridNodes[x] = [];
-        for (var y = 0; y < 25; y++) {
+        for (y = 0; y < 25; y++) {
             var node = {
                 x: x,
                 y: y,
@@ -440,6 +518,10 @@ function InitializeGrid() {
             GridNodes[x][y] = node;
         }
     }
+        for (k = 0; k < Cheese.length; k++) {
+            GridNodes[Cheese[k].x][Cheese[k].y].visited = true;
+            GridNodes[Cheese[k].x][Cheese[k].y].closed = true;
+        }
     return GridNodes
 }
 
