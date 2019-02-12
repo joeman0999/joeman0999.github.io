@@ -1,0 +1,27 @@
+<head>
+    <link rel="stylesheet" href="Pong.css" />
+    <script src="Pong.js"></script>
+    <title>Pong</title>
+</head>
+
+<body>
+    <div id="Menu">
+        <button class="Menu-Button" onclick="Difficulty_Select()">One Player</button>
+        <button class="Menu-Button" onclick="Start_Two_Player()">Two Player</button>
+        <button class="Menu-Button" onclick="location.href='index.html'">Exit Game</button>
+
+
+    </div>
+    <div id="DifficultyArea" hidden="true">
+        <button class="Menu-Button" onclick="Start_One_Player(4)">Easy</button>
+        <button class="Menu-Button" onclick="Start_One_Player(5)">Medium</button>
+        <button class="Menu-Button" onclick="Start_One_Player(8)">Hard</button>
+        <button id="Menu-Button"  class="Menu-Button" onclick="Menu()">Main Menu</button>
+    </div>
+    <div id="ButtonArea" hidden="true">
+        <button id="Menu-Button" onclick="Menu()">Main Menu</button>
+        <text id="wins">Left: 0 Right: 0</text>
+    </div>
+</body>
+
+</html>
