@@ -346,6 +346,7 @@ function HelpScreen() {
 }
 
 function startVSGame() {
+    Level = 0;
     VsGame = true;
     SoloGame = false;
     CoOpGame = false;
