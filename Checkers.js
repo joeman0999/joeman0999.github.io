@@ -15,6 +15,8 @@ var BlackCheckerQueen = new Image();
 BlackCheckerQueen.src = "images/BlackCheckerQueen.png";
 var RedCheckerQueen = new Image();
 RedCheckerQueen.src = "images/RedCheckerQueen.png";
+var BackGroundSelect = new Image();
+BackGroundSelect.src = "images/BackGroundSelect.png";
 
 function New_Game() {
     BlackCheckers = [
@@ -129,12 +131,13 @@ function New_Game() {
     jumpagain = false;
     document.getElementById("Jump_Again-Button").hidden = true;
     document.getElementById("End_Turn-Button").hidden = true;
+
+    updateGameArea();
 }
 
 var myGameArea = {
     canvas: document.createElement("canvas"),
     start: function () {
-        New_Game();
         myGameArea.keys = [];
         this.canvas.setAttribute("id", "GameArea")
         this.canvas.width = Thecanvas.width;
@@ -148,16 +151,16 @@ var myGameArea = {
         } else {
             document.getElementById("GameArea").addEventListener('click', clickhandler2P);
         }
-        this.interval = setInterval(updateGameArea, 60);
+
+        New_Game();
     },
     stop: function () {
-        clearInterval(this.interval);
         if (TypeOnePlayer) {
             document.getElementById("GameArea").removeEventListener('click', clickhandler1P);
         } else if (Computer != "None") {
             document.getElementById("GameArea").removeEventListener('click', clickhandler2P);
         }
-        myGameArea.clear;
+        myGameArea.clear();
     },
     clear: function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -213,21 +216,29 @@ function Menu() {
 
 function updateGameArea() {
     var i
+    var Marker = {
+        x: Math.floor(Mouse.x / 68),
+        y: Math.floor(Mouse.y / 68) 
+    }
     myGameArea.clear();
     for (i = 0; i < RedCheckers.length; i++) {
         if (RedCheckers[i].Queen) {
-            draw(RedCheckerQueen, RedCheckers[i])
+            draw(RedCheckerQueen, RedCheckers[i]);
         } else {
-            draw(RedChecker, RedCheckers[i])
+            draw(RedChecker, RedCheckers[i]);
         }
     }
     for (i = 0; i < BlackCheckers.length; i++) {
         if (BlackCheckers[i].Queen) {
-            draw(BlackCheckerQueen, BlackCheckers[i])
+            draw(BlackCheckerQueen, BlackCheckers[i]);
         } else {
-            draw(BlackChecker, BlackCheckers[i])
+            draw(BlackChecker, BlackCheckers[i]);
         }
     }
+    if (Mouse.Holds == "Red" || Mouse.Holds == "Black") {
+        draw(BackGroundSelect, Marker);
+    }
+
     if ((PlayersTurn == "Red" && Computer == "Red") || (PlayersTurn == "Black" && Computer == "Black")) {
         if (!Timedout) {
             Timedout = true;
@@ -475,6 +486,8 @@ function clickhandler2P(e) {
             }
         }
     }
+
+    updateGameArea();
 }
 
 function clickhandler1P(e) {
@@ -691,6 +704,8 @@ function clickhandler1P(e) {
             }
         }
     }
+
+    updateGameArea();
 }
 
 function Checkforjump(playercolor, piece) {
@@ -976,7 +991,7 @@ function checkforwin() {
         }
 
         if (!move) {
-            alert('Black Wins.')
+            alert('Gray Wins.')
         }
     } else {
         for (i = 0; i < BlackCheckers.length; i++) {
@@ -1076,7 +1091,7 @@ function checkforwin() {
         }
 
         if (!move) {
-            alert('Red Wins.')
+            alert('Blue Wins.')
         }
     }
 }
@@ -1188,6 +1203,7 @@ function RunComputersRandomTurn() {
     } else {
         // if I calculated other moves in this move chain
     }
+    updateGameArea();
 }
 
 function CreateNewMove(index, type, positions, next) {

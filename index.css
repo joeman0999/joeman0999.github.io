@@ -1,39 +1,76 @@
-button {
-  background: #222  repeat-x;
-  font: 20px Helvetica Neue;
+body {
+  background-color: black;
+}
+
+.Game-Option {
+  height: 100px;
+}
+
+div.GameGroup {
+  position: relative;
+  left: 0px;
+  margin: auto;
+  padding: 10px 0px 0px 50px;
+}
+
+.Group-text {
   color: white;
-  text-shadow: 0 -1px 1px #222;
-  padding: 6px 10px 6px 10px;
-  border: 0;
-  border-bottom: 1px solid #222;
-  min-width: 80px;
-  -moz-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px #999;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px #999;
+}
+
+.Game-Text-Button {
+  background: rgba(0, 0, 0, 0.0);
+  font: 25px Helvetica Neue;
+  color: blue;
+  border: 0px;
   margin: 5px;
 }
 
-button.Menu-Button {
-  background: #222  repeat-x;
-  font: 50px Helvetica Neue;
+button.Game-Text-Button:hover {
+  color: lightskyblue;
+}
+
+.Game-Image-Button {
+  float: left;
+  width: 80px;
+  height: 70px;
+  background-repeat: no-repeat;
+  background-color: white;
+  border: 3px solid blue;
+  margin: 10px 10px 0px 0px;
+}
+
+button.Game-Image-Button:hover {
+  border: 3px solid lightskyblue;
+}
+
+#Game-1-Image {
+  background-image: url(GameImages/Tanks.png);
+  background-size: 75px 65px;
+}
+
+#Game-2-Image {
+  background-image: url(images/Tank2.png);
+  background-size: 75px 65px;
+}
+
+#Game-3-Image {
+  background-image: url(images/Tank3.png);
+  background-size: 75px 65px;
+}
+
+#Game-4-Image {
+  background-image: url(images/Tank4.png);
+  background-size: 75px 65px;
+}
+
+#Game-5-Image {
+  background-image: url(GameImages/Pong.png);
+  background-size: 75px 65px;
+}
+
+.Game-Description{
   color: white;
-  text-shadow: 0 -1px 1px #222;
-  padding: 6px 10px 6px 10px;
-  border: 0;
-  border-bottom: 1px solid #222;
-  min-width: 80px;
-  -moz-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px #999;
-  border-radius: 7px;
-  box-shadow: 0 1px 3px #999;
-  margin: 5px;
-}
-
-button:hover {
-  background-color: #555;
-}
-
-button:disabled {
-  background-color: grey;
+  padding: 0px 0px 10px 15px;
+  width: 500px;
+  margin: 0;
 }
