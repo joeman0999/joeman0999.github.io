@@ -1,15 +1,67 @@
+<!DOCTYPE html>
 <html>
 
 <head>
     <link rel="stylesheet" href="index.css" />
     <title>MainPage</title>
-    <button class="Menu-Button" onclick="location.href='Tanks.html'">Tanks</button>
-    <button class="Menu-Button" onclick="location.href='Doggo.html'">Dogs</button>
-    <button class="Menu-Button" onclick="location.href='Checkers.html'">Checkers</button>
-    <button class="Menu-Button" onclick="location.href='Snake.html'">Snake</button>
-    <button class="Menu-Button" onclick="location.href='Clicker.html'">Clicker Game</button>
-    <button class="Menu-Button" onclick="location.href='Mouse.html'">Mouse Game</button>
-    <button class="Menu-Button" onclick="location.href='Pong.html'">Pong</button>
+
 </head>
+
+<body>
+    <div class="GameGroup">
+        <h1 id="Complete-text" class="Group-text">Completed Games</h1>
+        <div class="Game-Option">
+            <button id="Game-1-Image" class="Game-Image-Button" onclick="location.href='Tanks.html'"></button>
+            <button class="Game-Text-Button" onclick="location.href='Tanks.html'">Tanks</button>
+            <div>
+                <p class="Game-Description">Try to destroy the enemy whether it be your friend or the computer, but don't let them destroy you first.</p>
+            </div>
+        </div>
+        <div class="Game-Option">
+            <button id="Game-2-Image" class="Game-Image-Button" onclick="location.href='Checkers.html'"></button>
+            <button class="Game-Text-Button" onclick="location.href='Checkers.html'">Checkers</button>
+            <div>
+                <p class="Game-Description">The classic board game of moving and jumping. Play vs. the computer, or against a friend.</p>
+            </div>
+        </div>
+        <div class="Game-Option">
+            <button id="Game-3-Image" class="Game-Image-Button" onclick="location.href='Snake.html'"></button>
+            <button class="Game-Text-Button" onclick="location.href='Snake.html'">Snake</button>
+            <div>
+                <p class="Game-Description">Slither around and eat fruit to grow your snake as long as possible. But don't
+                hit the wall, your tail, or your friend!</p>
+            </div>
+        </div>
+        <div class="Game-Option">
+            <button id="Game-4-Image" class="Game-Image-Button" onclick="location.href='Mouse.html'"></button>
+            <button class="Game-Text-Button" onclick="location.href='Mouse.html'">Mouse Game</button>
+            <div>
+                <p class="Game-Description">Try to trap the cats before they eat you!</p>
+            </div>
+        </div>
+        <div class="Game-Option">
+            <button id="Game-5-Image" class="Game-Image-Button" onclick="location.href='Pong.html'"></button>
+            <button class="Game-Text-Button" onclick="location.href='Pong.html'">Pong</button>
+            <div>
+                <p class="Game-Description">The classic atari arcade game Pong. Play with
+                your friend or against the computer</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="GameGroup">
+        <h1 id="Development-text" class="Group-text">Games Still In Development</h1>
+        <div>
+            <button class="Game-Text-Button" onclick="location.href='Doggo.html'">Dogs</button>
+        </div>
+        <div>
+            <button class="Game-Text-Button" onclick="location.href='Clicker.html'">Clicker Game</button>
+        </div>
+        <div>
+            <button class="Game-Text-Button" onclick="location.href='/demos/JoeAttempt(Pile)2.html'">Skull Bowling</button>
+        </div>
+    </div>
+
+</body>
 
 </html>
