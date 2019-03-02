@@ -3877,7 +3877,7 @@ function PlayerLevel(index) {
                 AIEnemy.push(new Image());
                 AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png";
                 AIEnemyData[j].Fireframe = 5;
-            } else if (AIEnemyData[j].AIType == "Tank") {
+            } else if (AIEnemyData[j].AIType == "Chase" || AIEnemyData[j].AIType == "Dodge" || AIEnemyData[j].AIType == "PathFind") {
                 AIEnemy.push(new Image());
                 AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png";
                 AIEnemyData[j].Fireframe = 5;
