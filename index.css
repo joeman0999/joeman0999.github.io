@@ -45,27 +45,32 @@ button.Game-Image-Button:hover {
 
 #Game-1-Image {
   background-image: url(GameImages/Tanks.png);
-  background-size: 74px 64px;
+  background-size: 76px 65px;
 }
 
 #Game-2-Image {
   background-image: url(GameImages/Checkers.png);
-  background-size: 74px 64px;
+  background-size: 76px 65px;
 }
 
 #Game-3-Image {
   background-image: url(GameImages/Snake.png);
-  background-size: 74px 64px;
+  background-size: 76px 65px;
 }
 
 #Game-4-Image {
   background-image: url(GameImages/Mouse.png);
-  background-size: 74px 64px;
+  background-size: 76px 65px;
 }
 
 #Game-5-Image {
   background-image: url(GameImages/Pong.png);
-  background-size: 74px 64px;
+  background-size: 76px 65px;
+}
+
+#Game-6-Image {
+  background-image: url(GameImages/SkeletonBowling.png);
+  background-size: 76px 65px;
 }
 
 .Game-Description{
