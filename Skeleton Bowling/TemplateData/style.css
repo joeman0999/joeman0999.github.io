@@ -1,3 +1,8 @@
+body {
+  background-color: black;
+  color: white;
+}
+
 .webgl-content * {border: 0; margin: 0; padding: 0}
 .webgl-content {position: relative; left: 20%;}
 
