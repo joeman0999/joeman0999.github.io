@@ -4,7 +4,7 @@ var Thecanvas = {
 };
 var Bottom = true;
 var PlayerImage = new Image();
-PlayerImage.src = "images/Snake.png";
+PlayerImage.src = "images/Snake2.png";
 var Player = {
     angle: 0,
     x: 250,
