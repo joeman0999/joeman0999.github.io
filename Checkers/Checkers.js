@@ -10,9 +10,9 @@ var TypeTwoPlayer = false;
 var BlackChecker = new Image();
 BlackChecker.src = "images/BlackChecker.png";
 var RedChecker = new Image();
-RedChecker.src = "images/RedChecker.png";
+RedChecker.src = "images/RedChecker.png"; // Red is blue
 var BlackCheckerQueen = new Image();
-BlackCheckerQueen.src = "images/BlackCheckerQueen.png";
+BlackCheckerQueen.src = "images/BlackCheckerQueen.png"; // black is grey
 var RedCheckerQueen = new Image();
 RedCheckerQueen.src = "images/RedCheckerQueen.png";
 var BackGroundSelect = new Image();
@@ -1136,7 +1136,7 @@ function RunComputersRandomTurn() {
                         RedCheckers[oldindex].Queen = true;
                         AIjumpagain = false;
                         ComputersMoveList = ComputersMoveList[option].next;
-                    } else if (Math.random() > .5 && Checkforjump('Red', RedCheckers[oldindex])) {
+                    } else if (Math.random() > .25 && Checkforjump('Red', RedCheckers[oldindex])) {
                         ComputersMoveList = ComputersMoveList[option].next;
                         FindMoves();
                         for (i = 0; i < ComputersMoveList.length; i++) {
@@ -1172,14 +1172,48 @@ function RunComputersRandomTurn() {
                 for (i = 0; i < RedCheckers.length; i++) {
                     if (RedCheckers[i].x == BlackCheckers[ComputersMoveList[option].index].x + (newx - BlackCheckers[ComputersMoveList[option].index].x)/2 && RedCheckers[i].y == BlackCheckers[ComputersMoveList[option].index].y + (newy - BlackCheckers[ComputersMoveList[option].index].y)/2) {
                         RedCheckers.splice(i, 1);
+                        break;
                     }
                 }
                 BlackCheckers[ComputersMoveList[option].index].x = newx;
                 BlackCheckers[ComputersMoveList[option].index].y = newy;
-                if (BlackCheckers[ComputersMoveList[option].index].y == 7) {
-                    BlackCheckers[ComputersMoveList[option].index].Queen = true;
+                while (AIjumpagain == true) {
+                    oldindex = ComputersMoveList[option].index;
+                    jumps = [];
+                    if (BlackCheckers[oldindex].y == 7) {
+                        BlackCheckers[oldindex].Queen = true;
+                        AIjumpagain = false;
+                        ComputersMoveList = ComputersMoveList[option].next;
+                    } else if (Math.random() > .25 && Checkforjump('Black', BlackCheckers[oldindex])) {
+                        ComputersMoveList = ComputersMoveList[option].next;
+                        FindMoves();
+                        for (i = 0; i < ComputersMoveList.length; i++) {
+                            if (ComputersMoveList[i].type == "jump") {
+                                jumps.push(i);
+                            }
+                        }
+                        for (k = 0; k < jumps.length; k++) {
+                            if (ComputersMoveList[jumps[k]].index == oldindex) {
+                                newx = ComputersMoveList[jumps[k]].positions[0];
+                                newy = ComputersMoveList[jumps[k]].positions[1];
+                                for (i = 0; i < RedCheckers.length; i++) {
+                                    if (RedCheckers[i].x == BlackCheckers[ComputersMoveList[jumps[k]].index].x + (newx - BlackCheckers[ComputersMoveList[jumps[k]].index].x) / 2 && RedCheckers[i].y == BlackCheckers[ComputersMoveList[jumps[k]].index].y + (newy - BlackCheckers[ComputersMoveList[jumps[k]].index].y) / 2) {
+                                        RedCheckers.splice(i, 1);
+                                        break;
+                                    }
+                                }
+                                option = jumps[k];
+                                BlackCheckers[ComputersMoveList[jumps[k]].index].x = newx;
+                                BlackCheckers[ComputersMoveList[jumps[k]].index].y = newy;
+                                break;
+                            }
+                        }
+                        AIjumpagain = true;
+                    } else {
+                        AIjumpagain = false;
+                        ComputersMoveList = ComputersMoveList[option].next;
+                    }
                 }
-                ComputersMoveList = ComputersMoveList[option].next;
             }
         } else {
             option = Math.round(Math.random() * (movements.length - 1));
