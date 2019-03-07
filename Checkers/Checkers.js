@@ -883,6 +883,7 @@ function jump_again(e) {
     }
     document.getElementById("Jump_Again-Button").hidden = true;
     document.getElementById("End_Turn-Button").hidden = true;
+    updateGameArea();
 }
 
 function checkforwin() {
