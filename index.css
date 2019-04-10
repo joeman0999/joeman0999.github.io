@@ -2,6 +2,14 @@ body {
   background-color: black;
 }
 
+footer {
+  color: white;
+  position: relative;
+  left: 125px;
+  width: 375px;
+  padding: 10px 0px 20px 0px;
+}
+
 .Game-Option {
   height: 100px;
 }
