@@ -40,6 +40,14 @@ var Player2Tank = {
     Shoot: 13
 }
 
+var LevelEditorInfo = {
+    Type: "Solo", // defines the number of friendly tanks to create
+    Wall: "BlackLine", // defines the type of wall to create
+    Enemy: "Target", // defines the type of enemy to create
+    x: 0, // used to determine the difference in the mouses new and old positions to move elements around
+    y: 0, // used to determine the difference in the mouses new and old positions to move elements around
+};
+
 function Menu() {
     clearInterval(myGameArea.interval);
     myGameArea.keys = [];
@@ -2781,13 +2789,6 @@ function LevelEditor() {
     SoloGame = false; // Game type
     CoOpGame = false; // Game type
     Level_Editor = true; // Game type
-    LevelEditorInfo = {
-        Type: "Solo", // defines the number of friendly tanks to create
-        Wall: "BlackLine", // defines the type of wall to create
-        Enemy: "Target", // defines the type of enemy to create
-        x: 0, // used to determine the difference in the mouses new and old positions to move elements around
-        y: 0, // used to determine the difference in the mouses new and old positions to move elements around
-    };
     Bullets = [];
     walls = []; // initializes the walls
     WALL = []; // initializes the wall images
