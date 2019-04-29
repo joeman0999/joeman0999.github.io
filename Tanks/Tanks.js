@@ -3898,7 +3898,8 @@ function LevelDelete(index) {
 }
 
 function PlayerLevel(index) {
-    var j
+    var j;
+    document.getElementById("GameArea").hidden = false;
     Level = -1 * (index + 1);
     VsGame = false;
     CoOpGame = false;
@@ -3969,7 +3970,7 @@ function PlayerLevel(index) {
         myGameArea.start();
     }
 
-    document.getElementById("GameArea").hidden = false;
+    
 }
 
 function ResetData() {
