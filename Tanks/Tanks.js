@@ -18,7 +18,10 @@ var Thecanvas = {
     height: 600
 };
 
+var SoloGame = false;
+var CoOpGame = false;
 var Level_Editor = false;
+var VsGame = false;
 
 var Player1Tank = {
     Tank: "images/Tank1.png",
@@ -87,6 +90,10 @@ function Menu() {
         width: 1300,
         height: 600
     };
+    SoloGame = false;
+    CoOpGame = false;
+    Level_Editor = false;
+    VsGame = false;
 }
 
 function Reset() {
@@ -402,9 +409,6 @@ function HelpScreen() {
 function startVSGame() {
     Level = 0;
     VsGame = true;
-    SoloGame = false;
-    CoOpGame = false;
-    Level_Editor = false;
     Bullets = [];
     document.getElementById("Menu").hidden = true;
     document.getElementById("ButtonArea").hidden = false;
@@ -453,10 +457,7 @@ function startVSGame() {
 
 function startSoloGame(n) {
     Level = n;
-    VsGame = false;
-    CoOpGame = false;
     SoloGame = true;
-    Level_Editor = false;
     Bullets = [];
 
     document.getElementById("Menu").hidden = true;
@@ -488,10 +489,7 @@ function startSoloGame(n) {
 
 function StartCoOpGame(n) {
     Level = n;
-    VsGame = false;
-    SoloGame = false;
     CoOpGame = true;
-    Level_Editor = false;
     Bullets = [];
 
     document.getElementById("Menu").hidden = true;
@@ -3899,7 +3897,6 @@ function LevelDelete(index) {
 
 function PlayerLevel(index) {
     var j;
-    document.getElementById("GameArea").hidden = false;
     Level = -1 * (index + 1);
     VsGame = false;
     CoOpGame = false;
@@ -3969,7 +3966,7 @@ function PlayerLevel(index) {
         }
         myGameArea.start();
     }
-
+    document.getElementById("GameArea").hidden = false;
     
 }
 
