@@ -1,0 +1,52 @@
+Start off as an atom.
+
+clicker to grow atom into a group of atoms.
+
+upgrade to start creating molecules.
+
+upgrade to create water H2O, salt NaCl.
+
+upgrades to create amino acids (9 Atoms), proteins (30 amino acids), Carbohydrates (24 Atoms).
+
+Cytoplasm
+a jelly-like fluid (5 Salt and 20 water)
+
+Plasma membrane (10 Proteins 10 Molecules)
+The plasma membrane is the outer lining of the cell. 
+It separates the cell from its environment and allows materials to enter and leave the cell.
+
+Cytoskeleton (20 Proteins)
+a network of long fibers that make up the cell's structural framework. 
+The cytoskeleton has several critical functions, including determining cell shape, participating in cell division, 
+and allowing cells to move. 
+
+Ribosomes (20 Proteins 10 Amino Acids)
+Ribosomes are organelles that process the cell's genetic instructions to create proteins. 
+These organelles can float freely in the cytoplasm or be connected to the endoplasmic reticulum (see above).
+
+Branch!!!!!!
+
+A
+Nucleus (20 DNA 20 Proteins) (Eukaryota)
+The nucleus serves as the cell's command center, sending directions to the cell to grow, mature, divide, or die. 
+It also houses DNA (deoxyribonucleic acid), the cell's hereditary material.
+
+Mitochondria (30 Proteins) (Eukaryota) (Start Creating Proteins)
+complex organelles that convert energy from food into a form that the cell can use. 
+They have their own genetic material, separate from the DNA in the nucleus, and can make copies of themselves.
+
+
+B
+Nucleoid (20 DNA 20 Proteins) (Bacteria and Archaea) (Start Creating Proteins)
+The nucleus serves as the cell's command center, sending directions to the cell to grow, mature, divide, or die. 
+It also houses DNA (deoxyribonucleic acid), the cell's hereditary material.
+
+Branch!!!!!!
+
+A
+Peptidoglycans in the Cell wall (Bacteria)
+For example, all bacteria contain peptidoglycans (a molecule composed of both protein and sugar rings) in their 
+cell walls. However, archaea do not have this compound in their cell walls.
+
+B
+no peptidoglycans in the Cell wall (Bacteria)
