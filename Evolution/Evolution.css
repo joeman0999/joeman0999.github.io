@@ -42,7 +42,12 @@ button:disabled {
   background-color: grey;
 }
 
+#GameArea {
+  position: relative;
+  top: 20px;
+}
+
 #UpgradeArea {
   position: relative;
-  top: 200px;
+  top: 30px;
 }

@@ -2,20 +2,158 @@ var Thecanvas = {
     width: 500,
     height: 500
 };
-var Bottom = true;
 
+var Objects = {
+    Atoms: [],
+    AtomSize: 5,
+    Molecules: [],
+    MoleculeSize: 5,
+    Water_Molecules: [], // same size as molecules
+    Salt_Molecules: [], // same size as molecules
+    Amino_Acids: [],
+    Amino_AcidSize: 4,
+    Proteins: [] // same size as amino acids as is a chain of them
+}
+
+var State = "Atom";
 var Atoms = 0;
 var Molecules = 0;
 var Water_Molecules = 0;
 var Salt_Molecules = 0;
 var Amino_Acids = 0;
 var Proteins = 0;
-var Multiplier = 1;
+var Multiplier = 0;
 var Frames = {
     Current: 0,
     Molecule: 0
 }
 
+var myGameArea = {
+    canvas: document.getElementById("GameArea"),
+    start: function () {
+        this.canvas = document.getElementById("GameArea");
+        this.canvas.width = 200;
+        this.canvas.height = 200;
+        this.context = this.canvas.getContext("2d");
+        this.frameNo = 0;
+    },
+    stop: function () {
+        //clearInterval(this.interval);
+    },
+    clear: function () {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+window.onload = function () {
+    myGameArea.start();
+}
+
+function render() {
+    myGameArea.clear();
+    ObjectCreation();
+    if (State == "Atom") {
+        for (var i = 0; i < Objects.Atoms.length; i++) {
+
+            myGameArea.context.fillStyle = Objects.Atoms[i].color;
+            myGameArea.context.beginPath();
+            myGameArea.context.arc(Objects.Atoms[i].x, Objects.Atoms[i].y, Objects.AtomSize, 0, Math.PI * 2);
+            myGameArea.context.closePath();
+            myGameArea.context.fill();
+
+            
+        }
+    }
+
+    for (var i = 0; i < Objects.Molecules.length; i++) {
+
+        myGameArea.context.fillStyle = Objects.Molecules[i].color;
+        myGameArea.context.beginPath();
+        myGameArea.context.arc(Objects.Molecules[i].x, Objects.Molecules[i].y, Objects.MoleculeSize, 0, Math.PI * 2);
+        myGameArea.context.closePath();
+        myGameArea.context.fill();
+    }
+
+    for (var i = 0; i < Objects.Water_Molecules.length; i++) {
+
+        myGameArea.context.fillStyle = "blue";
+        myGameArea.context.beginPath();
+        myGameArea.context.arc(Objects.Water_Molecules[i].x, Objects.Water_Molecules[i].y, Objects.MoleculeSize, 0, Math.PI * 2);
+        myGameArea.context.closePath();
+        myGameArea.context.fill();
+    }
+
+    for (var i = 0; i < Objects.Salt_Molecules.length; i++) {
+
+        myGameArea.context.fillStyle = "grey";
+        myGameArea.context.beginPath();
+        myGameArea.context.arc(Objects.Salt_Molecules[i].x, Objects.Salt_Molecules[i].y, Objects.MoleculeSize, 0, Math.PI * 2);
+        myGameArea.context.closePath();
+        myGameArea.context.fill();
+    }
+
+    if (State == "Cytoplasm" || State == "Protein" || State == "Membrane") {
+
+        for (var i = 0; i < Objects.Amino_Acids.length; i++) {
+
+            myGameArea.context.fillStyle = Objects.Amino_Acids[i].color;
+            myGameArea.context.beginPath();
+            myGameArea.context.arc(Objects.Amino_Acids[i].x, Objects.Amino_Acids[i].y, Objects.Amino_AcidSize, 0, Math.PI * 2);
+            myGameArea.context.closePath();
+            myGameArea.context.fill();
+        }
+
+        myGameArea.context.fillStyle = "Chartreuse";
+        myGameArea.context.globalAlpha = .95;
+        myGameArea.context.beginPath();
+        myGameArea.context.moveTo(100, 50);
+        myGameArea.context.quadraticCurveTo(140, 20, 140, 90);
+        myGameArea.context.quadraticCurveTo(160, 125, 130, 160);
+        myGameArea.context.quadraticCurveTo(90, 180, 70, 160);
+        myGameArea.context.quadraticCurveTo(40, 120, 50, 90);
+        myGameArea.context.quadraticCurveTo(40, 50, 100, 50);
+        myGameArea.context.fill();
+
+        for (var i = 0; i < Objects.Proteins.length; i++) {
+            myGameArea.context.lineWidth = 4;
+            myGameArea.context.strokeStyle = Objects.Proteins[i].color;
+            myGameArea.context.lineCap = 'round';
+            myGameArea.context.beginPath();
+            myGameArea.context.setLineDash([1, 4]);
+            myGameArea.context.moveTo(Objects.Proteins[i].x1, Objects.Proteins[i].y1);
+            myGameArea.context.quadraticCurveTo(Objects.Proteins[i].conx, Objects.Proteins[i].cony, Objects.Proteins[i].x2, Objects.Proteins[i].y2);
+            myGameArea.context.stroke();
+        }
+        
+        if (State == "Membrane") {
+            myGameArea.context.strokeStyle = "Lime";
+            myGameArea.context.beginPath();
+            myGameArea.context.setLineDash([]);
+            myGameArea.context.moveTo(100, 50);
+            myGameArea.context.quadraticCurveTo(140, 20, 140, 90);
+            myGameArea.context.quadraticCurveTo(160, 125, 130, 160);
+            myGameArea.context.quadraticCurveTo(90, 180, 70, 160);
+            myGameArea.context.quadraticCurveTo(40, 120, 50, 90);
+            myGameArea.context.quadraticCurveTo(40, 50, 100, 50);
+            myGameArea.context.stroke();
+        }
+    }
+
+    if (State == "Skeleton") {
+        myGameArea.context.fillStyle = "Chartreuse";
+        myGameArea.context.globalAlpha = .95;
+        myGameArea.context.beginPath();
+        myGameArea.context.arc(100, 100, 70, 0, Math.PI * 2);
+        myGameArea.context.closePath();
+        myGameArea.context.fill();
+
+        myGameArea.context.strokeStyle = "Lime";
+        myGameArea.context.beginPath();
+        myGameArea.context.arc(100, 100, 70, 0, Math.PI * 2);
+        myGameArea.context.closePath();
+        myGameArea.context.stroke();
+    }
+}
 
 function GainAtoms() {
     Atoms++;
@@ -65,7 +203,7 @@ function CreateMolecules(type) {
 function Upgrade(number) {
     switch(number) {
         case 0:
-            Atoms++;
+            GainAtoms();
             document.getElementById("GameAreaDiv").hidden = false;
             document.getElementById('Upgrade1').hidden = true;
             document.getElementById('Upgrade2').hidden = false;
@@ -78,6 +216,7 @@ function Upgrade(number) {
                 document.getElementById("Molecules").hidden = false;
                 document.getElementById('Upgrade2').hidden = true;
                 document.getElementById('Upgrade3').hidden = false;
+                Objects.AtomSize = 3;
             }
             break;
         case 2:
@@ -104,6 +243,13 @@ function Upgrade(number) {
             if (Water_Molecules > 19 && Salt_Molecules > 4) {
                 Water_Molecules -= 20;
                 Salt_Molecules -= 5;
+                Molecules += Water_Molecules + Salt_Molecules;   /// ******turns water and salt into molecules as are never used again
+                Multiplier = 1;
+                Objects.Atoms = [];
+                Objects.MoleculeSize = 3;
+                Water_Molecules = 0;
+                Salt_Molecules = 0;
+                State = "Cytoplasm";
                 interval = setInterval(Update, 1000);
                 document.getElementById("Salt").hidden = true;
                 document.getElementById("CreateSalt").hidden = true;
@@ -126,6 +272,9 @@ function Upgrade(number) {
             if (Amino_Acids > 29) {
                 Amino_Acids -= 30;
                 Proteins++;
+                Objects.MoleculeSize = 2;
+                Objects.Amino_AcidSize = 3;
+                State = "Protein";
                 document.getElementById("CreateProteins").hidden = false;
                 document.getElementById("Proteins").hidden = false;
                 document.getElementById('Upgrade7').hidden = true;
@@ -133,10 +282,15 @@ function Upgrade(number) {
             }
             break;
         case 7:
-            if (Molecules > 9 && Proteins > 9) {
-                Molecules -= 10;
+            if (Molecules > 49 && Proteins > 9) {
+                Molecules -= 50;
                 Proteins -= 10;
+                Atoms += Molecules*10;
+                Molecules = 0;
+                document.getElementById('CreateMolecules').hidden = true;
+                document.getElementById("Molecules").hidden = true;
                 Multiplier++;
+                State = "Membrane";
                 document.getElementById('Upgrade8').hidden = true;
                 document.getElementById('Upgrade9').hidden = false;
             }
@@ -145,6 +299,7 @@ function Upgrade(number) {
             if (Proteins > 19) {
                 Proteins -= 20;
                 Multiplier++;
+                State = "Skeleton";
                 document.getElementById('Upgrade9').hidden = true;
                 document.getElementById('Upgrade10').hidden = false;
             }
@@ -173,6 +328,7 @@ function WriteValues() {
     document.getElementById("Salt").innerHTML = 'Salt: ' + Salt_Molecules;
     document.getElementById("Amino_Acids").innerHTML = 'Amino_Acids: ' + Amino_Acids;
     document.getElementById("Proteins").innerHTML = 'Proteins: ' + Proteins;
+    render();
 }
 
 function Update() {
@@ -185,4 +341,195 @@ function Update() {
         }
     }
     WriteValues();
+}
+
+function ObjectCreation() {
+    if (State == "Atom") {
+        if (Atoms < Objects.Atoms.length) {
+            var ToRemove = Objects.Atoms.length - Atoms;
+            for (var i = 0; i < ToRemove; i++) {
+                Objects.Atoms.splice(Math.round(Math.random() * (Objects.Atoms.length - 1)), 1);
+            }
+        } else if (Atoms > Objects.Atoms.length) {
+            var colorOption = 0;
+            var color = "";
+            while (Atoms > Objects.Atoms.length) {
+                colorOption = Math.round(Math.random() * 4); // 5 options
+                switch (colorOption) {
+                    case 0:
+                        color = "greenyellow";
+                        break;
+                    case 1:
+                        color = "mediumorchid";
+                        break;
+                    case 2:
+                        color = "darkorange";
+                        break;
+                    case 3:
+                        color = "aquamarine";
+                        break;
+                    case 4:
+                        color = "black";
+                        break;
+                }
+                var newAtom = {
+                    color: color,
+                    x: Math.random() * 200,
+                    y: Math.random() * 200
+                }
+                Objects.Atoms.push(newAtom);
+            }
+        }
+    }
+
+    if (Water_Molecules < Objects.Water_Molecules.length) {
+        var ToRemove = Objects.Water_Molecules.length - Water_Molecules;
+        for (var i = 0; i < ToRemove; i++) {
+            Objects.Water_Molecules.splice(Math.round(Math.random() * (Objects.Water_Molecules.length - 1)), 1);
+        }
+    } else if (Water_Molecules > Objects.Water_Molecules.length) {
+        while (Water_Molecules > Objects.Water_Molecules.length) {
+
+            var newMolecule = {
+                x: Math.random() * 200,
+                y: Math.random() * 200
+            }
+            Objects.Water_Molecules.push(newMolecule);
+        }
+    }
+
+    if (Salt_Molecules < Objects.Salt_Molecules.length) {
+        var ToRemove = Objects.Salt_Molecules.length - Salt_Molecules;
+        for (var i = 0; i < ToRemove; i++) {
+            Objects.Salt_Molecules.splice(Math.round(Math.random() * (Objects.Salt_Molecules.length - 1)), 1);
+        }
+    } else if (Salt_Molecules > Objects.Salt_Molecules.length) {
+        while (Salt_Molecules > Objects.Salt_Molecules.length) {
+
+            var newMolecule = {
+                x: Math.random() * 200,
+                y: Math.random() * 200
+            }
+            Objects.Salt_Molecules.push(newMolecule);
+        }
+    }
+
+    if (Molecules < Objects.Molecules.length) {
+        var ToRemove = Objects.Molecules.length - Molecules;
+        for (var i = 0; i < ToRemove; i++) {
+            Objects.Molecules.splice(Math.round(Math.random() * (Objects.Molecules.length - 1)), 1);
+        }
+    } else if (Molecules > Objects.Molecules.length) {
+        var colorOption = 0;
+        var color = "";
+        while (Molecules > Objects.Molecules.length) {
+            colorOption = Math.round(Math.random() * 3); // 4 options
+            switch (colorOption) {
+                case 0:
+                    color = "orangered";
+                    break;
+                case 1:
+                    color = "cyan";
+                    break;
+                case 2:
+                    color = "pink";
+                    break;
+                case 3:
+                    color = "lime";
+                    break;
+            }
+            var newMolecule = {
+                color: color,
+                x: Math.random() * 200,
+                y: Math.random() * 200
+            }
+            Objects.Molecules.push(newMolecule);
+        }
+    }
+
+    if (Amino_Acids < Objects.Amino_Acids.length) {
+        var ToRemove = Objects.Amino_Acids.length - Amino_Acids;
+        for (var i = 0; i < ToRemove; i++) {
+            Objects.Amino_Acids.splice(Math.round(Math.random() * (Objects.Amino_Acids.length - 1)), 1);
+        }
+    } else if (Amino_Acids > Objects.Amino_Acids.length) {
+        var colorOption = 0;
+        var color = "";
+        while (Amino_Acids > Objects.Amino_Acids.length) {
+            colorOption = Math.round(Math.random() * 3); // 4 options
+            switch (colorOption) {
+                case 0:
+                    color = "orange";
+                    break;
+                case 1:
+                    color = "green";
+                    break;
+                case 2:
+                    color = "yellow";
+                    break;
+                case 3:
+                    color = "blue";
+                    break;
+            }
+            var newAmino_Acid = {
+                color: color,
+                x: Math.random() * 200,
+                y: Math.random() * 200
+            }
+            Objects.Amino_Acids.push(newAmino_Acid);
+        }
+    }
+
+    if (Proteins < Objects.Proteins.length) {
+        var ToRemove = Objects.Proteins.length - Amino_Acids;
+        for (var i = 0; i < ToRemove; i++) {
+            Objects.Proteins.splice(Math.round(Math.random() * (Objects.Proteins.length - 1)), 1);
+        }
+    } else if (Proteins > Objects.Proteins.length) {
+        var colorOption = 0;
+        var color = "";
+        while (Proteins > Objects.Proteins.length) {
+            colorOption = Math.round(Math.random() * 3); // 4 options
+            switch (colorOption) {
+                case 0:
+                    color = "orange";
+                    break;
+                case 1:
+                    color = "green";
+                    break;
+                case 2:
+                    color = "blue";
+                    break;
+                case 3:
+                    color = "yellow";
+                    break;
+            }
+            var x1 = Math.random() * 160 + 20;
+            var y1 = Math.random() * 160 + 20;
+            var length = Math.random() * 20 + 20;
+            var angle = Math.random() * Math.PI * 2;
+            var midx = x1 + (length * Math.cos(angle))/2;
+            var midy = y1 + (length * Math.sin(angle))/2;
+
+            var length2 = (Math.random() * 20 + 10);
+            var angle2 = (Math.PI * 4 / 8 * Math.random()) + (Math.PI * 2 / 8);
+            if (Math.random() > .5) {
+                var conx = length2 * Math.cos(angle + angle2) + midx;
+                var cony = length2 * Math.sin(angle + angle2) + midy;
+            } else {
+                var conx = length2 * Math.cos(angle - angle2) + midx;
+                var cony = length2 * Math.sin(angle - angle2) + midy;
+            }
+            var newProtein = {
+                color: color,
+                x1: x1,
+                y1: y1,
+                x2: (length * Math.cos(angle)) + x1,
+                y2: (length * Math.sin(angle)) + y1,
+                conx: conx,
+                cony: cony
+            }
+            Objects.Proteins.push(newProtein);
+        }
+    }
 }
