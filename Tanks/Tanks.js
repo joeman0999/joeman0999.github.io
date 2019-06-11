@@ -1684,9 +1684,6 @@ function updateCoOpAI(Info) {
                 Path.y -= 5 * Math.cos(Theta2);
                 PathDistance += 5;
                 if (WallCheck(Path, walls)) {// says I hit a wall trying to go on a straight path that means stay on pathfind not switch
-                    Info.AIType = "Chase";
-                    Info.Target = 2;
-                    Info.Path = [];
                     Los = false;
                     break;
                 }
