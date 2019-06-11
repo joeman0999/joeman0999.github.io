@@ -789,7 +789,7 @@ function updateCoOpGameArea() {
         }
     }
 
-    if (AIEnemyData.length == 0 && Level != 0) {
+    if (AIEnemyData.length == 0) {
         myGameArea.keys = [];
         myGameArea.stop();
         myGameArea.clear();
@@ -1347,7 +1347,7 @@ function updateCoOpAI(Info) {
             Info.angle = Theta;
         }
     } else if (Info.AIType == "Chase") {
-        var x2, y2, distance, distance2
+        var x2, y2, distance, distance2, LOS2
         var PathDistance = 0;
         var Path = {
             Shape: "Bullet",
@@ -1357,34 +1357,39 @@ function updateCoOpAI(Info) {
         if (Info.Target == 1) {
             x = Tank1Data.x - Info.x;
             y = Info.y - Tank1Data.y;
-            x2 = Tank2Data.x - Info.x;
-            y2 = Info.y - Tank2Data.y;
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
-
             Theta = Math.atan2(x, y);
             if (Theta >= Math.PI * 2) {
                 Theta = Theta - Math.PI * 2
             } else if (Theta < 0) {
                 Theta = Theta + Math.PI * 2;
             }
-            Theta2 = Math.atan2(x2, y2);
-            if (Theta2 >= Math.PI * 2) {
-                Theta2 = Theta2 - Math.PI * 2
-            } else if (Theta2 < 0) {
-                Theta2 = Theta2 + Math.PI * 2;
-            }
 
-            var LOS2 = true;
-            while (distance2 - PathDistance >= 5) {
-                Path.x += 5 * Math.sin(Theta);
-                Path.y -= 5 * Math.cos(Theta);
-                PathDistance += 5;
-                if (WallCheck(Path, walls)) {
-                    LOS2 = false;
-                    break;
+            if (Tank2Data.Alive) {
+                x2 = Tank2Data.x - Info.x;
+                y2 = Info.y - Tank2Data.y;
+                distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
+                Theta2 = Math.atan2(x2, y2);
+                if (Theta2 >= Math.PI * 2) {
+                    Theta2 = Theta2 - Math.PI * 2
+                } else if (Theta2 < 0) {
+                    Theta2 = Theta2 + Math.PI * 2;
                 }
+                LOS2 = true;
+                while (distance2 - PathDistance >= 5) {
+                    Path.x += 5 * Math.sin(Theta);
+                    Path.y -= 5 * Math.cos(Theta);
+                    PathDistance += 5;
+                    if (WallCheck(Path, walls)) {
+                        LOS2 = false;
+                        break;
+                    }
+                }
+            } else {
+                LOS2 = false;
+                distance2 = 1000;
             }
+            // Reset Data and check if we can see the target tank
             PathDistance = 0;
             Path.x = Info.x;
             Path.y = Info.y;
@@ -1418,34 +1423,40 @@ function updateCoOpAI(Info) {
         } else if (Info.Target == 2) {
             x = Tank2Data.x - Info.x;
             y = Info.y - Tank2Data.y;
-            x2 = Tank1Data.x - Info.x;
-            y2 = Info.y - Tank1Data.y;
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
-
             Theta = Math.atan2(x, y);
             if (Theta >= Math.PI * 2) {
                 Theta = Theta - Math.PI * 2
             } else if (Theta < 0) {
                 Theta = Theta + Math.PI * 2;
             }
-            Theta2 = Math.atan2(x2, y2);
-            if (Theta2 >= Math.PI * 2) {
-                Theta2 = Theta2 - Math.PI * 2
-            } else if (Theta2 < 0) {
-                Theta2 = Theta2 + Math.PI * 2;
-            }
 
-            var LOS2 = true;
-            while (distance2 - PathDistance >= 5) {
-                Path.x += 5 * Math.sin(Theta);
-                Path.y -= 5 * Math.cos(Theta);
-                PathDistance += 5;
-                if (WallCheck(Path, walls)) {
-                    LOS2 = false;
-                    break;
+            if (Tank1Data.Alive) {
+                x2 = Tank1Data.x - Info.x;
+                y2 = Info.y - Tank1Data.y;
+                distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
+                Theta2 = Math.atan2(x2, y2);
+                if (Theta2 >= Math.PI * 2) {
+                    Theta2 = Theta2 - Math.PI * 2
+                } else if (Theta2 < 0) {
+                    Theta2 = Theta2 + Math.PI * 2;
                 }
+
+                LOS2 = true;
+                while (distance2 - PathDistance >= 5) {
+                    Path.x += 5 * Math.sin(Theta);
+                    Path.y -= 5 * Math.cos(Theta);
+                    PathDistance += 5;
+                    if (WallCheck(Path, walls)) {
+                        LOS2 = false;
+                        break;
+                    }
+                }
+            } else {
+                LOS2 = false;
+                distance2 = 1000;
             }
+            
             PathDistance = 0;
             Path.x = Info.x;
             Path.y = Info.y;
@@ -1618,23 +1629,18 @@ function updateCoOpAI(Info) {
         }
         x = Tank1Data.x - Info.x;
         y = Info.y - Tank1Data.y;
-        x2 = Tank2Data.x - Info.x;
-        y2 = Info.y - Tank2Data.y;
         distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
-        PathDistance = 0;
-        Path = {
-            Shape: "Bullet",
-            x: Info.x,
-            y: Info.y
-        }
-
         Theta = Math.atan2(x, y);
         if (Theta >= Math.PI * 2) {
             Theta = Theta - Math.PI * 2
         } else if (Theta < 0) {
             Theta = Theta + Math.PI * 2;
         }
+
+        x2 = Tank2Data.x - Info.x;
+        y2 = Info.y - Tank2Data.y;
+        distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
+        PathDistance = 0;
         Theta2 = Math.atan2(x2, y2);
         if (Theta2 >= Math.PI * 2) {
             Theta2 = Theta2 - Math.PI * 2
@@ -1642,15 +1648,24 @@ function updateCoOpAI(Info) {
             Theta2 = Theta2 + Math.PI * 2;
         }
 
-        LOS = true;
-        while (LOS == true && distance - PathDistance >= 5) {
-            Path.x += 5 * Math.sin(Theta);
-            Path.y -= 5 * Math.cos(Theta);
-            PathDistance += 5;
-            if (WallCheck(Path, walls)) {
-                LOS = false;
-                break;
+        Path = {
+            Shape: "Bullet",
+            x: Info.x,
+            y: Info.y
+        }
+        if (Tank1Data.Alive) {
+            LOS = true;
+            while (LOS == true && distance - PathDistance >= 5) {
+                Path.x += 5 * Math.sin(Theta);
+                Path.y -= 5 * Math.cos(Theta);
+                PathDistance += 5;
+                if (WallCheck(Path, walls)) {
+                    LOS = false;
+                    break;
+                }
             }
+        } else {
+            LOS = false
         }
 
         if (LOS) {
@@ -1663,7 +1678,7 @@ function updateCoOpAI(Info) {
             Path.x = Info.x;
             Path.y = Info.y;
             
-            while (LOS == true && distance2 - PathDistance >= 5) {
+            while (distance2 - PathDistance >= 5) {
                 Path.x += 5 * Math.sin(Theta2);
                 Path.y -= 5 * Math.cos(Theta2);
                 PathDistance += 5;
@@ -1933,9 +1948,7 @@ function LevelSelectorScreen() {
             Max_Level = 1;
         }
     } catch (err) {
-        if (typeof Max_Level == "undefined") {
-            Max_Level = 10;
-        }
+        Max_Level = 10;
     }
     document.getElementById("Menu").hidden = true;
     document.getElementById("Solo_Level_List").hidden = false;
@@ -1967,9 +1980,7 @@ function CoOpLevelSelectorScreen() {
             CoOpMax_Level = 1;
         }
     } catch (err) {
-        if (typeof CoOpMax_Level == "undefined") {
-            CoOpMax_Level = 4;
-        }
+        CoOpMax_Level = 4;
     }
 
     try {
