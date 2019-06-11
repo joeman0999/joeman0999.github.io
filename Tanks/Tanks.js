@@ -142,18 +142,20 @@ function Reset() {
             Shape: "Rect",
             frame: 0
         };
-        VSMapSelect();
+        var option = Math.round(Math.random() * 5 + 1); // random level
+        VSMapSelect(option);
         myGameArea.interval = setInterval(updateVsGameArea, 20);
     } else if (SoloGame) {
+        Tank1Data.Alive = true;
         myGameArea.interval = setInterval(updateSoloGameArea, 20);
         document.getElementById("wins").innerHTML = "Level: " + Level;
-        SoloLevelSelector();
+        SoloLevelSelector(Level);
     } else if (CoOpGame) {
         Tank1Data.Alive = true;
         Tank2Data.Alive = true;
         myGameArea.interval = setInterval(updateCoOpGameArea, 20);
         document.getElementById("wins").innerHTML = "Level: " + Level;
-        CoOpLevelSelector();
+        CoOpLevelSelector(Level);
     }
 }
 
@@ -171,7 +173,6 @@ var myGameArea = {
 
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         if (VsGame) {
-            AIEnemy = [];
             this.interval = setInterval(updateVsGameArea, 20);
             document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
         } else if (SoloGame) {
@@ -400,7 +401,7 @@ function HelpScreen() {
         Shape: "Rect",
         frame: 0
     }
-    SoloLevelSelector();
+    SoloLevelSelector(0);
     myGameArea.start()
     document.getElementById("GameArea").hidden = false;
     document.getElementById("Help-Area").hidden = false;
@@ -450,7 +451,8 @@ function startVSGame() {
         Shape: "Rect",
         frame: 0
     }
-    VSMapSelect();
+    var option = Math.round(Math.random() * 5 + 1); // random level
+    VSMapSelect(option);
     myGameArea.start()
     document.getElementById("GameArea").hidden = false;
 }
@@ -482,7 +484,7 @@ function startSoloGame(n) {
         Shape: "Rect",
         frame: 0
     }
-    SoloLevelSelector();
+    SoloLevelSelector(Level);
     myGameArea.start();
     document.getElementById("GameArea").hidden = false;
 }
@@ -535,7 +537,7 @@ function StartCoOpGame(n) {
         frame: 0,
         Alive: true,
     }
-    CoOpLevelSelector();
+    CoOpLevelSelector(Level);
     myGameArea.start()
     document.getElementById("GameArea").hidden = false;
 }
@@ -659,10 +661,9 @@ function updateSoloGameArea() {
     frame = frame + 1;
     var x, y, i, k
     for (i = 0; i < Bullets.length; i += 1) {
-        for (k = 0; k < AIEnemy.length; k += 1) {
+        for (k = 0; k < AIEnemyData.length; k += 1) {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
-                AIEnemy.splice(k, 1);
                 Bullets.splice(i, 1);
                 i = i - 1;
                 k = k - 1;
@@ -683,7 +684,7 @@ function updateSoloGameArea() {
         }
     }
 
-    if (AIEnemy.length == 0 && Level != 0) {
+    if (AIEnemyData.length == 0 && Level != 0) {
         myGameArea.keys = [];
         myGameArea.stop();
         myGameArea.clear();
@@ -750,10 +751,9 @@ function updateCoOpGameArea() {
     var x, y, i, k
     for (i = 0; i < Bullets.length; i += 1) {
 
-        for (k = 0; k < AIEnemy.length; k += 1) {
+        for (k = 0; k < AIEnemyData.length; k += 1) {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
-                AIEnemy.splice(k, 1);
                 Bullets.splice(i, 1);
                 i = i - 1;
                 k = k - 1;
@@ -775,7 +775,7 @@ function updateCoOpGameArea() {
         }
     }
 
-    if (AIEnemy.length == 0 && Level != 0) {
+    if (AIEnemyData.length == 0 && Level != 0) {
         myGameArea.keys = [];
         myGameArea.stop();
         myGameArea.clear();
@@ -1802,7 +1802,7 @@ function drawWallsAndBullets() {
 
 function AiDraw() {
     var k, x, y;
-    for (k = 0; k < AIEnemy.length; k += 1) {
+    for (k = 0; k < AIEnemyData.length; k += 1) {
         if (frame - AIEnemyData[k].FireRate > AIEnemyData[k].Fireframe && AIEnemyData[k].AIType != "Target") {
             AIEnemyData[k].Fireframe = frame;
             if (AIEnemyData[k].Shape == "Rect") {
@@ -1822,7 +1822,7 @@ function AiDraw() {
             AIEnemyData[k] = updateCoOpAI(AIEnemyData[k]);
         }
         AIEnemyData[k] = update(AIEnemyData[k]);
-        drawTank(AIEnemy[k], AIEnemyData[k])
+        drawTank(AIEnemyData[k].img, AIEnemyData[k])
     }
 }
 
@@ -1898,13 +1898,12 @@ function crashWith(obj, otherobj) {
     return crash;
 }
 
-function SoloLevelSelector() {
+function SoloLevelSelector(selectedLevel) {
     var i
-    switch (Level) {
+    switch (selectedLevel) {
         case 0:
             walls = [];
             AIEnemyData = [];
-            AIEnemy = [];
             break;
         case 1:
             walls = [];
@@ -1922,10 +1921,9 @@ function SoloLevelSelector() {
                 FireRate: "never",
                 frame: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Target.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Target.png";
             }
             break;
         case 2:
@@ -1959,10 +1957,9 @@ function SoloLevelSelector() {
                 frame: 0
             }
             ];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Target.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Target.png";
             }
             break;
 
@@ -1988,10 +1985,9 @@ function SoloLevelSelector() {
                 FireRate: "never",
                 frame: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Target.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Target.png";
             }
             break;
         case 4:
@@ -2010,10 +2006,9 @@ function SoloLevelSelector() {
                 FireRate: 25,
                 Fireframe: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Turret.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Turret.png";
             }
             break;
 
@@ -2046,10 +2041,9 @@ function SoloLevelSelector() {
                 FireRate: 30,
                 Fireframe: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Turret.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Turret.png";
             }
             break;
 
@@ -2074,10 +2068,9 @@ function SoloLevelSelector() {
                 Pathframe: 0,
                 Path: []
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Tank3.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Tank3.png";
             }
             break;
         case 7:
@@ -2119,10 +2112,9 @@ function SoloLevelSelector() {
                 Pathframe: 0,
                 Path: []
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Tank3.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Tank3.png";
             }
             break;
         case 8:
@@ -2180,10 +2172,9 @@ function SoloLevelSelector() {
                 FireRate: 30,
                 Fireframe: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Turret.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Turret.png";
             }
             break;
         case 9:
@@ -2231,10 +2222,9 @@ function SoloLevelSelector() {
                 Pathframe: 0,
                 Path: []
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Tank3.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Tank3.png";
             }
             break;
         case 10:
@@ -2338,10 +2328,9 @@ function SoloLevelSelector() {
                 Pathframe: 0,
                 Path: []
             }]
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Tank3.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Tank3.png";
             }
             break;
         default:
@@ -2357,7 +2346,7 @@ function SoloLevelSelector() {
     DetermineGridMap();
 }
 
-function CoOpLevelSelector() {
+function CoOpLevelSelector(selectedLevel) {
     var i
     Tank1Data = {
         x: 100,
@@ -2395,7 +2384,7 @@ function CoOpLevelSelector() {
         frame: 0,
         Alive: true,
     };
-    switch (Level) {
+    switch (selectedLevel) {
         case 1:
             walls = [];
             AIEnemyData = [{
@@ -2412,10 +2401,9 @@ function CoOpLevelSelector() {
                 FireRate: "never",
                 frame: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Target.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Target.png";
             }
             break;
         case 2:
@@ -2447,10 +2435,9 @@ function CoOpLevelSelector() {
                 FireRate: "never",
                 frame: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Target.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Target.png";
             }
             break;
         case 3:
@@ -2488,10 +2475,9 @@ function CoOpLevelSelector() {
                 Target: 2,
                 TargetSwitch: 0
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Turret.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Turret.png";
             }
             break;
 
@@ -2538,10 +2524,9 @@ function CoOpLevelSelector() {
                 TargetSwitch: 0,
                 Path: []
             }];
-            AIEnemy = [];
             for (i = 0; i < AIEnemyData.length; i++) {
-                AIEnemy[i] = new Image();
-                AIEnemy[i].src = "images/Tank3.png";
+                AIEnemyData[i].img = new Image();
+                AIEnemyData[i].img.src = "images/Tank3.png";
             }
             break;
         default:
@@ -2627,9 +2612,8 @@ function CoOpLevelSelectorScreen() {
     }
 }
 
-function VSMapSelect() { // selects the map to use for the vs game type currently. using random numbers
-    var option = Math.round(Math.random() * 5 + 1);
-    switch (option) {
+function VSMapSelect(selectedLevel) { // selects the map to use for the vs game type currently. using random numbers
+    switch (selectedLevel) {
         case 1:
             walls = [{
                 x: 650,
@@ -2790,8 +2774,7 @@ function LevelEditor() {
     Bullets = [];
     walls = []; // initializes the walls
     WALL = []; // initializes the wall images
-    AIEnemy = [];
-    AIEnemyData = [];
+    AIEnemyData = []; // initializes the Enemies
     Tank1 = new Image(); // used when creating images instead of components
     Tank1.src = Player1Tank.Tank; // used to define the images code source
     Tank1Data = {
@@ -2886,10 +2869,10 @@ function updateLevelEditorArea() {
         drawTank(Tank2, Tank2Data);
     }
 
-    for (k = 0; k < AIEnemy.length; k += 1) {
+    for (k = 0; k < AIEnemyData.length; k += 1) {
         AIEnemyData[k] = updateCoOpAI(AIEnemyData[k]);
         AIEnemyData[k] = update(AIEnemyData[k]);
-        drawTank(AIEnemy[k], AIEnemyData[k]);
+        drawTank(AIEnemyData[k].img, AIEnemyData[k]);
     }
 
     for (k = 0; k < walls.length; k++) {
@@ -2957,6 +2940,7 @@ function AddEnemy() {
         speed: 0,
         AIEnemy: true,
         frame: 0,
+        img: new Image()
     }
     if (LevelEditorInfo.Enemy == "Target") {
 
@@ -2965,10 +2949,9 @@ function AddEnemy() {
         NewEnemy.AIType = "Target";
         NewEnemy.Shape = "Circle";
         NewEnemy.FireRate = "never";
-
+        
         AIEnemyData.push(NewEnemy);
-        AIEnemy.push(new Image());
-        AIEnemy[AIEnemyData.length - 1].src = "images/Target.png"
+        AIEnemyData[AIEnemyData.length - 1].img.src = "images/Target.png"
     } else if (LevelEditorInfo.Enemy == "Turret") {
         NewEnemy.radius = 30;
         NewEnemy.Tank = false;
@@ -2979,8 +2962,7 @@ function AddEnemy() {
         NewEnemy.TargetSwitch = 0;
 
         AIEnemyData.push(NewEnemy);
-        AIEnemy.push(new Image());
-        AIEnemy[AIEnemyData.length - 1].src = "images/Turret.png"
+        AIEnemyData[AIEnemyData.length - 1].img.src = "images/Turret.png"
     } else if (LevelEditorInfo.Enemy == "Tank") {
         NewEnemy.Lw = 15;
         NewEnemy.Rw = 15;
@@ -2995,8 +2977,7 @@ function AddEnemy() {
         NewEnemy.Path = [];
 
         AIEnemyData.push(NewEnemy);
-        AIEnemy.push(new Image());
-        AIEnemy[AIEnemyData.length - 1].src = "images/Tank3.png"
+        AIEnemyData[AIEnemyData.length - 1].img.src = "images/Tank3.png"
     }
     setTimeout(LevelEditorDrawing, 50);
 }
@@ -3151,7 +3132,7 @@ function TanksOverlap(obj1) {
 
         Obj1Points = [Obj1topright[0], Obj1topright[1], Obj1topleft[0], Obj1topleft[1], Obj1bottomleft[0], Obj1bottomleft[1], Obj1bottomright[0], Obj1bottomright[1]]
         if (VsGame || CoOpGame || LevelEditorInfo.Type == "CoOp") {
-            if (Tank2Data.x != obj1.x || Tank2Data.y != obj1.y) {
+            if ((Tank2Data.x != obj1.x || Tank2Data.y != obj1.y) && Tank2Data.Alive) {
                 obj2 = Tank2Data;
                 trhy = Math.sqrt(Math.pow(obj2.Th, 2) + Math.pow(obj2.Lw, 2));
                 tlhy = Math.sqrt(Math.pow(obj2.Th, 2) + Math.pow(obj2.Rw, 2));
@@ -3203,7 +3184,7 @@ function TanksOverlap(obj1) {
                     }
                 }
             }
-            if (Tank1Data.x != obj1.x || Tank1Data.y != obj1.y) {
+            if ((Tank1Data.x != obj1.x || Tank1Data.y != obj1.y) && Tank1Data.Alive) {
                 obj2 = Tank1Data;
                 trhy = Math.sqrt(Math.pow(obj2.Th, 2) + Math.pow(obj2.Lw, 2));
                 tlhy = Math.sqrt(Math.pow(obj2.Th, 2) + Math.pow(obj2.Rw, 2));
@@ -3256,7 +3237,7 @@ function TanksOverlap(obj1) {
                     }
                 }
             }
-            for (k = 0; k < AIEnemy.length; k += 1) {
+            for (k = 0; k < AIEnemyData.length; k += 1) {
                 if (AIEnemyData[k].x != obj1.x || AIEnemyData[k].y != obj1.y) {
                     obj2 = AIEnemyData[k];
 
@@ -3366,7 +3347,7 @@ function TanksOverlap(obj1) {
                         return overlap;
                     }
                 }
-                for (k = 0; k < AIEnemy.length; k += 1) {
+                for (k = 0; k < AIEnemyData.length; k += 1) {
                     if (AIEnemyData[k].x != obj1.x || AIEnemyData[k].y != obj1.y) {
                         obj2 = AIEnemyData[k];
 
@@ -3424,7 +3405,7 @@ function TanksOverlap(obj1) {
                 }
 
             } else {
-                for (k = 0; k < AIEnemy.length; k += 1) {
+                for (k = 0; k < AIEnemyData.length; k += 1) {
                     if (AIEnemyData[k].x != obj1.x || AIEnemyData[k].y != obj1.y) {
                         obj2 = AIEnemyData[k];
 
@@ -3925,7 +3906,6 @@ function PlayerLevel(index) {
     Tank2.src = Player2Tank.Tank;
 
     AIEnemyData = SavedLevels[index].AIEnemyData;
-    AIEnemy = [];
     WALL = [];
     walls = SavedLevels[index].walls;
     Tank2Data = SavedLevels[index].Tank2Data;
@@ -3936,31 +3916,11 @@ function PlayerLevel(index) {
         WALL[walls.length - 1].src = "images/Wall.png";
     }
 
-    if (Level_Editor) {
+    if (!Level_Editor) {
         for (j = 0; j < AIEnemyData.length; j++) {
-            if (AIEnemyData[j].AIType == "Target") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Target.png";
-            } else if (AIEnemyData[j].AIType == "Turret") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Turret.png";
-            } else if (AIEnemyData[j].AIType == "Tank") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Tank3.png";
-            }
-        }
-    } else {
-        for (j = 0; j < AIEnemyData.length; j++) {
-            if (AIEnemyData[j].AIType == "Target") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Target.png";
-            } else if (AIEnemyData[j].AIType == "Turret") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Turret.png";
+            if (AIEnemyData[j].AIType == "Turret") {
                 AIEnemyData[j].Fireframe = 5;
             } else if (AIEnemyData[j].AIType == "Chase" || AIEnemyData[j].AIType == "Dodge" || AIEnemyData[j].AIType == "PathFind") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Tank3.png";
                 AIEnemyData[j].Fireframe = 5;
             }
         }
@@ -3985,14 +3945,15 @@ function LevelEditorDrawing() {
     if (LevelEditorInfo.Type == "CoOp") {
         drawTank(Tank2, Tank2Data);
     }
-    for (k = 0; k < AIEnemy.length; k += 1) {
-        drawTank(AIEnemy[k], AIEnemyData[k]);
+    for (k = 0; k < AIEnemyData.length; k += 1) {
+        drawTank(AIEnemyData[k].img, AIEnemyData[k]);
     }
 
     for (k = 0; k < walls.length; k++) {
         drawWall(WALL[k], walls[k]);
     }
 }
+
 /*
 Things to Add:
 
@@ -4010,16 +3971,15 @@ AI:
         if enemy not in same general direction stop
         if further stop if turret
         stop if the friendly is closer then like 50px or something too
-    ADD PathFind to the CoOp AI
 
 All
     add more levels
     Turrets and targets can be run over
     image saving for walls and turets and targets to draw based soley off the data to save memory. one instance of the image redrawn in other locations
+    TanksOverlap, WallCheck, Crashwith in one function.
 
 Level Editor: 
-    can't move anything after hitting play.
-    after pause or death everything returns to start locations.
-    bullets can be fired.
+    add option to fire bullets.
+    after death or on reset everything returns to start locations to really test the level.
 */
 
