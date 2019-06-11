@@ -16,7 +16,7 @@
         <text id="wins"></text>
     </div>
     <div id="Menu">
-        <button id="VS-Button" class="Menu-Button" onclick="startVSGame()">1 VS 1</button>
+        <button id="VS-Button" class="Menu-Button" onclick="VSLevelSelectorScreen()">1 VS 1</button>
         <button id="Solo-Button" class="Menu-Button" onclick="LevelSelectorScreen()">SOLO</button>
         <button id="CoOp-Button" class="Menu-Button" onclick="CoOpLevelSelectorScreen()">CoOp</button>
         <button id="LevelEditor-Button" class="Menu-Button" onclick="LevelEditor()">Level Editor</button>
@@ -43,6 +43,21 @@
             <button id="SoloPlayerLevel3" class="Level-Button" onclick="PlayerLevel(2)" hidden="true">Player Level 3</button>
     </div>
 
+    <div id="VS_Level_List" hidden="true">
+        <button id="Menu-Button" class="Level-Button" onclick="Menu()">Main Menu</button>
+        <br><br>
+        <button id="VSLevel1" class="Level-Button" onclick="startVSGame(1)">1</button>
+        <button id="VSLevel2" class="Level-Button" onclick="startVSGame(2)">2</button>
+        <button id="VSLevel3" class="Level-Button" onclick="startVSGame(3)">3</button>
+        <button id="VSLevel4" class="Level-Button" onclick="startVSGame(4)">4</button>
+        <button id="VSLevel5" class="Level-Button" onclick="startVSGame(5)">5</button>
+        <button id="VSLevel6" class="Level-Button" onclick="startVSGame(6)">6</button>
+        <button id="VSRandom" class="Level-Button" onclick="startVSGame(0)">Random</button>
+        <button id="VSPlayerLevel1" class="Level-Button" onclick="PlayerLevel(0)" hidden="true">Player Level 1</button>
+        <button id="VSPlayerLevel2" class="Level-Button" onclick="PlayerLevel(1)" hidden="true">Player Level 2</button>
+        <button id="VSPlayerLevel3" class="Level-Button" onclick="PlayerLevel(2)" hidden="true">Player Level 3</button>
+    </div>
+
     <div id="CoOp_Level_List" hidden = "true">
         <button id="Menu-Button" class="Level-Button" onclick="Menu()" >Main Menu</button>
         <br><br>
@@ -66,6 +81,7 @@
         <select id="Solo-selector" onchange="LevelEditorSelect('Type')">
             <option value = 0>Solo</option>
             <option value = 1>CoOp</option>
+            <option value = 2>VS</option>
         </select>
 
         <select id="Movement-selector">
@@ -125,12 +141,6 @@
             <button id="Tank1-6-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',6)" ></button>
             <button id="Tank1-7-Button" class= "Tank-Images" onclick="TankSelect(1,'Image',7)" ></button>
             <br><br>
-            <!-- <text class="Settings-Text">
-                &nbsp Shooting:
-            </text>
-            <button id="Tank1-Space-Button" onclick="TankSelect(1, 'Shoot', 'Space')" disabled = "true">SpaceBar</button>
-            <button id="Tank1-Enter-Button" onclick="TankSelect(1, 'Shoot', 'Enter')" >Enter</button>
-            <br><br> -->
             <text class="Settings-Text">&nbsp; Movement:</text>
             <button id="Tank1-WASD-Button" onclick="TankSelect(1, 'Move', 'WASD')" disabled = "true">WASD and SpaceBar</button>
             <button id="Tank1-4568-Button" onclick="TankSelect(1, 'Move', '4568')" >4568 and SpaceBar</button>

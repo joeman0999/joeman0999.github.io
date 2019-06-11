@@ -82,6 +82,7 @@ function Menu() {
     }
 
     document.getElementById("Solo_Level_List").hidden = true;
+    document.getElementById("VS_Level_List").hidden = true;
     document.getElementById("CoOp_Level_List").hidden = true;
     document.getElementById("ButtonArea").hidden = true;
     document.getElementById("LevelEditorArea").hidden = true;
@@ -409,11 +410,18 @@ function HelpScreen() {
     document.getElementById("Help-Area").hidden = false;
 }
 
-function startVSGame() {
+function TrackReset() {
+    if (myGameArea.keys && myGameArea.keys[78]) {
+        Reset();
+    }
+}
+
+function startVSGame(n) {
     Level = 0;
     VsGame = true;
     Bullets = [];
     document.getElementById("Menu").hidden = true;
+    document.getElementById("VS_Level_List").hidden = true;
     document.getElementById("ButtonArea").hidden = false;
     Tank1 = new Image();
     Tank1.src = Player1Tank.Tank;
@@ -454,8 +462,10 @@ function startVSGame() {
         frame: 0
     }
     AIEnemyData = [];
-    var option = Math.round(Math.random() * 5 + 1); // random level
-    VSMapSelect(option);
+    if (n == 0) {
+        n = Math.round(Math.random() * 5 + 1); // random level
+    }
+    VSMapSelect(n);
     myGameArea.start()
     document.getElementById("GameArea").hidden = false;
 }
@@ -545,7 +555,7 @@ function StartCoOpGame(n) {
     document.getElementById("GameArea").hidden = false;
 }
 
-function component(width, height, color, x, y, type) {
+function component(width, height, color, x, y, type) { // makes bullets
 
     this.type = type;
     this.width = width;
@@ -880,12 +890,6 @@ function updateCoOpGameArea() {
 
     AiDraw();
     drawWallsAndBullets();
-}
-
-function TrackReset() {
-    if (myGameArea.keys && myGameArea.keys[78]) {
-        Reset();
-    }
 }
 
 function update(Info) { // updates the position given many elements and checks for collisions
@@ -1902,6 +1906,92 @@ function crashWith(obj, otherobj) {
     return crash;
 }
 
+function VSLevelSelectorScreen() {
+    document.getElementById("Menu").hidden = true;
+    document.getElementById("VS_Level_List").hidden = false;
+
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
+        }
+        for (let i = 0; i < SavedLevels.length; i++) {
+            if (SavedLevels[i].Type == "VS") {
+                document.getElementById("VSPlayerLevel" + (i + 1)).hidden = false;
+            }
+        }
+    } catch (err) {
+
+    }
+}
+
+function LevelSelectorScreen() {
+    try {
+        if (localStorage.Max_Level) {
+            Max_Level = localStorage.Max_Level;
+        } else {
+            localStorage.Max_Level = 1;
+            Max_Level = 1;
+        }
+    } catch (err) {
+        if (typeof Max_Level == "undefined") {
+            Max_Level = 10;
+        }
+    }
+    document.getElementById("Menu").hidden = true;
+    document.getElementById("Solo_Level_List").hidden = false;
+    
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
+        }
+        for (let i = 0; i < SavedLevels.length; i++) {
+            if (SavedLevels[i].Type == "Solo") {
+                document.getElementById("SoloPlayerLevel" + (i+1)).hidden = false;
+            }
+        }
+    } catch (err) {
+
+    }
+
+    for (let i = 2; i <= Max_Level && Max_Level <= 10; i++) {
+        document.getElementById("Level" + i).disabled = false;
+    }
+}
+
+function CoOpLevelSelectorScreen() {
+    try {
+        if (localStorage.CoOpMax_Level) {
+            CoOpMax_Level = localStorage.CoOpMax_Level;
+        } else {
+            localStorage.CoOpMax_Level = 1;
+            CoOpMax_Level = 1;
+        }
+    } catch (err) {
+        if (typeof CoOpMax_Level == "undefined") {
+            CoOpMax_Level = 4;
+        }
+    }
+
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
+        }
+        for (let i = 0; i < SavedLevels.length; i++) {
+            if (SavedLevels[i].Type == "CoOp") {
+                document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = false;
+            }
+        }
+    } catch (err) {
+
+    }
+    document.getElementById("Menu").hidden = true;
+    document.getElementById("CoOp_Level_List").hidden = false;
+
+    for (let i = 2; i <= CoOpMax_Level && CoOpMax_Level <= 4; i++) {
+        document.getElementById("CoOpLevel" + i).disabled = false;
+    }
+}
+
 function SoloLevelSelector(selectedLevel) {
     switch (selectedLevel) {
         case 0:
@@ -2541,74 +2631,6 @@ function CoOpLevelSelector(selectedLevel) {
     }
 }
 
-function LevelSelectorScreen() {
-    try {
-        if (localStorage.Max_Level) {
-            Max_Level = localStorage.Max_Level;
-        } else {
-            localStorage.Max_Level = 1;
-            Max_Level = 1;
-        }
-    } catch (err) {
-        if (typeof Max_Level == "undefined") {
-            Max_Level = 10;
-        }
-    }
-    document.getElementById("Menu").hidden = true;
-    document.getElementById("Solo_Level_List").hidden = false;
-    
-    try {
-        if (localStorage.SavedLevels) {
-            SavedLevels = JSON.parse(localStorage.SavedLevels);
-        }
-        for (let i = 0; i < SavedLevels.length; i++) {
-            if (SavedLevels[i].Type == "Solo") {
-                document.getElementById("SoloPlayerLevel" + (i+1)).hidden = false;
-            }
-        }
-    } catch (err) {
-
-    }
-
-    for (let i = 2; i <= Max_Level && Max_Level <= 10; i++) {
-        document.getElementById("Level" + i).disabled = false;
-    }
-}
-
-function CoOpLevelSelectorScreen() {
-    try {
-        if (localStorage.CoOpMax_Level) {
-            CoOpMax_Level = localStorage.CoOpMax_Level;
-        } else {
-            localStorage.CoOpMax_Level = 1;
-            CoOpMax_Level = 1;
-        }
-    } catch (err) {
-        if (typeof CoOpMax_Level == "undefined") {
-            CoOpMax_Level = 4;
-        }
-    }
-
-    try {
-        if (localStorage.SavedLevels) {
-            SavedLevels = JSON.parse(localStorage.SavedLevels);
-        }
-        for (let i = 0; i < SavedLevels.length; i++) {
-            if (SavedLevels[i].Type == "CoOp") {
-                document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = false;
-            }
-        }
-    } catch (err) {
-
-    }
-    document.getElementById("Menu").hidden = true;
-    document.getElementById("CoOp_Level_List").hidden = false;
-
-    for (let i = 2; i <= CoOpMax_Level && CoOpMax_Level <= 4; i++) {
-        document.getElementById("CoOpLevel" + i).disabled = false;
-    }
-}
-
 function VSMapSelect(selectedLevel) { // selects the map to use for the vs game type currently. using random numbers
     switch (selectedLevel) {
         case 1:
@@ -2882,6 +2904,9 @@ function LevelEditorSelect(Option) {
             Tank2Data.Alive = false;
         } else if (value == 1) {
             LevelEditorInfo.Type = "CoOp";
+            Tank2Data.Alive = true;
+        } else if (value == 2) {
+            LevelEditorInfo.Type = "VS";
             Tank2Data.Alive = true;
         }
     } else if (Option == "Wall") {
@@ -3450,6 +3475,157 @@ function TanksOverlap(obj1) {
     }
 }
 
+function SaveLevel() {
+    var NewLevel = {
+        Type: LevelEditorInfo.Type,
+        AIEnemyData: AIEnemyData,
+        walls: walls,
+        Tank2Data: Tank2Data,
+        Tank1Data: Tank1Data
+    }
+    try {
+        if (localStorage.SavedLevels) {
+            SavedLevels = JSON.parse(localStorage.SavedLevels);
+            if (SavedLevels.length < 3) {
+                if (NewLevel.Type == "VS" && AIEnemyData.length != 0) {
+                    alert("No enemys may exist in a VS game right now.")/////////////////////////////////////////////// try to get rid of
+                } else {
+                    SavedLevels.push(NewLevel);
+                    localStorage.SavedLevels = JSON.stringify(SavedLevels);
+                }
+            } else {
+                alert("Max number of levels reached delete a level to save.");
+            }
+        } else {
+            SavedLevels = [];
+            SavedLevels.push(NewLevel);
+            localStorage.SavedLevels = JSON.stringify(SavedLevels);
+            alert("Level Saved.");
+        }
+        for (i = 0; i < 3; i++) {
+            document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
+            document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = true;
+            document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = true;
+            document.getElementById("EditPlayerLevel" + (i + 1)).hidden = true;
+        }
+        for (i = 0; i < SavedLevels.length; i++) {
+            document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
+            document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
+        }
+
+    } catch (err) {
+        alert("Level can not be Saved.")
+    }
+}
+
+function LevelDelete(index) {
+    var i
+    SavedLevels.splice(index, 1);
+    localStorage.SavedLevels = JSON.stringify(SavedLevels);
+    for (i = 0; i < 3; i++) {
+        document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
+        document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = true;
+        document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = true;
+        document.getElementById("EditPlayerLevel" + (i + 1)).hidden = true;
+    }
+    for (i = 0; i < SavedLevels.length; i++) {
+        document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
+        document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
+    }
+    alert("Level Deleted.");
+}
+
+function PlayerLevel(index) {
+    var j;
+    Level = -1 * (index + 1);
+    VsGame = false;
+    CoOpGame = false;
+    SoloGame = false;
+    SavedLevels = JSON.parse(localStorage.SavedLevels);
+    if (Level_Editor) {
+        Level_Editor = true;
+    } else if (SavedLevels[index].Type == "Solo") {
+        SoloGame = true;
+        Level_Editor = false;
+        document.getElementById("ButtonArea").hidden = false;
+    } else if (SavedLevels[index].Type == "CoOp") {
+        CoOpGame = true;
+        Level_Editor = false;
+        document.getElementById("ButtonArea").hidden = false;
+    }
+
+    Bullets = [];
+    document.getElementById("Menu").hidden = true;
+    document.getElementById("Solo_Level_List").hidden = true;
+    document.getElementById("CoOp_Level_List").hidden = true;
+    document.getElementById("VS_Level_List").hidden = true;
+
+    Tank1 = new Image();
+    Tank1.src = Player1Tank.Tank;
+    Tank2 = new Image();
+    Tank2.src = Player2Tank.Tank;
+
+    AIEnemyData = SavedLevels[index].AIEnemyData;
+    walls = SavedLevels[index].walls;
+    Tank2Data = SavedLevels[index].Tank2Data;
+    Tank1Data = SavedLevels[index].Tank1Data;
+
+    for (j = 0; j < walls.length; j++) {
+        walls[walls.length - 1].img = new Image();
+        walls[walls.length - 1].img.src = "images/Wall.png";
+    }
+
+    if (Level_Editor) {
+        for (j = 0; j < AIEnemyData.length; j++) {
+            if (AIEnemyData[j].AIType == "Target") {
+                AIEnemyData[j].img.src = "images/Target.png";
+            } else if (AIEnemyData[j].AIType == "Turret") {
+                AIEnemyData[j].img.src = "images/Turret.png";
+            } else if (AIEnemyData[j].AIType == "Tank") {
+                AIEnemyData[j].img.src = "images/Tank3.png";
+            }
+        }
+    } else {
+        for (j = 0; j < AIEnemyData.length; j++) {
+            if (AIEnemyData[j].AIType == "Target") {
+                AIEnemyData[j].img.src = "images/Target.png";
+            } else if (AIEnemyData[j].AIType == "Turret") {
+                AIEnemyData[j].img.src = "images/Turret.png";
+                AIEnemyData[j].Fireframe = 5;
+            } else if (AIEnemyData[j].AIType == "Chase" || AIEnemyData[j].AIType == "Dodge" || AIEnemyData[j].AIType == "PathFind") {
+                AIEnemyData[j].img.src = "images/Tank3.png";
+                AIEnemyData[j].Fireframe = 5;
+            }
+        }
+        myGameArea.start();
+    }
+    document.getElementById("GameArea").hidden = false;
+
+}
+
+function ResetData() {
+    try {
+        localStorage.clear();
+    } catch (err) {
+
+    }
+}
+
+function LevelEditorDrawing() {
+    myGameArea.clear();
+    drawTank(Tank1, Tank1Data);
+    if (LevelEditorInfo.Type == "CoOp") {
+        drawTank(Tank2, Tank2Data);
+    }
+    for (let i = 0; i < AIEnemyData.length; i += 1) {
+        drawTank(AIEnemyData[i].img, AIEnemyData[i]);
+    }
+
+    for (let i = 0; i < walls.length; i++) {
+        drawWall(walls[i].img, walls[i]);
+    }
+}
+
 function indexOfMin(arr) {
     if (arr.length === 0) {
         return -1;
@@ -3804,152 +3980,6 @@ function search(grid, start, end, diagonal, heuristic) {
     return [];
 }
 
-function SaveLevel() {
-    var NewLevel = {
-        Type: LevelEditorInfo.Type,
-        AIEnemyData: AIEnemyData,
-        walls: walls,
-        Tank2Data: Tank2Data,
-        Tank1Data: Tank1Data
-    }
-    try {
-        if (localStorage.SavedLevels) {
-            SavedLevels = JSON.parse(localStorage.SavedLevels);
-            if (SavedLevels.length < 3) {
-                SavedLevels.push(NewLevel);
-                localStorage.SavedLevels = JSON.stringify(SavedLevels);
-            } else {
-                alert("Max number of levels reached delete a level to save.");
-            }
-        } else {
-            SavedLevels = [];
-            SavedLevels.push(NewLevel);
-            localStorage.SavedLevels = JSON.stringify(SavedLevels);
-            alert("Level Saved.");
-        }
-        for (i = 0; i < 3; i++) {
-            document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
-            document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = true;
-            document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = true;
-            document.getElementById("EditPlayerLevel" + (i + 1)).hidden = true;
-        }
-        for (i = 0; i < SavedLevels.length; i++) {
-            document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
-            document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
-        }
-        
-    } catch (err) {
-        alert("Level can not be Saved.")
-    }
-}
-
-function LevelDelete(index) {
-    var i
-    SavedLevels.splice(index, 1);
-    localStorage.SavedLevels = JSON.stringify(SavedLevels);
-    for (i = 0; i < 3; i++) {
-        document.getElementById("SoloPlayerLevel" + (i + 1)).hidden = true;
-        document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = true;
-        document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = true;
-        document.getElementById("EditPlayerLevel" + (i + 1)).hidden = true;
-    }
-    for (i = 0; i < SavedLevels.length; i++) {
-        document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
-        document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
-    }
-    alert("Level Deleted.");
-}
-
-function PlayerLevel(index) {
-    var j;
-    Level = -1 * (index + 1);
-    VsGame = false;
-    CoOpGame = false;
-    SoloGame = false;
-    SavedLevels = JSON.parse(localStorage.SavedLevels);
-    if (Level_Editor) {
-        Level_Editor = true;
-    } else if(SavedLevels[index].Type == "Solo") {
-        SoloGame = true;
-        Level_Editor = false;
-        document.getElementById("ButtonArea").hidden = false;
-    } else if (SavedLevels[index].Type == "CoOp") {
-        CoOpGame = true;
-        Level_Editor = false;
-        document.getElementById("ButtonArea").hidden = false;
-    }
-
-    Bullets = [];
-    document.getElementById("Menu").hidden = true;
-    document.getElementById("Solo_Level_List").hidden = true;
-    document.getElementById("CoOp_Level_List").hidden = true;
-    
-    Tank1 = new Image();
-    Tank1.src = Player1Tank.Tank;
-    Tank2 = new Image();
-    Tank2.src = Player2Tank.Tank;
-
-    AIEnemyData = SavedLevels[index].AIEnemyData;
-    walls = SavedLevels[index].walls;
-    Tank2Data = SavedLevels[index].Tank2Data;
-    Tank1Data = SavedLevels[index].Tank1Data;
-
-    for (j = 0; j < walls.length; j++) {
-        walls[walls.length - 1].img = new Image();
-        walls[walls.length - 1].img.src = "images/Wall.png";
-    }
-
-    if (Level_Editor) {
-        for (j = 0; j < AIEnemyData.length; j++) {
-            if (AIEnemyData[j].AIType == "Target") {
-                AIEnemyData[j].img.src = "images/Target.png";
-            } else if (AIEnemyData[j].AIType == "Turret") {
-                AIEnemyData[j].img.src = "images/Turret.png";
-            } else if (AIEnemyData[j].AIType == "Tank") {
-                AIEnemyData[j].img.src = "images/Tank3.png";
-            }
-        }
-    } else {
-        for (j = 0; j < AIEnemyData.length; j++) {
-            if (AIEnemyData[j].AIType == "Target") {
-                AIEnemyData[j].img.src = "images/Target.png";
-            } else if (AIEnemyData[j].AIType == "Turret") {
-                AIEnemyData[j].img.src = "images/Turret.png";
-                AIEnemyData[j].Fireframe = 5;
-            } else if (AIEnemyData[j].AIType == "Chase" || AIEnemyData[j].AIType == "Dodge" || AIEnemyData[j].AIType == "PathFind") {
-                AIEnemyData[j].img.src = "images/Tank3.png";
-                AIEnemyData[j].Fireframe = 5;
-            }
-        }
-        myGameArea.start();
-    }
-    document.getElementById("GameArea").hidden = false;
-    
-}
-
-function ResetData() {
-    try {
-        localStorage.clear();
-    } catch (err) {
-    
-    }
-}
-
-function LevelEditorDrawing() {
-    myGameArea.clear();
-    drawTank(Tank1, Tank1Data);
-    if (LevelEditorInfo.Type == "CoOp") {
-        drawTank(Tank2, Tank2Data);
-    }
-    for (let i = 0; i < AIEnemyData.length; i += 1) {
-        drawTank(AIEnemyData[i].img, AIEnemyData[i]);
-    }
-
-    for (let i = 0; i < walls.length; i++) {
-        drawWall(walls[i].img, walls[i]);
-    }
-}
-
 /*
 Things to Add:
 
@@ -3971,15 +4001,15 @@ AI:
 All:
     add more levels.
     Turrets and targets can be run over.
-    image saving for walls and turets and targets to draw based soley off the data to save memory. one instance of the image redrawn in other locations
     TanksOverlap, WallCheck, Crashwith in one function.
 
 VS:
-    Add option to choose random level or select specific levels.
+    Add Ai to vs games (it will make them CoOp but win if one of them dies instead)
 
 Level Editor: 
     add option to fire bullets.
     after death or on reset everything returns to start locations to really test the level.
     add option to load levels that already exist
+    add option to make vs levels first must implement better vs screen
 */
 
