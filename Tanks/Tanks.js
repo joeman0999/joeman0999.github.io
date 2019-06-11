@@ -252,7 +252,7 @@ function mousedownhandler(e) {
         LevelEditorInfo.x = Tank2Data.x;
         LevelEditorInfo.y = Tank2Data.y;
     }
-    for (i = 0; i < walls.length; i++) {
+    for (let i = 0; i < walls.length; i++) {
         if (crashWith(walls[i], Mouse[0])) {
             Mouse[0].Holds = "Wall";
             Mouse[0].Index = i;
@@ -261,7 +261,7 @@ function mousedownhandler(e) {
             break;
         }
     }
-    for (i = 0; i < AIEnemyData.length; i++) {
+    for (let i = 0; i < AIEnemyData.length; i++) {
         if (crashWith(AIEnemyData[i], Mouse[0])) {
             Mouse[0].Holds = "AI";
             Mouse[0].Index = i;
@@ -295,9 +295,7 @@ function mousemovehandler(e) {
                 Tank2Data.y = LevelEditorInfo.y - (Mouse[0].OriginalY - Mouse[0].y);
             } else if (Mouse[0].Holds == "Wall") {
                 walls[Mouse[0].Index].x = LevelEditorInfo.x - (Mouse[0].OriginalX - Mouse[0].x);
-                WALL[Mouse[0].Index].x = walls[Mouse[0].Index].x;
                 walls[Mouse[0].Index].y = LevelEditorInfo.y - (Mouse[0].OriginalY - Mouse[0].y);
-                WALL[Mouse[0].Index].y = walls[Mouse[0].Index].y;
                 
             } else if (Mouse[0].Holds == "AI") {
                 AIEnemyData[Mouse[0].Index].x = LevelEditorInfo.x - (Mouse[0].OriginalX - Mouse[0].x);
@@ -311,7 +309,6 @@ function mousemovehandler(e) {
                 Tank2Data.angle = Math.atan2((Tank2Data.y - Mouse[0].y), (Tank2Data.x - Mouse[0].x)) - Math.PI / 2;
             } else if (Mouse[0].Holds == "Wall") {
                 walls[Mouse[0].Index].angle = Math.atan2((walls[Mouse[0].Index].y - Mouse[0].y), (walls[Mouse[0].Index].x - Mouse[0].x)) - Math.PI / 2;
-                WALL[Mouse[0].Index].angle = walls[Mouse[0].Index].angle;
             } else if (Mouse[0].Holds == "AI") {
                 AIEnemyData[Mouse[0].Index].angle = Math.atan2((AIEnemyData[Mouse[0].Index].y - Mouse[0].y), (AIEnemyData[Mouse[0].Index].x - Mouse[0].x)) - Math.PI / 2;
             }
@@ -573,8 +570,8 @@ function component(width, height, color, x, y, type) {
 
 function updateVsGameArea() {
     frame = frame + 1;
-    var x, y, i
-    for (i = 0; i < Bullets.length; i += 1) {
+    var x, y
+    for (let i = 0; i < Bullets.length; i += 1) {
         if (crashWith(Tank2Data, Bullets[i])) {
             myGameArea.keys = [];
             myGameArea.clear();
@@ -662,9 +659,9 @@ function updateVsGameArea() {
 
 function updateSoloGameArea() {
     frame = frame + 1;
-    var x, y, i, k
-    for (i = 0; i < Bullets.length; i += 1) {
-        for (k = 0; k < AIEnemyData.length; k += 1) {
+    var x, y
+    for (let i = 0; i < Bullets.length; i += 1) {
+        for (let k = 0; k < AIEnemyData.length; k += 1) {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
                 Bullets.splice(i, 1);
@@ -752,10 +749,10 @@ function updateSoloGameArea() {
 
 function updateCoOpGameArea() {
     frame = frame + 1;
-    var x, y, i, k
-    for (i = 0; i < Bullets.length; i += 1) {
+    var x, y
+    for (let i = 0; i < Bullets.length; i += 1) {
 
-        for (k = 0; k < AIEnemyData.length; k += 1) {
+        for (let k = 0; k < AIEnemyData.length; k += 1) {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
                 Bullets.splice(i, 1);
@@ -984,10 +981,10 @@ function updateAI(Info) {
             Info.angle = Theta;
         }
     } else if (Info.AIType == "Chase") {
-        var x, y, i, PathDistance, distance, Theta, Path
+        var x, y, PathDistance, distance, Theta, Path
         Info.FireRate = 30;
 
-        for (i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
+        for (let i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
             y = Bullets[i].y - Info.y;
             Theta = Math.atan2(x, y);
@@ -1129,7 +1126,7 @@ function updateAI(Info) {
 
     } else if (Info.AIType == "PathFind") {
 
-        var x, y, i, PathDistance, distance, Theta, Path, LOS
+        var x, y, PathDistance, distance, Theta, Path, LOS
 
         for (i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
@@ -1594,7 +1591,7 @@ function updateCoOpAI(Info) {
         }
     } else if (Info.AIType == "PathFind") {
 
-        var x, y, i, PathDistance, distance, Theta, Path, LOS
+        var PathDistance, distance, Path, LOS
 
         for (i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
@@ -1788,8 +1785,7 @@ function drawWall(image, Info) {
 }
 
 function drawWallsAndBullets() {
-    var i;
-    for (i = 0; i < Bullets.length; i += 1) {
+    for (let i = 0; i < Bullets.length; i += 1) {
         Bullets[i].x += Math.sin(Bullets[i].angle) * 4.5;
         Bullets[i].y += Math.cos(Bullets[i].angle) * -4.5;
 
@@ -1800,14 +1796,14 @@ function drawWallsAndBullets() {
             Bullets[i].update();
         }
     }
-    for (i = 0; i < walls.length; i++) {
-        drawWall(WALL[i], walls[i]);
+    for (let i = 0; i < walls.length; i++) {
+        drawWall(walls[i].img.src, walls[i]);
     }
 }
 
 function AiDraw() {
-    var k, x, y;
-    for (k = 0; k < AIEnemyData.length; k += 1) {
+    var x, y;
+    for (let k = 0; k < AIEnemyData.length; k += 1) {
         if (frame - AIEnemyData[k].FireRate > AIEnemyData[k].Fireframe && AIEnemyData[k].AIType != "Target") {
             AIEnemyData[k].Fireframe = frame;
             if (AIEnemyData[k].Shape == "Rect") {
@@ -1904,7 +1900,6 @@ function crashWith(obj, otherobj) {
 }
 
 function SoloLevelSelector(selectedLevel) {
-    var i
     switch (selectedLevel) {
         case 0:
             walls = [];
@@ -1926,7 +1921,7 @@ function SoloLevelSelector(selectedLevel) {
                 FireRate: "never",
                 frame: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Target.png";
             }
@@ -1962,7 +1957,7 @@ function SoloLevelSelector(selectedLevel) {
                 frame: 0
             }
             ];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Target.png";
             }
@@ -1990,7 +1985,7 @@ function SoloLevelSelector(selectedLevel) {
                 FireRate: "never",
                 frame: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Target.png";
             }
@@ -2011,7 +2006,7 @@ function SoloLevelSelector(selectedLevel) {
                 FireRate: 25,
                 Fireframe: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Turret.png";
             }
@@ -2046,7 +2041,7 @@ function SoloLevelSelector(selectedLevel) {
                 FireRate: 30,
                 Fireframe: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Turret.png";
             }
@@ -2073,7 +2068,7 @@ function SoloLevelSelector(selectedLevel) {
                 Pathframe: 0,
                 Path: []
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Tank3.png";
             }
@@ -2117,7 +2112,7 @@ function SoloLevelSelector(selectedLevel) {
                 Pathframe: 0,
                 Path: []
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Tank3.png";
             }
@@ -2177,7 +2172,7 @@ function SoloLevelSelector(selectedLevel) {
                 FireRate: 30,
                 Fireframe: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Turret.png";
             }
@@ -2227,7 +2222,7 @@ function SoloLevelSelector(selectedLevel) {
                 Pathframe: 0,
                 Path: []
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Tank3.png";
             }
@@ -2333,7 +2328,7 @@ function SoloLevelSelector(selectedLevel) {
                 Pathframe: 0,
                 Path: []
             }]
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Tank3.png";
             }
@@ -2343,16 +2338,14 @@ function SoloLevelSelector(selectedLevel) {
             Menu();
             break;
     }
-    WALL = []
-    for (i = 0; i < walls.length; i++) {
-        WALL.push(new Image());
-        WALL[i].src = "images/Wall.png";
+    for (let i = 0; i < walls.length; i++) {
+        walls.img = new Image();
+        walls[i].img.src = "images/Wall.png";
     }
     DetermineGridMap();
 }
 
 function CoOpLevelSelector(selectedLevel) {
-    var i
     Tank1Data = {
         x: 100,
         y: 200,
@@ -2406,7 +2399,7 @@ function CoOpLevelSelector(selectedLevel) {
                 FireRate: "never",
                 frame: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Target.png";
             }
@@ -2440,7 +2433,7 @@ function CoOpLevelSelector(selectedLevel) {
                 FireRate: "never",
                 frame: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Target.png";
             }
@@ -2480,7 +2473,7 @@ function CoOpLevelSelector(selectedLevel) {
                 Target: 2,
                 TargetSwitch: 0
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Turret.png";
             }
@@ -2529,7 +2522,7 @@ function CoOpLevelSelector(selectedLevel) {
                 TargetSwitch: 0,
                 Path: []
             }];
-            for (i = 0; i < AIEnemyData.length; i++) {
+            for (let i = 0; i < AIEnemyData.length; i++) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Tank3.png";
             }
@@ -2539,15 +2532,13 @@ function CoOpLevelSelector(selectedLevel) {
             Menu();
             break;
     }
-    WALL = []
-    for (i = 0; i < walls.length; i++) {
-        WALL.push(new Image())
-        WALL[i].src = "images/Wall.png";
+    for (let i = 0; i < walls.length; i++) {
+        walls.img = new Image();
+        walls[i].img.src = "images/Wall.png";
     }
 }
 
 function LevelSelectorScreen() {
-    var i;
     try {
         if (localStorage.Max_Level) {
             Max_Level = localStorage.Max_Level;
@@ -2567,7 +2558,7 @@ function LevelSelectorScreen() {
         if (localStorage.SavedLevels) {
             SavedLevels = JSON.parse(localStorage.SavedLevels);
         }
-        for (i = 0; i < SavedLevels.length; i++) {
+        for (let i = 0; i < SavedLevels.length; i++) {
             if (SavedLevels[i].Type == "Solo") {
                 document.getElementById("SoloPlayerLevel" + (i+1)).hidden = false;
             }
@@ -2576,7 +2567,7 @@ function LevelSelectorScreen() {
 
     }
 
-    for (i = 2; i <= Max_Level && Max_Level <= 10; i++) {
+    for (let i = 2; i <= Max_Level && Max_Level <= 10; i++) {
         document.getElementById("Level" + i).disabled = false;
     }
 }
@@ -2599,8 +2590,7 @@ function CoOpLevelSelectorScreen() {
         if (localStorage.SavedLevels) {
             SavedLevels = JSON.parse(localStorage.SavedLevels);
         }
-        k = 1;
-        for (i = 0; i < SavedLevels.length; i++) {
+        for (let i = 0; i < SavedLevels.length; i++) {
             if (SavedLevels[i].Type == "CoOp") {
                 document.getElementById("CoOpPlayerLevel" + (i + 1)).hidden = false;
             }
@@ -2611,7 +2601,7 @@ function CoOpLevelSelectorScreen() {
     document.getElementById("Menu").hidden = true;
     document.getElementById("CoOp_Level_List").hidden = false;
 
-    for (i = 2; i <= CoOpMax_Level && CoOpMax_Level <= 4; i++) {
+    for (let i = 2; i <= CoOpMax_Level && CoOpMax_Level <= 4; i++) {
         document.getElementById("CoOpLevel" + i).disabled = false;
     }
 }
@@ -2755,12 +2745,9 @@ function VSMapSelect(selectedLevel) { // selects the map to use for the vs game 
             ]
             break;
     }
-
-    WALL = []
-    var i
-    for (i = 0; i < walls.length; i++) {
-        WALL.push(new Image())
-        WALL[i].src = "images/Wall.png";
+    for (let i = 0; i < walls.length; i++) {
+        walls.img = new Image();
+        walls[i].img.src = "images/Wall.png";
     }
 }
 
@@ -2777,7 +2764,6 @@ function LevelEditor() {
     Level_Editor = true; // Game type
     Bullets = [];
     walls = []; // initializes the walls
-    WALL = []; // initializes the wall images
     AIEnemyData = []; // initializes the Enemies
     Tank1 = new Image(); // used when creating images instead of components
     Tank1.src = Player1Tank.Tank; // used to define the images code source
@@ -2823,7 +2809,7 @@ function LevelEditor() {
         if (localStorage.SavedLevels) {
             SavedLevels = JSON.parse(localStorage.SavedLevels);
         }
-        for (i = 0; i < SavedLevels.length; i++) {
+        for (let i = 0; i < SavedLevels.length; i++) {
             document.getElementById("EditPlayerLevel" + (i + 1)).hidden = false;
             document.getElementById("DeletePlayerLevel" + (i + 1)).hidden = false;
         }
@@ -2835,7 +2821,6 @@ function LevelEditor() {
 }
 
 function updateLevelEditorArea() {
-    var k
     frame = frame + 1;
     myGameArea.clear();
     Tank1Data.moveAngle = 0;
@@ -2873,14 +2858,14 @@ function updateLevelEditorArea() {
         drawTank(Tank2, Tank2Data);
     }
 
-    for (k = 0; k < AIEnemyData.length; k += 1) {
-        AIEnemyData[k] = updateCoOpAI(AIEnemyData[k]);
-        AIEnemyData[k] = update(AIEnemyData[k]);
-        drawTank(AIEnemyData[k].img, AIEnemyData[k]);
+    for (let i = 0; i < AIEnemyData.length; i += 1) {
+        AIEnemyData[i] = updateCoOpAI(AIEnemyData[i]);
+        AIEnemyData[i] = update(AIEnemyData[i]);
+        drawTank(AIEnemyData[i].img, AIEnemyData[i]);
     }
 
-    for (k = 0; k < walls.length; k++) {
-        drawWall(WALL[k], walls[k]);
+    for (let i = 0; i < walls.length; i++) {
+        drawWall(walls[i].img.src, walls[i]);
     }
 }
 
@@ -2926,10 +2911,10 @@ function AddWall() {
             height: Height,
             angle: 0,
             Shape: "wall",
+            img: new Image()
         }
         walls.push(newWall)
-        WALL.push(new Image())
-        WALL[walls.length - 1].src = "images/Wall.png";
+        walls[walls.length - 1].img.src = "images/Wall.png";
     }
     DetermineGridMap()
     setTimeout(LevelEditorDrawing, 50);
@@ -2992,11 +2977,10 @@ function WallCheck(obj, walls) {
     // and Bullets are defined as points
     // outputs either true or false
     var Hit = false;
-    var index = 0;
-    var i, wall, trhy, tlhy, brhy, blhy, angletopright, angletopleft, anglebottomright, anglebottomleft, other, Width, Height, d1, d2, d3, d4, topright, topleft, bottomleft, bottomright
+    var wall, trhy, tlhy, brhy, blhy, angletopright, angletopleft, anglebottomright, anglebottomleft, other, Width, Height, d1, d2, d3, d4, topright, topleft, bottomleft, bottomright
 
     if (obj.Shape == "Rect") {
-        var k, WallPoints
+        var WallPoints
 
         trhy = Math.sqrt(Math.pow(obj.Th, 2) + Math.pow(obj.Lw, 2))
         tlhy = Math.sqrt(Math.pow(obj.Th, 2) + Math.pow(obj.Rw, 2))
@@ -3014,7 +2998,7 @@ function WallCheck(obj, walls) {
         obj.x + brhy * Math.sin(anglebottomright), obj.y + brhy * Math.cos(anglebottomright)
         ];
 
-        for (k = 0; k < walls.length; k++) {
+        for (let k = 0; k < walls.length; k++) {
             wall = walls[k]
             Width = wall.width / 2;
             Height = wall.height / 2;
@@ -3033,7 +3017,7 @@ function WallCheck(obj, walls) {
             bottomleft = [wall.x + blhy * Math.sin(anglebottomleft), wall.y + blhy * Math.cos(anglebottomleft)];
             bottomright = [wall.x + brhy * Math.sin(anglebottomright), wall.y + brhy * Math.cos(anglebottomright)];
 
-            for (i = 0; i <= 6; i += 2) {
+            for (let i = 0; i <= 6; i += 2) {
                 // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
                 // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
                 // top left to top right
@@ -3052,7 +3036,7 @@ function WallCheck(obj, walls) {
             }
             // check if WallPoints are in obj1
             WallPoints = [topright[0], topright[1], topleft[0], topleft[1], bottomleft[0], bottomleft[1], bottomright[0], bottomright[1]]
-            for (i = 0; i <= 6; i += 2) {
+            for (let i = 0; i <= 6; i += 2) {
                 // top left to top right
                 d1 = (WallPoints[i] - other[2]) * (other[1] - other[3]) - (WallPoints[1 + i] - other[3]) * (other[0] - other[2]);
                 // bottom left to bottom right
@@ -3071,7 +3055,7 @@ function WallCheck(obj, walls) {
     } else if (obj.Shape == "Bullet") {
         other = [obj.x, obj.y];
 
-        for (i = 0; i < walls.length; i++) {
+        for (let i = 0; i < walls.length; i++) {
             wall = walls[i]
             Width = wall.width / 2;
             Height = wall.height / 2;
@@ -3114,7 +3098,6 @@ function WallCheck(obj, walls) {
 
 function TanksOverlap(obj1) {
     var overlap = false;
-    var k
     if (obj1.Shape == "Rect") {
         // Define obj1
         var trhy, tlhy, brhy, blhy, angletopright, angletopleft, Obj1topright, Obj1topleft, Obj1bottomright, Obj1Points, Obj2topright, Obj2topleft, Obj2bottomright, d1, d2, d3, d4, Obj2Points
@@ -3155,8 +3138,7 @@ function TanksOverlap(obj1) {
 
                 Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]]
 
-                d1, d2, d3, d4
-                for (i = 0; i <= 6; i += 2) {
+                for (let i = 0; i <= 6; i += 2) {
                     // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
                     // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
                     // top left to top right
@@ -3207,8 +3189,7 @@ function TanksOverlap(obj1) {
 
                 Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]]
 
-                d1, d2, d3, d4
-                for (i = 0; i <= 6; i += 2) {
+                for (let i = 0; i <= 6; i += 2) {
                     // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
                     // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
                     // top left to top right
@@ -3241,7 +3222,7 @@ function TanksOverlap(obj1) {
                     }
                 }
             }
-            for (k = 0; k < AIEnemyData.length; k += 1) {
+            for (let k = 0; k < AIEnemyData.length; k += 1) {
                 if (AIEnemyData[k].x != obj1.x || AIEnemyData[k].y != obj1.y) {
                     obj2 = AIEnemyData[k];
 
@@ -3262,8 +3243,7 @@ function TanksOverlap(obj1) {
 
                     Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]]
 
-                    d1, d2, d3, d4
-                    for (i = 0; i <= 6; i += 2) {
+                    for (let i = 0; i <= 6; i += 2) {
                         // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
                         // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
                         // top left to top right
@@ -3318,8 +3298,7 @@ function TanksOverlap(obj1) {
 
                 Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]]
 
-                d1, d2, d3, d4
-                for (i = 0; i <= 6; i += 2) {
+                for (let i = 0; i <= 6; i += 2) {
                     // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
                     // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
                     // top left to top right
@@ -3351,7 +3330,7 @@ function TanksOverlap(obj1) {
                         return overlap;
                     }
                 }
-                for (k = 0; k < AIEnemyData.length; k += 1) {
+                for (let k = 0; k < AIEnemyData.length; k += 1) {
                     if (AIEnemyData[k].x != obj1.x || AIEnemyData[k].y != obj1.y) {
                         obj2 = AIEnemyData[k];
 
@@ -3370,10 +3349,9 @@ function TanksOverlap(obj1) {
                         Obj2bottomleft = [obj2.x + blhy * Math.sin(anglebottomleft), obj2.y + blhy * Math.cos(anglebottomleft)];
                         Obj2bottomright = [obj2.x + brhy * Math.sin(anglebottomright), obj2.y + brhy * Math.cos(anglebottomright)];
 
-                        Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]]
+                        Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]];
 
-                        d1, d2, d3, d4
-                        for (i = 0; i <= 6; i += 2) {
+                        for (let i = 0; i <= 6; i += 2) {
                             // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
                             // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
                             // top left to top right
@@ -3409,7 +3387,7 @@ function TanksOverlap(obj1) {
                 }
 
             } else {
-                for (k = 0; k < AIEnemyData.length; k += 1) {
+                for (let k = 0; k < AIEnemyData.length; k += 1) {
                     if (AIEnemyData[k].x != obj1.x || AIEnemyData[k].y != obj1.y) {
                         obj2 = AIEnemyData[k];
 
@@ -3430,8 +3408,7 @@ function TanksOverlap(obj1) {
 
                         Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]]
 
-                        d1, d2, d3, d4
-                        for (i = 0; i <= 6; i += 2) {
+                        for (let i = 0; i <= 6; i += 2) {
                             // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
                             // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
                             // top left to top right
@@ -3478,7 +3455,7 @@ function indexOfMin(arr) {
     var min = arr[0];
     var minIndex = 0;
 
-    for (var i = 1; i < arr.length; i++) {
+    for (let i = 1; i < arr.length; i++) {
         if (arr[i] > min) {
             minIndex = i;
             min = arr[i];
@@ -3495,11 +3472,11 @@ function DetermineGridMap() { // Determines the grid state for the walls to gene
         x: 0,
         y: 0
     }
-    for (var i = 0; i < 260; i++) {
+    for (let i = 0; i < 260; i++) {
         GridMap[i] = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true];
         Info.x = Info.x + 5;
         Info.y = 0;
-        for (var k = 0; k < 120; k++) {
+        for (let k = 0; k < 120; k++) {
             Info.y = Info.y + 5;
             if (20 >= Info.x || Info.x >= Thecanvas.width - 20 || WallCheck(Info, walls)) {
                 GridMap[i][k] = false;
@@ -3535,9 +3512,9 @@ function FindConnectingPath(Point1, Point2) {
 function InitializeGrid() {
     var GridNodes = [];
 
-    for (var x = 0, xl = Math.floor(GridMap.length / 10); x < xl; x++) {
+    for (let x = 0, xl = Math.floor(GridMap.length / 10); x < xl; x++) {
         GridNodes[x] = [];
-        for (var y = 0, yl = Math.floor(GridMap[x].length / 10); y < yl; y++) {
+        for (let y = 0, yl = Math.floor(GridMap[x].length / 10); y < yl; y++) {
             var node = {
                 x: x,
                 y: y,
@@ -3552,8 +3529,8 @@ function InitializeGrid() {
 
             node.visited = false; 
             node.closed = false; 
-            for (var k = 0, kl = 10; k < kl; k++) {
-                for (var i = 0, il = 10; i < il; i++) {
+            for (let k = 0, kl = 10; k < kl; k++) {
+                for (let i = 0, il = 10; i < il; i++) {
                     var value = GridMap[x * 10 + k][y * 10 + i];
                     if (!value) {
                         node.visited = true; // has this square been visited 
@@ -3910,14 +3887,13 @@ function PlayerLevel(index) {
     Tank2.src = Player2Tank.Tank;
 
     AIEnemyData = SavedLevels[index].AIEnemyData;
-    WALL = [];
     walls = SavedLevels[index].walls;
     Tank2Data = SavedLevels[index].Tank2Data;
     Tank1Data = SavedLevels[index].Tank1Data;
 
     for (j = 0; j < walls.length; j++) {
-        WALL.push(new Image())
-        WALL[walls.length - 1].src = "images/Wall.png";
+        walls[walls.length - 1].img = new Image();
+        walls[walls.length - 1].img.src = "images/Wall.png";
     }
 
     if (Level_Editor) {
@@ -3968,7 +3944,7 @@ function LevelEditorDrawing() {
     }
 
     for (k = 0; k < walls.length; k++) {
-        drawWall(WALL[k], walls[k]);
+        drawWall(walls[k].img.src, walls[k]);
     }
 }
 
