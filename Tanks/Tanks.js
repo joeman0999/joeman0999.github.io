@@ -1678,16 +1678,24 @@ function updateCoOpAI(Info) {
             Path.x = Info.x;
             Path.y = Info.y;
             
+            Los = true;
             while (distance2 - PathDistance >= 5) {
                 Path.x += 5 * Math.sin(Theta2);
                 Path.y -= 5 * Math.cos(Theta2);
                 PathDistance += 5;
-                if (WallCheck(Path, walls)) {
+                if (WallCheck(Path, walls)) {// says I hit a wall trying to go on a straight path that means stay on pathfind not switch
                     Info.AIType = "Chase";
                     Info.Target = 2;
                     Info.Path = [];
-                    return Info;
+                    Los = false;
+                    break;
                 }
+            }
+            if (Los) {
+                Info.AIType = "Chase";
+                Info.Target = 2;
+                Info.Path = [];
+                return Info;
             }
         }
 
