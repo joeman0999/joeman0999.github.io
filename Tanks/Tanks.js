@@ -3626,6 +3626,7 @@ function PlayerLevel(index) {
                 AIEnemyData[j].Fireframe = 5;
             }
         }
+        DetermineGridMap();
         myGameArea.start();
     }
     document.getElementById("GameArea").hidden = false;
