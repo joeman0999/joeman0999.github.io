@@ -3923,28 +3923,22 @@ function PlayerLevel(index) {
     if (Level_Editor) {
         for (j = 0; j < AIEnemyData.length; j++) {
             if (AIEnemyData[j].AIType == "Target") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Target.png";
+                AIEnemyData[j].img.src = "images/Target.png";
             } else if (AIEnemyData[j].AIType == "Turret") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Turret.png";
+                AIEnemyData[j].img.src = "images/Turret.png";
             } else if (AIEnemyData[j].AIType == "Tank") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Tank3.png";
+                AIEnemyData[j].img.src = "images/Tank3.png";
             }
         }
     } else {
         for (j = 0; j < AIEnemyData.length; j++) {
             if (AIEnemyData[j].AIType == "Target") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Target.png";
+                AIEnemyData[j].img.src = "images/Target.png";
             } else if (AIEnemyData[j].AIType == "Turret") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Turret.png";
+                AIEnemyData[j].img.src = "images/Turret.png";
                 AIEnemyData[j].Fireframe = 5;
             } else if (AIEnemyData[j].AIType == "Chase" || AIEnemyData[j].AIType == "Dodge" || AIEnemyData[j].AIType == "PathFind") {
-                AIEnemy.push(new Image());
-                AIEnemy[j].src = "images/Tank3.png";
+                AIEnemyData[j].img.src = "images/Tank3.png";
                 AIEnemyData[j].Fireframe = 5;
             }
         }
