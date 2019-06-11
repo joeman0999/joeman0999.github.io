@@ -53,6 +53,8 @@ var LevelEditorInfo = {
 
 var Max_Level = 1;
 var CoOpMax_Level = 1;
+var AIEnemyData = [];
+var Bullets = [];
 
 function Menu() {
     clearInterval(myGameArea.interval);
@@ -451,6 +453,7 @@ function startVSGame() {
         Shape: "Rect",
         frame: 0
     }
+    AIEnemyData = [];
     var option = Math.round(Math.random() * 5 + 1); // random level
     VSMapSelect(option);
     myGameArea.start()
@@ -1797,7 +1800,7 @@ function drawWallsAndBullets() {
         }
     }
     for (let i = 0; i < walls.length; i++) {
-        drawWall(walls[i].img.src, walls[i]);
+        drawWall(walls[i].img, walls[i]);
     }
 }
 
@@ -2865,7 +2868,7 @@ function updateLevelEditorArea() {
     }
 
     for (let i = 0; i < walls.length; i++) {
-        drawWall(walls[i].img.src, walls[i]);
+        drawWall(walls[i].img, walls[i]);
     }
 }
 
@@ -3933,18 +3936,17 @@ function ResetData() {
 }
 
 function LevelEditorDrawing() {
-    var k
     myGameArea.clear();
     drawTank(Tank1, Tank1Data);
     if (LevelEditorInfo.Type == "CoOp") {
         drawTank(Tank2, Tank2Data);
     }
-    for (k = 0; k < AIEnemyData.length; k += 1) {
-        drawTank(AIEnemyData[k].img, AIEnemyData[k]);
+    for (let i = 0; i < AIEnemyData.length; i += 1) {
+        drawTank(AIEnemyData[i].img, AIEnemyData[i]);
     }
 
-    for (k = 0; k < walls.length; k++) {
-        drawWall(walls[k].img.src, walls[k]);
+    for (let i = 0; i < walls.length; i++) {
+        drawWall(walls[i].img, walls[i]);
     }
 }
 
@@ -3966,14 +3968,18 @@ AI:
         if further stop if turret
         stop if the friendly is closer then like 50px or something too
 
-All
-    add more levels
-    Turrets and targets can be run over
+All:
+    add more levels.
+    Turrets and targets can be run over.
     image saving for walls and turets and targets to draw based soley off the data to save memory. one instance of the image redrawn in other locations
     TanksOverlap, WallCheck, Crashwith in one function.
+
+VS:
+    Add option to choose random level or select specific levels.
 
 Level Editor: 
     add option to fire bullets.
     after death or on reset everything returns to start locations to really test the level.
+    add option to load levels that already exist
 */
 
