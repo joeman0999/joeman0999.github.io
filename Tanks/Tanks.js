@@ -3552,6 +3552,10 @@ function PlayerLevel(index) {
         CoOpGame = true;
         Level_Editor = false;
         document.getElementById("ButtonArea").hidden = false;
+    } else if (SavedLevels[index].Type == "VS") {
+        VSGame = true;
+        Level_Editor = false;
+        document.getElementById("ButtonArea").hidden = false;
     }
 
     Bullets = [];
@@ -3571,28 +3575,34 @@ function PlayerLevel(index) {
     Tank1Data = SavedLevels[index].Tank1Data;
 
     for (j = 0; j < walls.length; j++) {
-        walls[walls.length - 1].img = new Image();
-        walls[walls.length - 1].img.src = "images/Wall.png";
+        walls[j].img = new Image();
+        walls[j].img.src = "images/Wall.png";
     }
 
     if (Level_Editor) {
         for (j = 0; j < AIEnemyData.length; j++) {
             if (AIEnemyData[j].AIType == "Target") {
+                AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Target.png";
             } else if (AIEnemyData[j].AIType == "Turret") {
+                AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Turret.png";
             } else if (AIEnemyData[j].AIType == "Tank") {
+                AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Tank3.png";
             }
         }
     } else {
         for (j = 0; j < AIEnemyData.length; j++) {
             if (AIEnemyData[j].AIType == "Target") {
+                AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Target.png";
             } else if (AIEnemyData[j].AIType == "Turret") {
+                AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Turret.png";
                 AIEnemyData[j].Fireframe = 5;
             } else if (AIEnemyData[j].AIType == "Chase" || AIEnemyData[j].AIType == "Dodge" || AIEnemyData[j].AIType == "PathFind") {
+                AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Tank3.png";
                 AIEnemyData[j].Fireframe = 5;
             }
