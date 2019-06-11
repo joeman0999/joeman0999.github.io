@@ -2339,7 +2339,7 @@ function SoloLevelSelector(selectedLevel) {
             break;
     }
     for (let i = 0; i < walls.length; i++) {
-        walls.img = new Image();
+        walls[i].img = new Image();
         walls[i].img.src = "images/Wall.png";
     }
     DetermineGridMap();
@@ -2533,7 +2533,7 @@ function CoOpLevelSelector(selectedLevel) {
             break;
     }
     for (let i = 0; i < walls.length; i++) {
-        walls.img = new Image();
+        walls[i].img = new Image();
         walls[i].img.src = "images/Wall.png";
     }
 }
@@ -2746,7 +2746,7 @@ function VSMapSelect(selectedLevel) { // selects the map to use for the vs game 
             break;
     }
     for (let i = 0; i < walls.length; i++) {
-        walls.img = new Image();
+        walls[i].img = new Image();
         walls[i].img.src = "images/Wall.png";
     }
 }
