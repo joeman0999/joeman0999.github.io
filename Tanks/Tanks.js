@@ -1475,6 +1475,7 @@ function updateCoOpAI(Info) {
             }
         } else {
             LOS = false
+            Info.Target = 2;
         }
 
         if (LOS) {
@@ -1482,11 +1483,12 @@ function updateCoOpAI(Info) {
             Info.Target = 1;
             Info.Path = [];
             return Info;
-        } else {
-            PathDistance = 0;
-            Path.x = Info.x;
-            Path.y = Info.y;
-            
+        }
+        PathDistance = 0;
+        Path.x = Info.x;
+        Path.y = Info.y;
+
+        if (Tank2Data.Alive) {
             Los = true;
             while (distance2 - PathDistance >= 5) {
                 Path.x += 5 * Math.sin(Theta2);
@@ -1503,6 +1505,8 @@ function updateCoOpAI(Info) {
                 Info.Path = [];
                 return Info;
             }
+        } else {
+            Info.Target = 1;
         }
 
         Info.FireRate = 100;
