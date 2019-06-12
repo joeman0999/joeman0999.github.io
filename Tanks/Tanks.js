@@ -60,7 +60,10 @@ var Level, Tank1, Tank2, Tank1Data, Tank2Data, frame
 function Menu() {
     clearInterval(myGameArea.interval);
     myGameArea.keys = [];
-    myGameArea.clear();
+    try {
+        myGameArea.clear();
+    } catch (err) {
+    }
     try {
         document.getElementById("GameArea").removeEventListener('mousedown', mousedownhandler);
     } catch (err) {
