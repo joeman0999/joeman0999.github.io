@@ -59,7 +59,7 @@ var Bullets = [];
 function Menu() {
     clearInterval(myGameArea.interval);
     myGameArea.keys = [];
-    myGameArea.clear;
+    myGameArea.clear();
     try {
         document.getElementById("GameArea").removeEventListener('mousedown', mousedownhandler);
     } catch (err) {
@@ -105,60 +105,22 @@ function Menu() {
 function Reset() {
     clearInterval(myGameArea.interval);
     myGameArea.keys = [];
-    myGameArea.clear;
+    myGameArea.clear();
     Bullets = [];
-    Tank1Data = {
-        x: 100,
-        y: 300,
-        Lw: 15,
-        Rw: 15,
-        Th: 15,
-        Bh: 30,
-        angle: Math.PI / 2,
-        moveAngle: 0,
-        speed: 0,
-        width: 30,
-        height: 40,
-        Tank: true,
-        AIEnemy: false,
-        Shape: "Rect",
-        frame: 0
-    }
     frame = 0;
     document.getElementById("Play-Button").disabled = true;
     document.getElementById("Pause-Button").disabled = false;
-    myGameArea.keys[78] = false;
     if (Level<0) {
         PlayerLevel((Level*-1)-1)
     } else if (VsGame) {
-        Tank2Data = {
-            x: 1200,
-            y: 300,
-            Lw: 15,
-            Rw: 15,
-            Th: 15,
-            Bh: 30,
-            angle: -Math.PI / 2,
-            moveAngle: 0,
-            speed: 0,
-            width: 30,
-            height: 55,
-            Tank: true,
-            AIEnemy: false,
-            Shape: "Rect",
-            frame: 0
-        };
         var option = Math.round(Math.random() * 5 + 1); // random level
         VSMapSelect(option);
-        myGameArea.interval = setInterval(updateVsGameArea, 20);
+        myGameArea.interval = setInterval(updateCoOpGameArea, 20);
     } else if (SoloGame) {
-        Tank1Data.Alive = true;
         myGameArea.interval = setInterval(updateSoloGameArea, 20);
         document.getElementById("wins").innerHTML = "Level: " + Level;
         SoloLevelSelector(Level);
     } else if (CoOpGame) {
-        Tank1Data.Alive = true;
-        Tank2Data.Alive = true;
         myGameArea.interval = setInterval(updateCoOpGameArea, 20);
         document.getElementById("wins").innerHTML = "Level: " + Level;
         CoOpLevelSelector(Level);
@@ -179,7 +141,7 @@ var myGameArea = {
 
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         if (VsGame) {
-            this.interval = setInterval(updateVsGameArea, 20);
+            this.interval = setInterval(updateCoOpGameArea, 20);
             document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
         } else if (SoloGame) {
             this.interval = setInterval(updateSoloGameArea, 20);
@@ -215,7 +177,7 @@ var myGameArea = {
         document.getElementById("Play-Button").disabled = true;
         document.getElementById("Pause-Button").disabled = false;
         if (VsGame) {
-            this.interval = setInterval(updateVsGameArea, 20);
+            this.interval = setInterval(updateCoOpGameArea, 20);
         } else if (SoloGame) {
             this.interval = setInterval(updateSoloGameArea, 20);
         } else if (CoOpGame) {
@@ -399,10 +361,9 @@ function HelpScreen() {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
-        frame: 0
+        frame: 0,
+        Alive: true
     }
     SoloLevelSelector(0);
     myGameArea.start()
@@ -437,10 +398,9 @@ function startVSGame(n) {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
-        frame: 0
+        frame: 0,
+        Alive: true
     }
     Tank2 = new Image();
     Tank2.src = Player2Tank.Tank;
@@ -456,10 +416,9 @@ function startVSGame(n) {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
-        frame: 0
+        frame: 0,
+        Alive: true
     }
     AIEnemyData = [];
     if (n == 0) {
@@ -492,10 +451,9 @@ function startSoloGame(n) {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
-        frame: 0
+        frame: 0,
+        Alive: true
     }
     SoloLevelSelector(Level);
     myGameArea.start();
@@ -526,8 +484,6 @@ function StartCoOpGame(n) {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
         frame: 0,
         Alive: true
@@ -544,8 +500,6 @@ function StartCoOpGame(n) {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
         frame: 0,
         Alive: true,
@@ -581,126 +535,37 @@ function component(width, height, color, x, y, type) { // makes bullets
     }
 }
 
-function updateVsGameArea() {
-    frame = frame + 1;
-    var x, y
-    for (let i = 0; i < Bullets.length; i += 1) {
-        if (crashWith(Tank2Data, Bullets[i])) {
-            myGameArea.keys = [];
-            myGameArea.clear();
-            myGameArea.stop();
-            document.getElementById("Play-Button").disabled = true;
-            BlueWins = BlueWins + 1;
-            document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
-            alert("Blue Player Wins!!")
-            return;
-        }
-        if (crashWith(Tank1Data, Bullets[i])) {
-            myGameArea.keys = [];
-            myGameArea.clear();
-            myGameArea.stop();
-            document.getElementById("Play-Button").disabled = true;
-            GreenWins = GreenWins + 1;
-            document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
-            alert("Green Player Wins!!")
-            return;
-        }
-        if (WallCheck(Bullets[i], walls)) {
-            Bullets.splice(i, 1);
-            i = i - 1;
-        }
-    }
-    
-    Tank1Data.moveAngle = 0;
-    Tank1Data.speed = 0;
-    Tank2Data.moveAngle = 0;
-    Tank2Data.speed = 0;
-    if (myGameArea.keys && myGameArea.keys[80]) {
-        myGameArea.stop();
-    }
-    if (myGameArea.keys && myGameArea.keys[32] && frame - 25 > Tank1Data.frame) {
-        Tank1Data.frame = frame;
-        x = Tank1Data.x + Math.sin(Tank1Data.angle) * (Tank1Data.Th + 10);
-        y = Tank1Data.y - Math.cos(Tank1Data.angle) * (Tank1Data.Th + 10);
-        Bullets.push(new component(2, 4, "blue", x, y));
-        Bullets[Bullets.length - 1].angle = Tank1Data.angle;
-        Bullets[Bullets.length - 1].Shape = "Bullet";
-    }
-    if (myGameArea.keys && myGameArea.keys[13] && frame - 25 > Tank2Data.frame) {
-        Tank2Data.frame = frame;
-        x = Tank2Data.x + Math.sin(Tank2Data.angle) * (Tank2Data.Th + 10);
-        y = Tank2Data.y - Math.cos(Tank2Data.angle) * (Tank2Data.Th + 10);
-        Bullets.push(new component(2, 4, "green", x, y));
-        Bullets[Bullets.length - 1].angle = Tank2Data.angle;
-        Bullets[Bullets.length - 1].Shape = "Bullet";
-    }
-    if (myGameArea.keys && myGameArea.keys[37]) {
-        Tank2Data.moveAngle = -5;
-    } else if (myGameArea.keys && myGameArea.keys[39]) {
-        Tank2Data.moveAngle = 5;
-    }
-
-    if (myGameArea.keys && myGameArea.keys[38]) {
-        Tank2Data.speed = 3;
-    } else if (myGameArea.keys && myGameArea.keys[40]) {
-        Tank2Data.speed = -3;
-    }
-
-    if (myGameArea.keys && myGameArea.keys[65]) {
-        Tank1Data.moveAngle = -5;
-    } else if (myGameArea.keys && myGameArea.keys[68]) {
-        Tank1Data.moveAngle = 5;
-    }
-
-    if (myGameArea.keys && myGameArea.keys[87]) {
-        Tank1Data.speed = 3;
-    } else if (myGameArea.keys && myGameArea.keys[83]) {
-        Tank1Data.speed = -3;
-    }
-
-    if (myGameArea.keys && myGameArea.keys[78]) {
-        Reset();
-    }
-
-    myGameArea.clear();
-    Tank1Data = update(Tank1Data);
-    drawTank(Tank1, Tank1Data);
-    Tank2Data = update(Tank2Data);
-    drawTank(Tank2, Tank2Data);
-    drawWallsAndBullets();
-}
-
 function updateSoloGameArea() {
     frame = frame + 1;
-    var x, y
+    var x, y, found
     for (let i = 0; i < Bullets.length; i += 1) {
+        found = false;
         for (let k = 0; k < AIEnemyData.length; k += 1) {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
                 Bullets.splice(i, 1);
-                i = i - 1;
-                k = k - 1;
+                i -= 1;
+                found = true;
                 break;
             }
         }
+        if (found) {
 
-        if (typeof Bullets[i] != "undefined" && crashWith(Tank1Data, Bullets[i])) {
-            myGameArea.keys = [];
+        } else if (crashWith(Tank1Data, Bullets[i])) {
             myGameArea.clear();
             myGameArea.stop();
             document.getElementById("Play-Button").disabled = true;
-            alert("Game Over")
+            alert("Game Over");
             return;
-        } else if (typeof Bullets[i] != "undefined" && WallCheck(Bullets[i], walls)) {
+        } else if (WallCheck(Bullets[i], walls)) {
             Bullets.splice(i, 1);
-            i = i - 1;
+            i -= 1;
         }
     }
 
     if (AIEnemyData.length == 0 && Level != 0) {
-        myGameArea.keys = [];
-        myGameArea.stop();
         myGameArea.clear();
+        myGameArea.stop();
         document.getElementById("Play-Button").disabled = true;
         if (Level > 0) {
             alert("Level " + Level + " Completed");
@@ -762,34 +627,54 @@ function updateSoloGameArea() {
 
 function updateCoOpGameArea() {
     frame = frame + 1;
-    var x, y
+    var x, y, found
     for (let i = 0; i < Bullets.length; i += 1) {
-
+        found = false;
         for (let k = 0; k < AIEnemyData.length; k += 1) {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
                 Bullets.splice(i, 1);
-                i = i - 1;
-                k = k - 1;
+                i -= 1;
+                found = true;
                 break;
             }
         }
 
-        if (typeof Bullets[i] != "undefined" && crashWith(Tank1Data, Bullets[i])) {
+        if (found) {
+
+        } else if (crashWith(Tank1Data, Bullets[i]) && Tank1Data.Alive) {
             Tank1Data.Alive = false;
             Bullets.splice(i, 1);
-            i = i - 1;
-        } else if (typeof Bullets[i] != "undefined" && crashWith(Tank2Data, Bullets[i])) {
+            i -= 1;
+            if (VsGame) {
+                myGameArea.clear();
+                myGameArea.stop();
+                document.getElementById("Play-Button").disabled = true;
+                GreenWins = GreenWins + 1;
+                document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
+                alert("Green Player Wins!!")
+                return;
+            }
+        } else if (crashWith(Tank2Data, Bullets[i]) && Tank2Data.Alive) {
             Tank2Data.Alive = false;
             Bullets.splice(i, 1);
-            i = i - 1;
-        } else if (typeof Bullets[i] != "undefined" && WallCheck(Bullets[i], walls)) {
+            i -= 1;
+            if (VsGame) {
+                myGameArea.clear();
+                myGameArea.stop();
+                document.getElementById("Play-Button").disabled = true;
+                BlueWins = BlueWins + 1;
+                document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
+                alert("Blue Player Wins!!")
+                return;
+            }
+        } else if (WallCheck(Bullets[i], walls)) {
             Bullets.splice(i, 1);
-            i = i - 1;
+            i -= 1;
         }
     }
 
-    if (AIEnemyData.length == 0) {
+    if (AIEnemyData.length == 0 && CoOpGame) {
         myGameArea.keys = [];
         myGameArea.stop();
         myGameArea.clear();
@@ -880,7 +765,6 @@ function updateCoOpGameArea() {
     }
 
     if (!Tank1Data.Alive && !Tank2Data.Alive) {
-        myGameArea.keys = [];
         myGameArea.clear();
         myGameArea.stop();
         document.getElementById("Play-Button").disabled = true;
@@ -920,9 +804,21 @@ function update(Info) { // updates the position given many elements and checks f
     return Info
 }
 
+function Atan2(x, y) {
+    var Theta = Math.atan2(x, y);
+    if (Theta >= Math.PI * 2) {
+        return (Theta - Math.PI * 2);
+    } else if (Theta < 0) {
+        return (Theta + Math.PI * 2);
+    } else {
+        return Theta;
+    }
+    
+}
+
 function updateAI(Info) {
     if (Info.angle >= Math.PI * 2) {
-        Info.angle = Info.angle - Math.PI * 2
+        Info.angle = Info.angle - Math.PI * 2;
     } else if (Info.angle < 0) {
         Info.angle = Info.angle + Math.PI * 2;
     }
@@ -931,13 +827,7 @@ function updateAI(Info) {
         // + y means down so y is flipped
         var x = Tank1Data.x - Info.x;
         var y = Info.y - Tank1Data.y;
-        Theta = Math.atan2(x, y);
-
-        if (Theta >= Math.PI * 2) {
-            Theta = Theta - Math.PI * 2
-        } else if (Theta < 0) {
-            Theta = Theta + Math.PI * 2;
-        }
+        Theta = Atan2(x, y);
 
         if (Theta > Info.angle) {
             AngleDif = Theta - Info.angle;
@@ -994,12 +884,8 @@ function updateAI(Info) {
         for (let i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
             y = Bullets[i].y - Info.y;
-            Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
+
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
                 Info.AIType = "Dodge";
@@ -1017,12 +903,7 @@ function updateAI(Info) {
             y: Info.y
         }
 
-        Theta = Math.atan2(x, y);
-        if (Theta >= Math.PI * 2) {
-            Theta = Theta - Math.PI * 2
-        } else if (Theta < 0) {
-            Theta = Theta + Math.PI * 2;
-        }
+        Theta = Atan2(x, y);
 
         while (distance - PathDistance >= 5) {
             Path.x += 5 * Math.sin(Theta);
@@ -1076,12 +957,8 @@ function updateAI(Info) {
         for (i = 0; i < Bullets.length; i += 1) {
             var x = Info.x - Bullets[i].x;
             var y = Bullets[i].y - Info.y;
-            var Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            var Theta = Atan2(x, y);
+
             var distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < 180 * 25 / Math.PI && distance < 150) {
                 Path = true;
@@ -1138,12 +1015,8 @@ function updateAI(Info) {
         for (i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
             y = Bullets[i].y - Info.y;
-            Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
+
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
                 Info.AIType = "Dodge";
@@ -1162,12 +1035,7 @@ function updateAI(Info) {
             y: Info.y
         }
 
-        Theta = Math.atan2(x, y);
-        if (Theta >= Math.PI * 2) {
-            Theta = Theta - Math.PI * 2
-        } else if (Theta < 0) {
-            Theta = Theta + Math.PI * 2;
-        }
+        Theta = Atan2(x, y);
 
         LOS = true;
         while (LOS == true && distance - PathDistance >= 5) {
@@ -1210,13 +1078,7 @@ function updateAI(Info) {
                 Info.PathIndex += 1;
             }
             Info.speed = 3;
-            Theta = Math.atan2(x, y);
-
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
 
             if (Theta > Info.angle) {
                 AngleDif = Theta - Info.angle;
@@ -1290,13 +1152,7 @@ function updateCoOpAI(Info) {
             }
         }
 
-        Theta = Math.atan2(x, y);
-
-        if (Theta >= Math.PI * 2) {
-            Theta = Theta - Math.PI * 2
-        } else if (Theta < 0) {
-            Theta = Theta + Math.PI * 2;
-        }
+        Theta = Atan2(x, y);
 
         if (Theta > Info.angle) {
             AngleDif = Theta - Info.angle;
@@ -1358,23 +1214,13 @@ function updateCoOpAI(Info) {
             x = Tank1Data.x - Info.x;
             y = Info.y - Tank1Data.y;
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
 
             if (Tank2Data.Alive) {
                 x2 = Tank2Data.x - Info.x;
                 y2 = Info.y - Tank2Data.y;
                 distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
-                Theta2 = Math.atan2(x2, y2);
-                if (Theta2 >= Math.PI * 2) {
-                    Theta2 = Theta2 - Math.PI * 2
-                } else if (Theta2 < 0) {
-                    Theta2 = Theta2 + Math.PI * 2;
-                }
+                Theta2 = Atan2(x2, y2);
                 LOS2 = true;
                 while (distance2 - PathDistance >= 5) {
                     Path.x += 5 * Math.sin(Theta);
@@ -1424,23 +1270,13 @@ function updateCoOpAI(Info) {
             x = Tank2Data.x - Info.x;
             y = Info.y - Tank2Data.y;
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
 
             if (Tank1Data.Alive) {
                 x2 = Tank1Data.x - Info.x;
                 y2 = Info.y - Tank1Data.y;
                 distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
-                Theta2 = Math.atan2(x2, y2);
-                if (Theta2 >= Math.PI * 2) {
-                    Theta2 = Theta2 - Math.PI * 2
-                } else if (Theta2 < 0) {
-                    Theta2 = Theta2 + Math.PI * 2;
-                }
+                Theta2 = Atan2(x2, y2);
 
                 LOS2 = true;
                 while (distance2 - PathDistance >= 5) {
@@ -1526,12 +1362,7 @@ function updateCoOpAI(Info) {
         for (i = 0; i < Bullets.length; i += 1) {
             x = Info.x - Bullets[i].x;
             y = Bullets[i].y - Info.y;
-            Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 30 / 180 && distance < 150) {
                 Info.AIType = "Dodge";
@@ -1546,12 +1377,7 @@ function updateCoOpAI(Info) {
         for (i = 0; i < Bullets.length; i += 1) {
             x = Info.x - Bullets[i].x;
             y = Bullets[i].y - Info.y;
-            var Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            var Theta = Atan2(x, y);
             var distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
             if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < 180 * 30 / Math.PI && distance < 150) {
@@ -1614,12 +1440,7 @@ function updateCoOpAI(Info) {
         for (i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
             y = Bullets[i].y - Info.y;
-            Theta = Math.atan2(x, y);
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
             if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
                 Info.AIType = "Dodge";
@@ -1630,23 +1451,13 @@ function updateCoOpAI(Info) {
         x = Tank1Data.x - Info.x;
         y = Info.y - Tank1Data.y;
         distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-        Theta = Math.atan2(x, y);
-        if (Theta >= Math.PI * 2) {
-            Theta = Theta - Math.PI * 2
-        } else if (Theta < 0) {
-            Theta = Theta + Math.PI * 2;
-        }
+        Theta = Atan2(x, y);
 
         x2 = Tank2Data.x - Info.x;
         y2 = Info.y - Tank2Data.y;
         distance2 = Math.sqrt(Math.pow(x2, 2) + Math.pow(y2, 2));
         PathDistance = 0;
-        Theta2 = Math.atan2(x2, y2);
-        if (Theta2 >= Math.PI * 2) {
-            Theta2 = Theta2 - Math.PI * 2
-        } else if (Theta < 0) {
-            Theta2 = Theta2 + Math.PI * 2;
-        }
+        Theta2 = Atan2(x2, y2);
 
         Path = {
             Shape: "Bullet",
@@ -1727,13 +1538,7 @@ function updateCoOpAI(Info) {
                 Info.PathIndex += 1;
             }
             Info.speed = 3;
-            Theta = Math.atan2(x, y);
-
-            if (Theta >= Math.PI * 2) {
-                Theta = Theta - Math.PI * 2
-            } else if (Theta < 0) {
-                Theta = Theta + Math.PI * 2;
-            }
+            Theta = Atan2(x, y);
 
             if (Theta > Info.angle) {
                 AngleDif = Theta - Info.angle;
@@ -1854,78 +1659,6 @@ function AiDraw() {
     }
 }
 
-function crashWith(obj, otherobj) {
-
-    var trhy, tlhy, brhy, blhy, angletopright, angletopleft, anglebottomright, anglebottomleft, mytopright, mytopleft, mybottomleft, mybottomright, d1, d2, d3, d4
-
-    var crash = false;
-    var other = [otherobj.x + otherobj.height / 2 * Math.sin(otherobj.angle), otherobj.y - otherobj.height / 2 * Math.cos(otherobj.angle)];
-    if (obj.Shape == "Rect") {
-        trhy = Math.sqrt(Math.pow(obj.Th, 2) + Math.pow(obj.Lw, 2));
-        tlhy = Math.sqrt(Math.pow(obj.Th, 2) + Math.pow(obj.Rw, 2));
-        brhy = Math.sqrt(Math.pow(obj.Bh, 2) + Math.pow(obj.Rw, 2));
-        blhy = Math.sqrt(Math.pow(obj.Bh, 2) + Math.pow(obj.Lw, 2));
-
-        angletopright = Math.atan2(obj.Th, obj.Rw) + Math.PI / 2 - obj.angle;
-        angletopleft = Math.atan2(obj.Th, -obj.Lw) + Math.PI / 2 - obj.angle;
-        anglebottomright = Math.atan2(-obj.Bh, obj.Rw) + Math.PI / 2 - obj.angle;
-        anglebottomleft = Math.atan2(-obj.Bh, -obj.Lw) + Math.PI / 2 - obj.angle;
-
-        mytopright = [obj.x + trhy * Math.sin(angletopright), obj.y + trhy * Math.cos(angletopright)];
-        mytopleft = [obj.x + tlhy * Math.sin(angletopleft), obj.y + tlhy * Math.cos(angletopleft)];
-        mybottomleft = [obj.x + blhy * Math.sin(anglebottomleft), obj.y + blhy * Math.cos(anglebottomleft)];
-        mybottomright = [obj.x + brhy * Math.sin(anglebottomright), obj.y + brhy * Math.cos(anglebottomright)];
-
-        // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
-        // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
-        // top left to top right
-        d1 = (other[0] - mytopleft[0]) * (mytopright[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mytopright[0] - mytopleft[0]);
-        // bottom left to bottom right
-        d3 = (other[0] - mybottomleft[0]) * (mybottomright[1] - mybottomleft[1]) - (other[1] - mybottomleft[1]) * (mybottomright[0] - mybottomleft[0]);
-        // top right to bottom right
-        d2 = (other[0] - mytopright[0]) * (mybottomright[1] - mytopright[1]) - (other[1] - mytopright[1]) * (mybottomright[0] - mytopright[0]);
-        // top left to bottom left
-        d4 = (other[0] - mytopleft[0]) * (mybottomleft[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mybottomleft[0] - mytopleft[0]);
-
-        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
-            crash = true
-        }
-
-    } else if (obj.Shape == "Circle") {
-        if (Math.sqrt(Math.pow(other[0] - obj.x, 2) + Math.pow(other[1] - obj.y, 2)) < obj.radius) {
-            crash = true;
-        }
-    } else if (obj.Shape == "wall") {
-        var hy = Math.sqrt(Math.pow(obj.height, 2) + Math.pow(obj.width, 2));
-
-        angletopright = Math.atan2(obj.height, obj.width) + Math.PI / 2 - obj.angle;
-        angletopleft = Math.atan2(obj.height, -obj.width) + Math.PI / 2 - obj.angle;
-        anglebottomright = Math.atan2(-obj.height, obj.width) + Math.PI / 2 - obj.angle;
-        anglebottomleft = Math.atan2(-obj.height, -obj.width) + Math.PI / 2 - obj.angle;
-
-        mytopright = [obj.x + hy * Math.sin(angletopright), obj.y + hy * Math.cos(angletopright)];
-        mytopleft = [obj.x + hy * Math.sin(angletopleft), obj.y + hy * Math.cos(angletopleft)];
-        mybottomleft = [obj.x + hy * Math.sin(anglebottomleft), obj.y + hy * Math.cos(anglebottomleft)];
-        mybottomright = [obj.x + hy * Math.sin(anglebottomright), obj.y + hy * Math.cos(anglebottomright)];
-
-        // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
-        // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
-        // top left to top right
-        d1 = (other[0] - mytopleft[0]) * (mytopright[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mytopright[0] - mytopleft[0]);
-        // bottom left to bottom right
-        d3 = (other[0] - mybottomleft[0]) * (mybottomright[1] - mybottomleft[1]) - (other[1] - mybottomleft[1]) * (mybottomright[0] - mybottomleft[0]);
-        // top right to bottom right
-        d2 = (other[0] - mytopright[0]) * (mybottomright[1] - mytopright[1]) - (other[1] - mytopright[1]) * (mybottomright[0] - mytopright[0]);
-        // top left to bottom left
-        d4 = (other[0] - mytopleft[0]) * (mybottomleft[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mybottomleft[0] - mytopleft[0]);
-
-        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
-            crash = true
-        }
-    }
-    return crash;
-}
-
 function VSLevelSelectorScreen() {
     document.getElementById("Menu").hidden = true;
     document.getElementById("VS_Level_List").hidden = false;
@@ -2009,6 +1742,22 @@ function CoOpLevelSelectorScreen() {
 }
 
 function SoloLevelSelector(selectedLevel) {
+    Tank1Data = {
+        x: 100,
+        y: 300,
+        Lw: 15,
+        Rw: 15,
+        Th: 15,
+        Bh: 30,
+        angle: Math.PI / 2,
+        moveAngle: 0,
+        speed: 0,
+        width: 30,
+        height: 40,
+        Shape: "Rect",
+        frame: 0,
+        Alive: true
+    }
     switch (selectedLevel) {
         case 0:
             walls = [];
@@ -2023,8 +1772,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 22,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Target",
                 Shape: "Circle",
                 FireRate: "never",
@@ -2044,8 +1791,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 22,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Target",
                 Shape: "Circle",
                 FireRate: "never",
@@ -2058,8 +1803,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 22,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Target",
                 Shape: "Circle",
                 FireRate: "never",
@@ -2087,8 +1830,6 @@ function SoloLevelSelector(selectedLevel) {
                 Direction: "Pos",
                 path: "Line",
                 radius: 23,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Target",
                 Shape: "Circle",
                 FireRate: "never",
@@ -2108,8 +1849,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 30,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 25,
@@ -2130,8 +1869,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 30,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 30,
@@ -2143,8 +1880,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 30,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 30,
@@ -2168,8 +1903,6 @@ function SoloLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2194,8 +1927,6 @@ function SoloLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2212,8 +1943,6 @@ function SoloLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2235,8 +1964,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 30,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 50,
@@ -2248,8 +1975,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 40,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 30,
@@ -2261,8 +1986,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 40,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 30,
@@ -2274,8 +1997,6 @@ function SoloLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 50,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 30,
@@ -2304,8 +2025,6 @@ function SoloLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2322,8 +2041,6 @@ function SoloLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2428,8 +2145,6 @@ function SoloLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2467,8 +2182,6 @@ function CoOpLevelSelector(selectedLevel) {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
         frame: 0,
         Alive: true
@@ -2485,8 +2198,6 @@ function CoOpLevelSelector(selectedLevel) {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
         frame: 0,
         Alive: true,
@@ -2501,8 +2212,6 @@ function CoOpLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 22,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Target",
                 Shape: "Circle",
                 FireRate: "never",
@@ -2522,8 +2231,6 @@ function CoOpLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 22,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Target",
                 Shape: "Circle",
                 FireRate: "never",
@@ -2535,8 +2242,6 @@ function CoOpLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 22,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Target",
                 Shape: "Circle",
                 FireRate: "never",
@@ -2556,8 +2261,6 @@ function CoOpLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 30,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 30,
@@ -2572,8 +2275,6 @@ function CoOpLevelSelector(selectedLevel) {
                 moveAngle: 0,
                 speed: 0,
                 radius: 30,
-                Tank: false,
-                AIEnemy: true,
                 AIType: "Turret",
                 Shape: "Circle",
                 FireRate: 30,
@@ -2600,8 +2301,6 @@ function CoOpLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2620,8 +2319,6 @@ function CoOpLevelSelector(selectedLevel) {
                 angle: -Math.PI / 2,
                 moveAngle: 0,
                 speed: 2,
-                Tank: true,
-                AIEnemy: true,
                 AIType: "Chase",
                 Shape: "Rect",
                 FireRate: 30,
@@ -2648,6 +2345,38 @@ function CoOpLevelSelector(selectedLevel) {
 }
 
 function VSMapSelect(selectedLevel) { // selects the map to use for the vs game type currently. using random numbers
+    Tank1Data = {
+        x: 100,
+        y: 300,
+        Lw: 15,
+        Rw: 15,
+        Th: 15,
+        Bh: 30,
+        angle: Math.PI / 2,
+        moveAngle: 0,
+        speed: 0,
+        width: 30,
+        height: 40,
+        Shape: "Rect",
+        frame: 0,
+        Alive: true
+    }
+    Tank2Data = {
+        x: 1200,
+        y: 300,
+        Lw: 15,
+        Rw: 15,
+        Th: 15,
+        Bh: 30,
+        angle: -Math.PI / 2,
+        moveAngle: 0,
+        speed: 0,
+        width: 30,
+        height: 55,
+        Shape: "Rect",
+        frame: 0,
+        Alive: true
+    }
     switch (selectedLevel) {
         case 1:
             walls = [{
@@ -2820,8 +2549,6 @@ function LevelEditor() {
         speed: 0, // movement speed in pixels
         width: 30, // width of image
         height: 55, // height of image
-        Tank: true, // Defines player tank
-        AIEnemy: false, // defines Enemy
         Shape: "Rect", // defines shape for hiting things
         frame: 0, // defines the rame it last shot
         Alive: true // Used in CoOp to determine the target
@@ -2840,8 +2567,6 @@ function LevelEditor() {
         speed: 0,
         width: 30,
         height: 55,
-        Tank: true,
-        AIEnemy: false,
         Shape: "Rect",
         frame: 0,
         Alive: false
@@ -2971,14 +2696,12 @@ function AddEnemy() {
         angle: Math.PI * 3 / 2,
         moveAngle: 0,
         speed: 0,
-        AIEnemy: true,
         frame: 0,
         img: new Image()
     }
     if (LevelEditorInfo.Enemy == "Target") {
 
         NewEnemy.radius = 22;
-        NewEnemy.Tank = false;
         NewEnemy.AIType = "Target";
         NewEnemy.Shape = "Circle";
         NewEnemy.FireRate = "never";
@@ -2987,7 +2710,6 @@ function AddEnemy() {
         AIEnemyData[AIEnemyData.length - 1].img.src = "images/Target.png"
     } else if (LevelEditorInfo.Enemy == "Turret") {
         NewEnemy.radius = 30;
-        NewEnemy.Tank = false;
         NewEnemy.AIType = "Turret";
         NewEnemy.Shape = "Circle";
         NewEnemy.FireRate = 30;
@@ -3001,7 +2723,6 @@ function AddEnemy() {
         NewEnemy.Rw = 15;
         NewEnemy.Th = 15;
         NewEnemy.Bh = 30;
-        NewEnemy.Tank = true;
         NewEnemy.AIType = "Chase";
         NewEnemy.Shape = "Rect";
         NewEnemy.FireRate = 30;
@@ -3015,14 +2736,80 @@ function AddEnemy() {
     setTimeout(LevelEditorDrawing, 50);
 }
 
-function WallCheck(obj, walls) {
-    // checks to see if an object hit a wall walls are defined souly using height width angle and position
-    // rectangles are defined complicatedly
-    // and Bullets are defined as points
-    // outputs either true or false
+function crashWith(obj, otherobj) { // used to determine if a point is inside another object bullets, line of sight, mouse click
+    var trhy, tlhy, brhy, blhy, angletopright, angletopleft, anglebottomright, anglebottomleft, mytopright, mytopleft, mybottomleft, mybottomright, d1, d2, d3, d4
+    var crash = false;
+    // moves to the front of the otherobj uses point to determine crash
+    var other = [otherobj.x + otherobj.height / 2 * Math.sin(otherobj.angle), otherobj.y - otherobj.height / 2 * Math.cos(otherobj.angle)];
+    if (obj.Shape == "Rect") {
+        trhy = Math.sqrt(Math.pow(obj.Th, 2) + Math.pow(obj.Lw, 2));
+        tlhy = Math.sqrt(Math.pow(obj.Th, 2) + Math.pow(obj.Rw, 2));
+        brhy = Math.sqrt(Math.pow(obj.Bh, 2) + Math.pow(obj.Rw, 2));
+        blhy = Math.sqrt(Math.pow(obj.Bh, 2) + Math.pow(obj.Lw, 2));
+
+        angletopright = Math.atan2(obj.Th, obj.Rw) + Math.PI / 2 - obj.angle;
+        angletopleft = Math.atan2(obj.Th, -obj.Lw) + Math.PI / 2 - obj.angle;
+        anglebottomright = Math.atan2(-obj.Bh, obj.Rw) + Math.PI / 2 - obj.angle;
+        anglebottomleft = Math.atan2(-obj.Bh, -obj.Lw) + Math.PI / 2 - obj.angle;
+
+        mytopright = [obj.x + trhy * Math.sin(angletopright), obj.y + trhy * Math.cos(angletopright)];
+        mytopleft = [obj.x + tlhy * Math.sin(angletopleft), obj.y + tlhy * Math.cos(angletopleft)];
+        mybottomleft = [obj.x + blhy * Math.sin(anglebottomleft), obj.y + blhy * Math.cos(anglebottomleft)];
+        mybottomright = [obj.x + brhy * Math.sin(anglebottomright), obj.y + brhy * Math.cos(anglebottomright)];
+
+        // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
+        // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
+        // top left to top right
+        d1 = (other[0] - mytopleft[0]) * (mytopright[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mytopright[0] - mytopleft[0]);
+        // bottom left to bottom right
+        d3 = (other[0] - mybottomleft[0]) * (mybottomright[1] - mybottomleft[1]) - (other[1] - mybottomleft[1]) * (mybottomright[0] - mybottomleft[0]);
+        // top right to bottom right
+        d2 = (other[0] - mytopright[0]) * (mybottomright[1] - mytopright[1]) - (other[1] - mytopright[1]) * (mybottomright[0] - mytopright[0]);
+        // top left to bottom left
+        d4 = (other[0] - mytopleft[0]) * (mybottomleft[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mybottomleft[0] - mytopleft[0]);
+
+        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+            crash = true
+        }
+
+    } else if (obj.Shape == "Circle") {
+        if (Math.sqrt(Math.pow(other[0] - obj.x, 2) + Math.pow(other[1] - obj.y, 2)) < obj.radius) {
+            crash = true;
+        }
+    } else if (obj.Shape == "wall") {
+        var hy = Math.sqrt(Math.pow(obj.height, 2) + Math.pow(obj.width, 2));
+
+        angletopright = Math.atan2(obj.height, obj.width) + Math.PI / 2 - obj.angle;
+        angletopleft = Math.atan2(obj.height, -obj.width) + Math.PI / 2 - obj.angle;
+        anglebottomright = Math.atan2(-obj.height, obj.width) + Math.PI / 2 - obj.angle;
+        anglebottomleft = Math.atan2(-obj.height, -obj.width) + Math.PI / 2 - obj.angle;
+
+        mytopright = [obj.x + hy * Math.sin(angletopright), obj.y + hy * Math.cos(angletopright)];
+        mytopleft = [obj.x + hy * Math.sin(angletopleft), obj.y + hy * Math.cos(angletopleft)];
+        mybottomleft = [obj.x + hy * Math.sin(anglebottomleft), obj.y + hy * Math.cos(anglebottomleft)];
+        mybottomright = [obj.x + hy * Math.sin(anglebottomright), obj.y + hy * Math.cos(anglebottomright)];
+
+        // A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
+        // d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
+        // top left to top right
+        d1 = (other[0] - mytopleft[0]) * (mytopright[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mytopright[0] - mytopleft[0]);
+        // bottom left to bottom right
+        d3 = (other[0] - mybottomleft[0]) * (mybottomright[1] - mybottomleft[1]) - (other[1] - mybottomleft[1]) * (mybottomright[0] - mybottomleft[0]);
+        // top right to bottom right
+        d2 = (other[0] - mytopright[0]) * (mybottomright[1] - mytopright[1]) - (other[1] - mytopright[1]) * (mybottomright[0] - mytopright[0]);
+        // top left to bottom left
+        d4 = (other[0] - mytopleft[0]) * (mybottomleft[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mybottomleft[0] - mytopleft[0]);
+
+        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+            crash = true
+        }
+    }
+    return crash;
+}
+
+function WallCheck(obj, walls) { // checks if a bullet or a rectangle overlaps a wall
     var Hit = false;
     var wall, trhy, tlhy, brhy, blhy, angletopright, angletopleft, anglebottomright, anglebottomleft, other, Width, Height, d1, d2, d3, d4, topright, topleft, bottomleft, bottomright
-
     if (obj.Shape == "Rect") {
         var WallPoints
 
@@ -3140,7 +2927,7 @@ function WallCheck(obj, walls) {
     return Hit;
 }
 
-function TanksOverlap(obj1) {
+function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks or the AItanks
     var overlap = false;
     if (obj1.Shape == "Rect") {
         // Define obj1
@@ -3603,7 +3390,7 @@ function PlayerLevel(index) {
             } else if (AIEnemyData[j].AIType == "Turret") {
                 AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Turret.png";
-            } else if (AIEnemyData[j].AIType == "Tank") {
+            } else if (AIEnemyData[j].AIType == "Chase" || AIEnemyData[j].AIType == "Dodge" || AIEnemyData[j].AIType == "PathFind") {
                 AIEnemyData[j].img = new Image();
                 AIEnemyData[j].img.src = "images/Tank3.png";
             }
@@ -4031,7 +3818,7 @@ All:
     TanksOverlap, WallCheck, Crashwith in one function.
 
 VS:
-    Add Ai to vs games (it will make them CoOp but win if one of them dies instead)
+    Add Ai to vs games when I make new levels
 
 Level Editor: 
     add option to fire bullets.
