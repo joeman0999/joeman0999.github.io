@@ -55,6 +55,7 @@ var Max_Level = 1;
 var CoOpMax_Level = 1;
 var AIEnemyData = [];
 var Bullets = [];
+var Level, Tank1, Tank2, Tank1Data, Tank2Data, frame
 
 function Menu() {
     clearInterval(myGameArea.interval);
@@ -176,12 +177,10 @@ var myGameArea = {
     unpause: function () {
         document.getElementById("Play-Button").disabled = true;
         document.getElementById("Pause-Button").disabled = false;
-        if (VsGame) {
+        if (VsGame || CoOpGame) {
             this.interval = setInterval(updateCoOpGameArea, 20);
         } else if (SoloGame) {
             this.interval = setInterval(updateSoloGameArea, 20);
-        } else if (CoOpGame) {
-            this.interval = setInterval(updateCoOpGameArea, 20);
         } else if (Level_Editor) {
             this.interval = setInterval(updateLevelEditorArea, 20);
             document.getElementById("Play2-Button").disabled = true;
@@ -378,7 +377,6 @@ function TrackReset() {
 }
 
 function startVSGame(n) {
-    Level = 0;
     VsGame = true;
     Bullets = [];
     document.getElementById("Menu").hidden = true;
@@ -420,7 +418,6 @@ function startVSGame(n) {
         frame: 0,
         Alive: true
     }
-    AIEnemyData = [];
     if (n == 0) {
         n = Math.round(Math.random() * 5 + 1); // random level
     }
@@ -433,7 +430,6 @@ function startSoloGame(n) {
     Level = n;
     SoloGame = true;
     Bullets = [];
-
     document.getElementById("Menu").hidden = true;
     document.getElementById("Solo_Level_List").hidden = true;
     document.getElementById("ButtonArea").hidden = false;
@@ -464,7 +460,6 @@ function StartCoOpGame(n) {
     Level = n;
     CoOpGame = true;
     Bullets = [];
-
     document.getElementById("Menu").hidden = true;
     document.getElementById("CoOp_Level_List").hidden = true;
     document.getElementById("ButtonArea").hidden = false;
@@ -509,9 +504,8 @@ function StartCoOpGame(n) {
     document.getElementById("GameArea").hidden = false;
 }
 
-function component(width, height, color, x, y, type) { // makes bullets
+function component(width, height, color, x, y, angle, Shape) { // makes bullets
 
-    this.type = type;
     this.width = width;
     this.height = height;
     this.speed = 0;
@@ -519,6 +513,8 @@ function component(width, height, color, x, y, type) { // makes bullets
     this.moveAngle = 0;
     this.x = x;
     this.y = y;
+    this.angle = angle;
+    this.Shape = Shape;
     this.update = function () {
         ctx = myGameArea.context;
         ctx.save();
@@ -544,22 +540,22 @@ function updateSoloGameArea() {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
                 Bullets.splice(i, 1);
-                i -= 1;
+                --i;
                 found = true;
                 break;
             }
         }
-        if (found) {
-
-        } else if (crashWith(Tank1Data, Bullets[i])) {
-            myGameArea.clear();
-            myGameArea.stop();
-            document.getElementById("Play-Button").disabled = true;
-            alert("Game Over");
-            return;
-        } else if (WallCheck(Bullets[i], walls)) {
-            Bullets.splice(i, 1);
-            i -= 1;
+        if (!found) {
+            if (crashWith(Tank1Data, Bullets[i])) {
+                myGameArea.clear();
+                myGameArea.stop();
+                document.getElementById("Play-Button").disabled = true;
+                alert("Game Over");
+                return;
+            } else if (WallCheck(Bullets[i], walls)) {
+                Bullets.splice(i, 1);
+                --i;
+            }
         }
     }
 
@@ -569,7 +565,7 @@ function updateSoloGameArea() {
         document.getElementById("Play-Button").disabled = true;
         if (Level > 0) {
             alert("Level " + Level + " Completed");
-            Level = Level + 1;
+            ++Level;
             try {
                 if (Max_Level < Level) {
                     localStorage.Max_Level = Level;
@@ -597,9 +593,7 @@ function updateSoloGameArea() {
         Tank1Data.frame = frame;
         x = Tank1Data.x + Math.sin(Tank1Data.angle) * (Tank1Data.Th + 10);
         y = Tank1Data.y - Math.cos(Tank1Data.angle) * (Tank1Data.Th + 10);
-        Bullets.push(new component(2, 4, "blue", x, y));
-        Bullets[Bullets.length - 1].angle = Tank1Data.angle;
-        Bullets[Bullets.length - 1].Shape = "Bullet";
+        Bullets.push(new component(2, 4, "blue", x, y, Tank1Data.angle, "Bullet"));
     }
 
     if (myGameArea.keys && myGameArea.keys[Player1Tank.Counter]) {
@@ -634,43 +628,43 @@ function updateCoOpGameArea() {
             if (crashWith(AIEnemyData[k], Bullets[i])) {
                 AIEnemyData.splice(k, 1);
                 Bullets.splice(i, 1);
-                i -= 1;
+                --i;
                 found = true;
                 break;
             }
         }
 
-        if (found) {
-
-        } else if (crashWith(Tank1Data, Bullets[i]) && Tank1Data.Alive) {
-            Tank1Data.Alive = false;
-            Bullets.splice(i, 1);
-            i -= 1;
-            if (VsGame) {
-                myGameArea.clear();
-                myGameArea.stop();
-                document.getElementById("Play-Button").disabled = true;
-                GreenWins = GreenWins + 1;
-                document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
-                alert("Green Player Wins!!")
-                return;
+        if (!found) {
+            if (crashWith(Tank1Data, Bullets[i]) && Tank1Data.Alive) {
+                Tank1Data.Alive = false;
+                Bullets.splice(i, 1);
+                --i;
+                if (VsGame) {
+                    myGameArea.clear();
+                    myGameArea.stop();
+                    document.getElementById("Play-Button").disabled = true;
+                    ++GreenWins;
+                    document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
+                    alert("Green Player Wins!!")
+                    return;
+                }
+            } else if (crashWith(Tank2Data, Bullets[i]) && Tank2Data.Alive) {
+                Tank2Data.Alive = false;
+                Bullets.splice(i, 1);
+                --i;
+                if (VsGame) {
+                    myGameArea.clear();
+                    myGameArea.stop();
+                    document.getElementById("Play-Button").disabled = true;
+                    ++BlueWins;
+                    document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
+                    alert("Blue Player Wins!!")
+                    return;
+                }
+            } else if (WallCheck(Bullets[i], walls)) {
+                Bullets.splice(i, 1);
+                --i;
             }
-        } else if (crashWith(Tank2Data, Bullets[i]) && Tank2Data.Alive) {
-            Tank2Data.Alive = false;
-            Bullets.splice(i, 1);
-            i -= 1;
-            if (VsGame) {
-                myGameArea.clear();
-                myGameArea.stop();
-                document.getElementById("Play-Button").disabled = true;
-                BlueWins = BlueWins + 1;
-                document.getElementById("wins").innerHTML = "Blue Wins: " + BlueWins + "      Green Wins: " + GreenWins;
-                alert("Blue Player Wins!!")
-                return;
-            }
-        } else if (WallCheck(Bullets[i], walls)) {
-            Bullets.splice(i, 1);
-            i -= 1;
         }
     }
 
@@ -681,7 +675,7 @@ function updateCoOpGameArea() {
         document.getElementById("Play-Button").disabled = true;
         if (Level > 0) {
             alert("Level " + Level + " Completed");
-            Level = Level + 1;
+            ++Level;
             try {
                 if (CoOpMax_Level < Level) {
                     localStorage.CoOpMax_Level = Level;
@@ -714,9 +708,7 @@ function updateCoOpGameArea() {
             Tank1Data.frame = frame;
             x = Tank1Data.x + Math.sin(Tank1Data.angle) * (Tank1Data.Th + 10);
             y = Tank1Data.y - Math.cos(Tank1Data.angle) * (Tank1Data.Th + 10);
-            Bullets.push(new component(2, 4, "blue", x, y));
-            Bullets[Bullets.length - 1].angle = Tank1Data.angle;
-            Bullets[Bullets.length - 1].Shape = "Bullet";
+            Bullets.push(new component(2, 4, "blue", x, y, Tank1Data.angle, "Bullet"));
         }
 
         if (myGameArea.keys && myGameArea.keys[65]) {
@@ -743,9 +735,7 @@ function updateCoOpGameArea() {
             Tank2Data.frame = frame;
             x = Tank2Data.x + Math.sin(Tank2Data.angle) * (Tank2Data.Th + 10);
             y = Tank2Data.y - Math.cos(Tank2Data.angle) * (Tank2Data.Th + 10);
-            Bullets.push(new component(2, 4, "green", x, y));
-            Bullets[Bullets.length - 1].angle = Tank2Data.angle;
-            Bullets[Bullets.length - 1].Shape = "Bullet";
+            Bullets.push(new component(2, 4, "green", x, y, Tank2Data.angle, "Bullet"));
         }
 
         if (myGameArea.keys && myGameArea.keys[37]) {
@@ -813,7 +803,6 @@ function Atan2(x, y) {
     } else {
         return Theta;
     }
-    
 }
 
 function updateAI(Info) {
@@ -822,11 +811,11 @@ function updateAI(Info) {
     } else if (Info.angle < 0) {
         Info.angle = Info.angle + Math.PI * 2;
     }
-    var Theta, AngleDif
+    var Theta, AngleDif, x, y
     if (Info.AIType == "Turret") {
         // + y means down so y is flipped
-        var x = Tank1Data.x - Info.x;
-        var y = Info.y - Tank1Data.y;
+        x = Tank1Data.x - Info.x;
+        y = Info.y - Tank1Data.y;
         Theta = Atan2(x, y);
 
         if (Theta > Info.angle) {
@@ -854,11 +843,11 @@ function updateAI(Info) {
         if (Info.speed != 0 && Info.path == "Line") {
             // + y means down so y is flipped
             if (Info.Direction == "Pos") {
-                var x = Info.x1 - Info.x;
-                var y = Info.y - Info.y1;
+                x = Info.x1 - Info.x;
+                y = Info.y - Info.y1;
             } else {
-                var x = Info.x2 - Info.x;
-                var y = Info.y - Info.y2;
+                x = Info.x2 - Info.x;
+                y = Info.y - Info.y2;
             }
 
             Theta = Math.atan2(x, y);
@@ -878,7 +867,7 @@ function updateAI(Info) {
             Info.angle = Theta;
         }
     } else if (Info.AIType == "Chase") {
-        var x, y, PathDistance, distance, Theta, Path
+        var PathDistance, distance, Path
         Info.FireRate = 30;
 
         for (let i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
@@ -950,17 +939,17 @@ function updateAI(Info) {
         }
 
     } else if (Info.AIType == "Dodge") {
-        var i, ii;
+        var i, ii, distance;
         var Distances = [];
         var indexes = [];
         var Path = false;
         for (i = 0; i < Bullets.length; i += 1) {
-            var x = Info.x - Bullets[i].x;
-            var y = Bullets[i].y - Info.y;
-            var Theta = Atan2(x, y);
+            x = Info.x - Bullets[i].x;
+            y = Bullets[i].y - Info.y;
+            Theta = Atan2(x, y);
 
-            var distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < 180 * 25 / Math.PI && distance < 150) {
+            distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+            if (Math.abs(Bullets[i].angle - Theta) < Math.PI * 25 / 180 && distance < 150) {
                 Path = true;
                 Distances.push(distance);
                 indexes.push(i);
@@ -973,9 +962,6 @@ function updateAI(Info) {
             return Info;
         }
 
-        var trueAngle = Info.angle + Math.PI / 2;
-        x = Info.x - Bullets[i].x + 5 * Math.cos(trueAngle);
-        y = Bullets[i].y - Info.y - 5 * Math.sin(trueAngle);
         Info.speed = -3;
 
         if (Theta > Bullets[i].angle) {
@@ -1008,9 +994,17 @@ function updateAI(Info) {
             AngleDif = 0;
         }
 
+        if (AngleDif < Math.PI / 180 * 5) {
+            Info.moveAngle = 0;
+            var Oldangle = Info.angle;
+            Info.angle = Theta
+            if (WallCheck(Info, walls) || TanksOverlap(Info)) {
+                Info.angle = Oldangle;
+            }
+        }
     } else if (Info.AIType == "PathFind") {
 
-        var x, y, PathDistance, distance, Theta, Path, LOS
+        var PathDistance, distance, Path, LOS
 
         for (i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
@@ -1114,7 +1108,7 @@ function updateAI(Info) {
 }
 
 function updateCoOpAI(Info) {
-    var i, ii, Theta, AngleDif, x, y
+    var Theta, AngleDif, x, y
     if (Info.angle >= Math.PI * 2) {
         Info.angle = Info.angle - Math.PI * 2
     } else if (Info.angle < 0) {
@@ -1371,16 +1365,17 @@ function updateCoOpAI(Info) {
         }
 
     } else if (Info.AIType == "Dodge") {
+        var i, ii, distance
         var Distances = [];
         var indexes = [];
         var Path = false;
         for (i = 0; i < Bullets.length; i += 1) {
             x = Info.x - Bullets[i].x;
             y = Bullets[i].y - Info.y;
-            var Theta = Atan2(x, y);
-            var distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+            Theta = Atan2(x, y);
+            distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
-            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < 180 * 30 / Math.PI && distance < 150) {
+            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
                 Path = true;
                 Distances.push(distance);
                 indexes.push(i);
@@ -1435,7 +1430,7 @@ function updateCoOpAI(Info) {
         }
     } else if (Info.AIType == "PathFind") {
 
-        var PathDistance, distance, Path, LOS
+        var PathDistance, distance, Path, LOS, x2, y2, distance2, PathDistance, Theta2
 
         for (i = 0; i < Bullets.length; i += 1) { // Check if it needs to switch to dodge mode
             x = Info.x - Bullets[i].x;
@@ -1565,8 +1560,6 @@ function updateCoOpAI(Info) {
 
 
         return Info;
-
-
     }
 
     return Info;
@@ -1645,9 +1638,7 @@ function AiDraw() {
                 x = AIEnemyData[k].x + Math.sin(AIEnemyData[k].angle) * (AIEnemyData[k].radius);
                 y = AIEnemyData[k].y - Math.cos(AIEnemyData[k].angle) * (AIEnemyData[k].radius);
             }
-            Bullets.push(new component(2, 4, "green", x, y));
-            Bullets[Bullets.length - 1].angle = AIEnemyData[k].angle;
-            Bullets[Bullets.length - 1].Shape = "Bullet";
+            Bullets.push(new component(2, 4, "green", x, y, AIEnemyData[k].angle, "Bullet"));
         }
         if (SoloGame) {
             AIEnemyData[k] = updateAI(AIEnemyData[k]);
@@ -2377,6 +2368,8 @@ function VSMapSelect(selectedLevel) { // selects the map to use for the vs game 
         frame: 0,
         Alive: true
     }
+    AIEnemyData = [];
+    walls = [];
     switch (selectedLevel) {
         case 1:
             walls = [{
@@ -2389,7 +2382,6 @@ function VSMapSelect(selectedLevel) { // selects the map to use for the vs game 
             break;
 
         case 2:
-            walls = []
             break;
         case 3:
             walls = [{
@@ -2606,7 +2598,7 @@ function updateLevelEditorArea() {
 
     Tank1Data = update(Tank1Data);
     drawTank(Tank1, Tank1Data);
-    if (LevelEditorInfo.Type == "CoOp") {
+    if (LevelEditorInfo.Type == "CoOp" || LevelEditorInfo.Type == "VS") {
         Tank2Data.moveAngle = 0;
         Tank2Data.speed = 0;
         if (myGameArea.keys && myGameArea.keys[37]) {
@@ -2630,9 +2622,7 @@ function updateLevelEditorArea() {
         drawTank(AIEnemyData[i].img, AIEnemyData[i]);
     }
 
-    for (let i = 0; i < walls.length; i++) {
-        drawWall(walls[i].img, walls[i]);
-    }
+    drawWallsAndBullets();
 }
 
 function LevelEditorSelect(Option) {
@@ -3341,12 +3331,9 @@ function LevelDelete(index) {
 function PlayerLevel(index) {
     var j;
     Level = -1 * (index + 1);
-    VsGame = false;
-    CoOpGame = false;
-    SoloGame = false;
     SavedLevels = JSON.parse(localStorage.SavedLevels);
     if (Level_Editor) {
-        Level_Editor = true;
+
     } else if (SavedLevels[index].Type == "Solo") {
         SoloGame = true;
         Level_Editor = false;
@@ -3429,16 +3416,14 @@ function ResetData() {
 function LevelEditorDrawing() {
     myGameArea.clear();
     drawTank(Tank1, Tank1Data);
-    if (LevelEditorInfo.Type == "CoOp") {
+    if (LevelEditorInfo.Type == "CoOp" || LevelEditorInfo.Type == "VS") {
         drawTank(Tank2, Tank2Data);
     }
     for (let i = 0; i < AIEnemyData.length; i += 1) {
         drawTank(AIEnemyData[i].img, AIEnemyData[i]);
     }
 
-    for (let i = 0; i < walls.length; i++) {
-        drawWall(walls[i].img, walls[i]);
-    }
+    drawWallsAndBullets();
 }
 
 function indexOfMin(arr) {
@@ -3450,7 +3435,7 @@ function indexOfMin(arr) {
     var minIndex = 0;
 
     for (let i = 1; i < arr.length; i++) {
-        if (arr[i] > min) {
+        if (arr[i] < min) {
             minIndex = i;
             min = arr[i];
         }
