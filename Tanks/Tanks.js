@@ -3395,6 +3395,7 @@ function PlayerLevel(index) {
                 AIEnemyData[j].img.src = "images/Tank3.png";
             }
         }
+        
     } else {
         for (j = 0; j < AIEnemyData.length; j++) {
             if (AIEnemyData[j].AIType == "Target") {
@@ -3410,9 +3411,9 @@ function PlayerLevel(index) {
                 AIEnemyData[j].Fireframe = 5;
             }
         }
-        DetermineGridMap();
         myGameArea.start();
     }
+    DetermineGridMap();
     document.getElementById("GameArea").hidden = false;
 
 }
