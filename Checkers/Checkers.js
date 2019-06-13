@@ -3,6 +3,7 @@ var Thecanvas = {
     height: 544
 };
 var Computer = "None";
+var PlayersTurn = "Red";
 var Timedout = false;
 var ComputersMoveList = [];
 var BoardState = [];
@@ -124,8 +125,6 @@ function New_Game() {
         }
     ];
     Mouse = {
-        x: 0,
-        y: 0,
         Index: 0,
         Holds: "Nothing",
     };
@@ -162,9 +161,6 @@ var myGameArea = {
     stop: function () {
         try {
             document.getElementById("GameArea").removeEventListener('click', clickhandler);
-        } catch(err) {
-        }
-        try {
             myGameArea.clear();
         } catch (err) {
         }
@@ -210,13 +206,13 @@ function OnePlayerColor(Color) {
 }
 
 function Menu() {
-    myGameArea.stop();
     Computer = "None";
     TypeOnePlayer = false;
     TypeTwoPlayer = false;
     document.getElementById("ButtonArea").hidden = true;
     document.getElementById("OnePlayerMenu").hidden = true;
     if (document.getElementById("GameArea")) {
+        myGameArea.stop();
         document.getElementById("GameArea").hidden = true;
     }
     document.getElementById("Menu").hidden = false;
@@ -252,15 +248,6 @@ function updateGameArea() {
     }
 }
 
-function crashWith(obj, other) {
-    var crash = false
-    if (Math.floor(other.x / 68) == obj.x && Math.floor(other.y / 68) == obj.y) {
-        crash = true;
-    }
-
-    return crash;
-}
-
 function draw(image, Info) {
     // works on any image given height width angle and position
 
@@ -281,7 +268,6 @@ function draw(image, Info) {
 
 function clickhandler(e) {
     if ((TypeOnePlayer && (PlayersTurn == "Red" && Computer == "Black") || (PlayersTurn == "Black" && Computer == "Red")) || TypeTwoPlayer) {
-        var index
         var x = Math.floor((e.clientX - 10) / 68);
         var y = Math.floor((e.clientY - 10) / 68);
         if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
@@ -296,7 +282,7 @@ function clickhandler(e) {
                             }
                         }
                     }
-                } else if (PlayersTurn == "Black") {
+                } else {
                     if (BoardState[y][x] == 2) {
                         Mouse.Holds = "Black";
                         for (let i = 0; i < BlackCheckers.length; i++) {
@@ -308,7 +294,7 @@ function clickhandler(e) {
                     }
                 }
             } else {
-                var Oldplacex, Oldplacey, jumpposition
+                var Oldplacex, Oldplacey, jumpposition, index
                 if (Mouse.Holds == "Red") {
                     Oldplacex = RedCheckers[Mouse.Index].x;
                     Oldplacey = RedCheckers[Mouse.Index].y;
@@ -600,12 +586,11 @@ function jump_again(e) {
     } else {
         jumpagain = false;
         if (Mouse.Holds == "Black") {
-            Mouse.Holds = "Nothing";
             PlayersTurn = "Red";
         } else {
-            Mouse.Holds = "Nothing";
             PlayersTurn = "Black";
         }
+        Mouse.Holds = "Nothing";
     }
     document.getElementById("Jump_Again-Button").hidden = true;
     document.getElementById("End_Turn-Button").hidden = true;
