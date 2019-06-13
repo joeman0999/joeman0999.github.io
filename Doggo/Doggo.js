@@ -1,5 +1,3 @@
-var PersonData, Person, canvas
-
 // Get canvas
 var Thecanvas = {
 	width: 900,
@@ -15,6 +13,8 @@ var myGameArea = {
 		this.canvas.width = Thecanvas.width;
 		this.canvas.height = Thecanvas.height;
 		this.context = this.canvas.getContext("2d");
+		this.context.font = "10px Arial";
+		this.context.fillStyle = "black";
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 		this.interval = setInterval(updateGameArea, 20);
 		window.addEventListener('keydown', keydownhandler)
@@ -113,7 +113,10 @@ var FollowDogData = {
 	Lw: 16,
 	angle: 0,
 	DogPush: false,
-	DogPresent: true
+	DogPresent: true,
+	BarkFrame: Math.random() * 100 + 150,
+	LastBark: 0,
+	BarkDuration: 0
 }
 
 var Tree = new Image();
@@ -211,20 +214,22 @@ var Objects = [
 		context: myGameArea.canvas.getContext("2d"),
 		x: 70,
 		y: 375,
-		width: 64,
-		height: 64,
+		width: 96,
+		height: 96,
 		image: RedHouse,
 		xFrame: 0,
 		yFrame: 0,
 		numberOfXFrames: 1,
 		numberOfYFrames: 1,
-		Th: 23,
-		Bh: 26,
-		Rw: 26,
-		Lw: 26,
+		Th: 34,
+		Bh: 39,
+		Rw: 39,
+		Lw: 39,
 		angle: 0
 	}
 ]
+
+var MyText = [];
 
 function updateGameArea() {
 	myGameArea.clear();
@@ -238,6 +243,7 @@ function updateGameArea() {
 	for (var k = 0; k < Objects.length; k++) {
 		render(Objects[k])
 	}
+	WriteText();
 }
 
 function updateCharacter(Data) {
@@ -435,6 +441,25 @@ function updateFollowDog(Data) {
 	}
 
 	Data.ticks += 1;
+	if (frame < Data.LastBark + Data.BarkDuration) {
+		let newText = {
+			text: "Woof!",
+			x: Data.x,
+			y: Data.y
+		}
+		if (Data.speedX == 0) {
+			newText.x += 15;
+		} else if (Data.speedX > 0) {
+			newText.x += 20;
+		} else {
+			newText.x -= 45;
+		}
+		MyText.push(newText);
+	} else if (frame > Data.BarkFrame) {
+		Data.BarkFrame = frame + Math.random() * 200 + 100;
+		Data.LastBark = frame;
+		Data.BarkDuration = Math.random() * 10 + 25;
+	}
 
 	if (Data.ticks >= Data.ticksPerFrame) {
 
@@ -473,6 +498,13 @@ function Draw(Data) {
 	for (var k = 0; k < Data.x.length; k++) {
 		Data.context.drawImage(Data.image, Data.x[k], Data.y[k])
 	}
+}
+
+function WriteText() {
+	for (let i = 0; i < MyText.length; ++i) {
+		myGameArea.context.fillText(MyText[i].text, MyText[i].x, MyText[i].y);
+	}
+	MyText = [];
 }
 
 function CharacterSelect() {
