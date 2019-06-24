@@ -4,6 +4,13 @@ var Thecanvas = {
 	height: 600
 }
 
+var Bounds = {
+	xMin: 40,
+	yMin: 40,
+	xMax: 880,
+	yMax: 560
+}
+
 var myGameArea = {
 	canvas: document.createElement("canvas"),
 	start: function () {
@@ -116,7 +123,7 @@ var FollowDogData = {
 	DogPresent: true,
 	BarkFrame: Math.random() * 100 + 150,
 	LastBark: 0,
-	BarkDuration: 0
+	BarkDuration: 0,
 }
 
 var Tree = new Image();
@@ -129,7 +136,7 @@ var Objects = [
 		context: myGameArea.canvas.getContext("2d"),
 		x: 200,
 		y: 200,
-		width: 40,
+		width: 39,
 		height: 46,
 		image: Tree,
 		xFrame: 0,
@@ -137,16 +144,16 @@ var Objects = [
 		numberOfXFrames: 1,
 		numberOfYFrames: 1,
 		Th: 23,
-		Bh: 21,
+		Bh: 18,
 		Rw: 18,
 		Lw: 18,
-		angle: 0
+		angle: 0,
 	},{
 		Object: "Tree",
 		context: myGameArea.canvas.getContext("2d"),
 		x: 400,
 		y: 400,
-		width: 40,
+		width: 39,
 		height: 46,
 		image: Tree,
 		xFrame: 0,
@@ -154,16 +161,16 @@ var Objects = [
 		numberOfXFrames: 1,
 		numberOfYFrames: 1,
 		Th: 23,
-		Bh: 21,
+		Bh: 18,
 		Rw: 18,
 		Lw: 18,
-		angle: 0
+		angle: 0,
 	}, {
 		Object: "Tree",
 		context: myGameArea.canvas.getContext("2d"),
 		x: 250,
 		y: 300,
-		width: 40,
+		width: 39,
 		height: 46,
 		image: Tree,
 		xFrame: 0,
@@ -171,16 +178,16 @@ var Objects = [
 		numberOfXFrames: 1,
 		numberOfYFrames: 1,
 		Th: 23,
-		Bh: 21,
+		Bh: 18,
 		Rw: 18,
 		Lw: 18,
-		angle: 0
+		angle: 0,
 	}, {
 		Object: "Tree",
 		context: myGameArea.canvas.getContext("2d"),
 		x: 281,
-		y: 52,
-		width: 40,
+		y: 92,
+		width: 39,
 		height: 46,
 		image: Tree,
 		xFrame: 0,
@@ -188,16 +195,16 @@ var Objects = [
 		numberOfXFrames: 1,
 		numberOfYFrames: 1,
 		Th: 23,
-		Bh: 21,
+		Bh: 18,
 		Rw: 18,
 		Lw: 18,
-		angle: 0
+		angle: 0,
 	}, {
 		Object: "Tree",
 		context: myGameArea.canvas.getContext("2d"),
 		x: 481,
 		y: 92,
-		width: 40,
+		width: 39,
 		height: 46,
 		image: Tree,
 		xFrame: 0,
@@ -205,14 +212,14 @@ var Objects = [
 		numberOfXFrames: 1,
 		numberOfYFrames: 1,
 		Th: 23,
-		Bh: 21,
+		Bh: 18,
 		Rw: 18,
 		Lw: 18,
-		angle: 0
+		angle: 0,
 	}, {
 		Object: "RedHouse",
 		context: myGameArea.canvas.getContext("2d"),
-		x: 70,
+		x: 130,
 		y: 375,
 		width: 96,
 		height: 96,
@@ -225,7 +232,7 @@ var Objects = [
 		Bh: 39,
 		Rw: 39,
 		Lw: 39,
-		angle: 0
+		angle: 0,
 	}
 ]
 
@@ -289,7 +296,11 @@ function updateCharacter(Data) {
 	}
 	Data.x += Data.speedX;
 	Data.y -= Data.speedY;
-	if (FollowDogData.DogPresent && Collision(Data, FollowDogData)) {
+	if (Data.x + Data.Rw / 2 > Bounds.xMax || Data.x - Data.Rw / 2 < Bounds.xMin || Data.y + Data.Th / 2 > Bounds.yMax || Data.y - Data.Th / 2 < Bounds.yMin) {
+		Data.x -= Data.speedX;
+		Data.y += Data.speedY;
+		FollowDogData.DogPush = false;
+	} else if (FollowDogData.DogPresent && Collision(Data, FollowDogData)) {
 		//Data.x -= Data.speedX;
 		//Data.y += Data.speedY;
 		FollowDogData.x += Data.speedX;
@@ -502,6 +513,10 @@ function Draw(Data) {
 
 function WriteText() {
 	for (let i = 0; i < MyText.length; ++i) {
+		var width = myGameArea.context.measureText(MyText[i].text).width + 4;
+		myGameArea.context.fillStyle = 'White';
+		myGameArea.context.fillRect(MyText[i].x - 2, MyText[i].y - 10, width, 12);
+		myGameArea.context.fillStyle = 'Black';
 		myGameArea.context.fillText(MyText[i].text, MyText[i].x, MyText[i].y);
 	}
 	MyText = [];
@@ -536,7 +551,7 @@ function AnimalSelect() {
 function Collision(obj1, obj2) {
 	var overlap = false;
 	// Define obj1
-	var trhy, tlhy, brhy, blhy, angletopright, angletopleft, Obj1topright, Obj1topleft, Obj1bottomright, Obj1Points, Obj2topright, Obj2topleft, Obj2bottomright, d1, d2, d3, d4, Obj2Points, k
+	var trhy, tlhy, brhy, blhy, angletopright, angletopleft, Obj1topright, Obj1topleft, Obj1bottomright, Obj1Points, Obj2topright, Obj2topleft, Obj2bottomright, d1, d2, d3, d4, Obj2Points
 
 	trhy = Math.sqrt(Math.pow(obj1.Th, 2) + Math.pow(obj1.Lw, 2));
 	tlhy = Math.sqrt(Math.pow(obj1.Th, 2) + Math.pow(obj1.Rw, 2));
@@ -572,7 +587,7 @@ function Collision(obj1, obj2) {
 	Obj2Points = [Obj2topright[0], Obj2topright[1], Obj2topleft[0], Obj2topleft[1], Obj2bottomleft[0], Obj2bottomleft[1], Obj2bottomright[0], Obj2bottomright[1]]
 
 	d1, d2, d3, d4
-	for (i = 0; i <= 6; i += 2) {
+	for (let i = 0; i <= 6; i += 2) {
 		// A=(x1,y1) to B=(x2,y2) a point P=(x,y) falls on you need to compute the value:-
 		// d=(x−x1)(y2−y1)−(y−y1)(x2−x1)
 		// top left to top right
@@ -584,7 +599,7 @@ function Collision(obj1, obj2) {
 		// top left to bottom left
 		d4 = (Obj2Points[i] - Obj1topleft[0]) * (Obj1bottomleft[1] - Obj1topleft[1]) - (Obj2Points[1 + i] - Obj1topleft[1]) * (Obj1bottomleft[0] - Obj1topleft[0]);
 
-		if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+		if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
 			overlap = true;
 			return overlap;
 		}
@@ -599,7 +614,7 @@ function Collision(obj1, obj2) {
 		// top left to bottom left
 		d4 = (Obj1Points[i] - Obj2topleft[0]) * (Obj2bottomleft[1] - Obj2topleft[1]) - (Obj1Points[1 + i] - Obj2topleft[1]) * (Obj2bottomleft[0] - Obj2topleft[0]);
 
-		if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+		if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
 			overlap = true;
 			return overlap;
 		}

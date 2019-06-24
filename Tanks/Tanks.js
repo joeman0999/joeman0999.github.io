@@ -2765,7 +2765,7 @@ function crashWith(obj, otherobj) { // used to determine if a point is inside an
         // top left to bottom left
         d4 = (other[0] - mytopleft[0]) * (mybottomleft[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mybottomleft[0] - mytopleft[0]);
 
-        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+        if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
             crash = true
         }
 
@@ -2797,7 +2797,7 @@ function crashWith(obj, otherobj) { // used to determine if a point is inside an
         // top left to bottom left
         d4 = (other[0] - mytopleft[0]) * (mybottomleft[1] - mytopleft[1]) - (other[1] - mytopleft[1]) * (mybottomleft[0] - mytopleft[0]);
 
-        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+        if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
             crash = true
         }
     }
@@ -2857,7 +2857,7 @@ function WallCheck(obj, walls) { // checks if a bullet or a rectangle overlaps a
                 // top left to bottom left
                 d4 = (other[i] - topleft[0]) * (bottomleft[1] - topleft[1]) - (other[1 + i] - topleft[1]) * (bottomleft[0] - topleft[0]);
 
-                if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                     Hit = true;
                     return Hit;
                 }
@@ -2874,7 +2874,7 @@ function WallCheck(obj, walls) { // checks if a bullet or a rectangle overlaps a
                 // top left to bottom left
                 d4 = (WallPoints[i] - other[2]) * (other[5] - other[3]) - (WallPoints[1 + i] - other[3]) * (other[4] - other[2]);
 
-                if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                     Hit = true;
                     return Hit;
                 }
@@ -2978,7 +2978,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                     // top left to bottom left
                     d4 = (Obj2Points[i] - Obj1topleft[0]) * (Obj1bottomleft[1] - Obj1topleft[1]) - (Obj2Points[1 + i] - Obj1topleft[1]) * (Obj1bottomleft[0] - Obj1topleft[0]);
 
-                    if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                    if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                         overlap = true;
                         return overlap;
                     }
@@ -2992,7 +2992,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                     // top left to bottom left
                     d4 = (Obj1Points[i] - Obj2topleft[0]) * (Obj2bottomleft[1] - Obj2topleft[1]) - (Obj1Points[1 + i] - Obj2topleft[1]) * (Obj2bottomleft[0] - Obj2topleft[0]);
 
-                    if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                    if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                         overlap = true;
                         return overlap;
                     }
@@ -3029,7 +3029,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                     // top left to bottom left
                     d4 = (Obj2Points[i] - Obj1topleft[0]) * (Obj1bottomleft[1] - Obj1topleft[1]) - (Obj2Points[1 + i] - Obj1topleft[1]) * (Obj1bottomleft[0] - Obj1topleft[0]);
 
-                    if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                    if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                         overlap = true;
                         return overlap;
                     }
@@ -3044,7 +3044,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                     // top left to bottom left
                     d4 = (Obj1Points[i] - Obj2topleft[0]) * (Obj2bottomleft[1] - Obj2topleft[1]) - (Obj1Points[1 + i] - Obj2topleft[1]) * (Obj2bottomleft[0] - Obj2topleft[0]);
 
-                    if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                    if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                         overlap = true;
                         return overlap;
                     }
@@ -3083,7 +3083,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                         // top left to bottom left
                         d4 = (Obj2Points[i] - Obj1topleft[0]) * (Obj1bottomleft[1] - Obj1topleft[1]) - (Obj2Points[1 + i] - Obj1topleft[1]) * (Obj1bottomleft[0] - Obj1topleft[0]);
 
-                        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                        if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                             overlap = true;
                             return overlap;
                         }
@@ -3098,7 +3098,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                         // top left to bottom left
                         d4 = (Obj1Points[i] - Obj2topleft[0]) * (Obj2bottomleft[1] - Obj2topleft[1]) - (Obj1Points[1 + i] - Obj2topleft[1]) * (Obj2bottomleft[0] - Obj2topleft[0]);
 
-                        if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                        if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                             overlap = true;
                             return overlap;
                         }
@@ -3138,7 +3138,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                     // top left to bottom left
                     d4 = (Obj2Points[i] - Obj1topleft[0]) * (Obj1bottomleft[1] - Obj1topleft[1]) - (Obj2Points[1 + i] - Obj1topleft[1]) * (Obj1bottomleft[0] - Obj1topleft[0]);
 
-                    if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                    if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                         overlap = true;
                         return overlap;
                     }
@@ -3153,7 +3153,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                     // top left to bottom left
                     d4 = (Obj1Points[i] - Obj2topleft[0]) * (Obj2bottomleft[1] - Obj2topleft[1]) - (Obj1Points[1 + i] - Obj2topleft[1]) * (Obj2bottomleft[0] - Obj2topleft[0]);
 
-                    if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                    if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                         overlap = true;
                         return overlap;
                     }
@@ -3191,7 +3191,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                             // top left to bottom left
                             d4 = (Obj2Points[i] - Obj1topleft[0]) * (Obj1bottomleft[1] - Obj1topleft[1]) - (Obj2Points[1 + i] - Obj1topleft[1]) * (Obj1bottomleft[0] - Obj1topleft[0]);
 
-                            if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                            if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                                 overlap = true;
                                 return overlap;
                             }
@@ -3206,7 +3206,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                             // top left to bottom left
                             d4 = (Obj1Points[i] - Obj2topleft[0]) * (Obj2bottomleft[1] - Obj2topleft[1]) - (Obj1Points[1 + i] - Obj2topleft[1]) * (Obj2bottomleft[0] - Obj2topleft[0]);
 
-                            if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                            if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                                 overlap = true;
                                 return overlap;
                             }
@@ -3248,7 +3248,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                             // top left to bottom left
                             d4 = (Obj2Points[i] - Obj1topleft[0]) * (Obj1bottomleft[1] - Obj1topleft[1]) - (Obj2Points[1 + i] - Obj1topleft[1]) * (Obj1bottomleft[0] - Obj1topleft[0]);
 
-                            if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                            if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                                 overlap = true;
                                 return overlap;
                             }
@@ -3263,7 +3263,7 @@ function TanksOverlap(obj1) { // checks if a Rectangle overlaps the player tanks
                             // top left to bottom left
                             d4 = (Obj1Points[i] - Obj2topleft[0]) * (Obj2bottomleft[1] - Obj2topleft[1]) - (Obj1Points[1 + i] - Obj2topleft[1]) * (Obj2bottomleft[0] - Obj2topleft[0]);
 
-                            if (((d1 > 0 && d3 < 0) && (d2 > 0 && d4 < 0)) || ((d1 < 0 && d3 > 0) && (d2 < 0 && d4 > 0))) {
+                            if (((d1 >= 0 && d3 <= 0) && (d2 >= 0 && d4 <= 0)) || ((d1 <= 0 && d3 >= 0) && (d2 <= 0 && d4 >= 0))) {
                                 overlap = true;
                                 return overlap;
                             }
