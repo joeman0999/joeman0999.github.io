@@ -84,6 +84,11 @@ button.Game-Image-Button:hover {
   background-size: 76px 65px;
 }
 
+#Game-7-Image {
+  background-image: url(GameImages/Paper.png);
+  background-size: 76px 65px;
+}
+
 .Game-Description{
   color: white;
   padding: 0px 0px 10px 15px;
