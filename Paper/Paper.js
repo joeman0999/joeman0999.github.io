@@ -7,6 +7,8 @@ var NumberBots = 50;
 var BotCam = false;
 var BotCams = [];
 var GameType = "";
+var xDown = null;
+var yDown = null;
 
 Land.push(new Image());
 Land[0].src = "images/Land1.png";
@@ -82,9 +84,11 @@ var myGameAreas = [
 			this.context = this.canvas.getContext("2d");
 			document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 			this.frame = 0;
-			this.interval = setInterval(updateGameArea, 25);
+			this.interval = setInterval(updateGameArea, 30);
 			window.addEventListener('keydown', keydownhandler);
 			window.addEventListener('keyup', keyuphandler);
+			window.addEventListener('touchstart', handleTouchStart, false);
+			window.addEventListener('touchmove', handleTouchMove, false);
 
 			GridReset();
 		},
@@ -150,23 +154,31 @@ function twoPlayer() {
 	Player1Data = Respawn(Player1Data);
 	Player2Data = Respawn(Player2Data);
 
+	//var Loc = [((Player2Data.Boardy + 10) / 20) - 1, ((Player2Data.Boardx + 10) / 20) - 1];
+
 	for (let i = 0; i < NumberBots; ++i) {
 		Bots[i] = newBot();
 		Bots[i].id = i + 3;
 		Bots[i] = Respawn(Bots[i]);
 	}
-	//Loc = [((Player2Data.Boardy + 10) / 20) - 1, ((Player2Data.Boardx + 10) / 20) - 1];
+	
 }
 
 function Menu() {
 	myGameAreas[0].stop();
 	document.getElementById("ButtonArea").hidden = true;
 	if (document.getElementById("GameArea1")) {
+		window.removeEventListener('keydown', keydownhandler);
+		window.removeEventListener('keyup', keyuphandler);
+		window.removeEventListener('touchstart', handleTouchStart);
+		window.removeEventListener('touchmove', handleTouchMove);
 		document.getElementById("GameArea1").hidden = true;
+
 	}
 	if (document.getElementById("GameArea2")) {
 		document.getElementById("GameArea2").hidden = true;
 	}
+
 	document.getElementById("Menu").hidden = false;
 }
 
@@ -196,6 +208,38 @@ function keydownhandler(e) {
 function keyuphandler(e) {
 	myGameAreas.keys[e.keyCode] = (e.type == "keydown");
 }
+
+function handleTouchStart(evt) {
+	xDown = evt.touches[0].clientX;
+	yDown = evt.touches[0].clientY;
+};
+
+function handleTouchMove(evt) {
+	if (!xDown || !yDown) {
+		return;
+	}
+	var xUp = evt.touches[0].clientX;
+	var yUp = evt.touches[0].clientY;
+	var xDiff = xDown - xUp;
+	var yDiff = yDown - yUp;
+
+	if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+		if (xDiff > 0) {
+			Player1Data.NewDirection = 'left';
+		} else {
+			Player1Data.NewDirection = 'right';
+		}
+	} else {
+		if (yDiff > 0) {
+			Player1Data.NewDirection = 'up';
+		} else {
+			Player1Data.NewDirection = 'down';
+		}
+	}
+
+	xDown = null;
+	yDown = null;
+};
 
 function newBot() {
 	
