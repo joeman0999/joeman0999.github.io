@@ -16,7 +16,8 @@ var CheeseImage = new Image();
 CheeseImage.src = "images/Cheese.png";
 var Mouse = {
     x: 12,
-    y: 12
+    y: 12,
+    direction: ""
 }
 var BigGrid = [
     [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,],
@@ -65,6 +66,8 @@ function Menu() {
     myGameArea.stop();
     document.getElementById("ButtonArea").hidden = true;
     if (document.getElementById("GameArea")) {
+        window.removeEventListener('keydown', keydownhandler);
+        window.removeEventListener('keyup', keyuphandler);
         document.getElementById("GameArea").hidden = true;
     }
     document.getElementById("Menu").hidden = false;
@@ -106,15 +109,18 @@ function updateGameArea() {
         myGameArea.clear();
         x = Mouse.x;
         y = Mouse.y;
-        if (myGameArea.keys[38] && y > 0) {
+
+        if (myGameArea.keys[38] || Mouse.direction == "up" && y > 0) {
             y -= 1;
-        } else if (myGameArea.keys[40] && y < 24) {
+        } else if (myGameArea.keys[40] || Mouse.direction == "down" && y < 24) {
             y += 1;
-        } else if (myGameArea.keys[39] && x < 24) {
+        } else if (myGameArea.keys[39] || Mouse.direction == "right" && x < 24) {
             x += 1;
-        } else if (myGameArea.keys[37] && x > 0) {
+        } else if (myGameArea.keys[37] || Mouse.direction == "left" && x > 0) {
             x -= 1;
         }
+
+        Mouse.direction = "";
 
         if (BigGrid[x][y]) {
             if (myGameArea.keys[38]) {
@@ -359,10 +365,8 @@ function updateGameArea() {
 }
 
 function LevelSelect() {
-    Mouse = {
-        x: 12,
-        y: 12
-    }
+    Mouse.x = 12;
+    Mouse.y = 12;
     BigGrid = [
         [false, false, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false, true, false, false, false, false, false,],
         [false, false, false, false, false, false, false, true, false, true, false, false, true, false, false, true, false, true, false, false, false, false, false, true, false,],
@@ -449,6 +453,15 @@ function SpawnCat() {
 function keydownhandler(e) {
     myGameArea.keys = (myGameArea.keys || []);
     myGameArea.keys[e.keyCode] = (e.type == "keydown");
+    if (myGameArea.keys[38]) {
+        Mouse.direction = "up";
+    } else if (myGameArea.keys[40]) {
+        Mouse.direction = "down";
+    } else if (myGameArea.keys[39]) {
+        Mouse.direction = "right";
+    } else if (myGameArea.keys[37]) {
+        Mouse.direction = "left";
+    }
 }
 
 function keyuphandler(e) {

@@ -156,6 +156,7 @@ var myGameArea = {
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
         document.getElementById("GameArea").addEventListener('click', clickhandler);
+        document.getElementById("GameArea").addEventListener('touchstart', handleTouchStart);
         New_Game();
     },
     stop: function () {
@@ -267,6 +268,15 @@ function draw(image, Info) {
 }
 
 function clickhandler(e) {
+    click(e);
+}
+
+function handleTouchStart(evt) {
+    var e = evt.touches[0];
+    click(e);
+}
+
+function click(e) {
     if ((TypeOnePlayer && (PlayersTurn == "Red" && Computer == "Black") || (PlayersTurn == "Black" && Computer == "Red")) || TypeTwoPlayer) {
         var x = Math.floor((e.clientX - 10) / 68);
         var y = Math.floor((e.clientY - 10) / 68);

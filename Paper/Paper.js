@@ -73,7 +73,6 @@ var Player2Data = {
 var myGameAreas = [
 	{
 		canvas: document.createElement("canvas"),
-		keys: [],
 		frame: 0,
 		start: function () {
 			this.canvas.setAttribute("id", "GameArea1")
@@ -86,14 +85,12 @@ var myGameAreas = [
 			this.frame = 0;
 			this.interval = setInterval(updateGameArea, 30);
 			window.addEventListener('keydown', keydownhandler);
-			window.addEventListener('keyup', keyuphandler);
 			window.addEventListener('touchstart', handleTouchStart, false);
 			window.addEventListener('touchmove', handleTouchMove, false);
 
 			GridReset();
 		},
 		stop: function () {
-			myGameAreas.keys = [];
 			clearInterval(this.interval);
 		},
 		clear: function () {
@@ -169,7 +166,6 @@ function Menu() {
 	document.getElementById("ButtonArea").hidden = true;
 	if (document.getElementById("GameArea1")) {
 		window.removeEventListener('keydown', keydownhandler);
-		window.removeEventListener('keyup', keyuphandler);
 		window.removeEventListener('touchstart', handleTouchStart);
 		window.removeEventListener('touchmove', handleTouchMove);
 		document.getElementById("GameArea1").hidden = true;
@@ -183,9 +179,6 @@ function Menu() {
 }
 
 function keydownhandler(e) {
-	myGameAreas.keys = (myGameAreas.keys || []);
-	myGameAreas.keys[e.keyCode] = (e.type == "keydown");
-
 	if (e.keyCode == 87) {
 		Player1Data.NewDirection = 'up';
 	} else if (e.keyCode == 83) {
@@ -202,17 +195,13 @@ function keydownhandler(e) {
 		Player2Data.NewDirection = "up";
 	} else if (e.keyCode == 40) {
 		Player2Data.NewDirection = "down";
-	} // Player 2 Keys
-}
-
-function keyuphandler(e) {
-	myGameAreas.keys[e.keyCode] = (e.type == "keydown");
+	}
 }
 
 function handleTouchStart(evt) {
 	xDown = evt.touches[0].clientX;
 	yDown = evt.touches[0].clientY;
-};
+}
 
 function handleTouchMove(evt) {
 	if (!xDown || !yDown) {
@@ -239,7 +228,7 @@ function handleTouchMove(evt) {
 
 	xDown = null;
 	yDown = null;
-};
+}
 
 function newBot() {
 	
@@ -671,9 +660,9 @@ function Spawn(Loc, id) {
 
 function Fill(id, start) {
 	var locs = [];
-	var Checked = Array(249);
+	var Checked = Array(250);
 
-	Checked[start[0]] = Array(249);
+	Checked[start[0]] = Array(250);
 	Checked[start[0]][start[1]] = true;
 	locs.push([start[0] + 1, start[1]]);
 	locs.push([start[0] - 1, start[1]]);
@@ -694,7 +683,7 @@ function Fill(id, start) {
 			if (Checked[r]) {
 				Checked[r][c] = true;
 			} else {
-				Checked[r] = Array(249);
+				Checked[r] = Array(250);
 				Checked[r][c] = true;
 			}
 
@@ -741,7 +730,7 @@ function InnerFill(id, start, Checked) {
 		if (Checked[r]) {
 			Checked[r][c] = true;
 		} else {
-			Checked[r] = Array(249);
+			Checked[r] = Array(250);
 			Checked[r][c] = true;
 		}
 

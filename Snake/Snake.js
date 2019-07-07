@@ -3,6 +3,8 @@ var Thecanvas = {
     height: 500
 };
 
+var xDown = null;
+var yDown = null;
 var HighScore = 0;
 var TwoPlayers = false;
 var SnakeImage = new Image();
@@ -89,6 +91,9 @@ function Menu() {
     document.getElementById("ButtonArea").hidden = true;
     if (document.getElementById("GameArea")) {
         document.getElementById("GameArea").hidden = true;
+        window.removeEventListener('keydown', keydownhandler);
+        window.removeEventListener('touchstart', handleTouchStart);
+        window.removeEventListener('touchmove', handleTouchMove);
     }
     document.getElementById("Menu").hidden = false;
 }
@@ -109,9 +114,9 @@ var myGameArea = {
             this.interval = setInterval(updateGameArea2, 20);
         }
 
-
         window.addEventListener('keydown', keydownhandler);
-
+        window.addEventListener('touchstart', handleTouchStart);
+        window.addEventListener('touchmove', handleTouchMove);
     },
     stop: function () {
         clearInterval(this.interval);
@@ -442,6 +447,38 @@ function keydownhandler(e) {
     } else if (e.keyCode == 65) {
         SnakeDirection2 = 'left';
     }
+}
+
+function handleTouchStart(evt) {
+    xDown = evt.touches[0].clientX;
+    yDown = evt.touches[0].clientY;
+}
+
+function handleTouchMove(evt) {
+    if (!xDown || !yDown) {
+        return;
+    }
+    var xUp = evt.touches[0].clientX;
+    var yUp = evt.touches[0].clientY;
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+        if (xDiff > 0) {
+            SnakeDirection = 'left';
+        } else {
+            SnakeDirection = 'right';
+        }
+    } else {
+        if (yDiff > 0) {
+            SnakeDirection = 'up';
+        } else {
+            SnakeDirection = 'down';
+        }
+    }
+
+    xDown = null;
+    yDown = null;
 }
 
 function spawnfruit() {
