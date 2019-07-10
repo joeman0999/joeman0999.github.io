@@ -1,6 +1,7 @@
 canvas {
   border: 1px solid #d3d3d3;
   background-image: url(images/CheckerBoard.png);
+  background-size: 100% 100%;
 }
 
 button {
