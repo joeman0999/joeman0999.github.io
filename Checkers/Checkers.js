@@ -239,6 +239,7 @@ function Menu() {
     TypeTwoPlayer = false;
     document.getElementById("ButtonArea").hidden = true;
     document.getElementById("OnePlayerMenu").hidden = true;
+    document.getElementById("DifficultyMenu").hidden = true;
     if (document.getElementById("GameArea")) {
         myGameArea.stop();
         document.getElementById("GameArea").hidden = true;
