@@ -92,8 +92,8 @@ var myGameAreas = [
 			this.frame = 0;
 			this.interval = setInterval(updateGameArea, 30);
 			window.addEventListener('keydown', keydownhandler);
-			window.addEventListener('touchstart', handleTouchStart, false);
-			window.addEventListener('touchmove', handleTouchMove, false);
+			window.addEventListener('touchstart', handleTouchStart);
+			window.addEventListener('touchmove', handleTouchMove);
 
 			GridReset();
 		},
