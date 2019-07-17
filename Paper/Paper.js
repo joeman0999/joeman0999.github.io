@@ -9,6 +9,7 @@ var BotCams = [];
 var GameType = "";
 var xDown = null;
 var yDown = null;
+var Multiplier = 1;
 
 Land.push(new Image());
 Land[0].src = "images/Land1.png";
@@ -70,16 +71,22 @@ var Player2Data = {
 	Alive: true
 };
 
+window.onload = function () {
+	var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight) - 70;
+	var min = Math.min(screenW, screenH);
+	var size = Math.floor(min);
+	Multiplier = size / 580;
+}
+
 var myGameAreas = [
 	{
 		canvas: document.createElement("canvas"),
 		frame: 0,
 		start: function () {
-			this.canvas.setAttribute("id", "GameArea1")
-			this.canvas.setAttribute("width", Thecanvas.width);
-			this.canvas.setAttribute("height", Thecanvas.height);
-			this.canvas.width = Thecanvas.width;
-			this.canvas.height = Thecanvas.height;
+			this.canvas.setAttribute("id", "GameArea1");
+			this.canvas.width = Thecanvas.width * Multiplier;
+			this.canvas.height = Thecanvas.height * Multiplier;
 			this.context = this.canvas.getContext("2d");
 			document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 			this.frame = 0;
@@ -100,11 +107,9 @@ var myGameAreas = [
 		canvas: document.createElement("canvas"),
 		start: function () {
 
-			this.canvas.setAttribute("id", "GameArea2")
-			this.canvas.setAttribute("width", Thecanvas.width);
-			this.canvas.setAttribute("height", Thecanvas.height);
-			this.canvas.width = Thecanvas.width;
-			this.canvas.height = Thecanvas.height;
+			this.canvas.setAttribute("id", "GameArea2");
+			this.canvas.width = Thecanvas.width * Multiplier;
+			this.canvas.height = Thecanvas.height * Multiplier;
 			this.context = this.canvas.getContext("2d");
 
 			document.body.insertBefore(this.canvas, document.body.childNodes[0]);
@@ -199,15 +204,16 @@ function keydownhandler(e) {
 }
 
 function handleTouchStart(evt) {
+	evt.preventDefault();
 	xDown = evt.touches[0].clientX;
 	yDown = evt.touches[0].clientY;
 }
 
 function handleTouchMove(evt) {
+	evt.preventDefault();
 	if (!xDown || !yDown) {
 		return;
 	}
-	evt.preventDefault();
 	var xUp = evt.touches[0].clientX;
 	var yUp = evt.touches[0].clientY;
 	var xDiff = xDown - xUp;
@@ -301,16 +307,16 @@ function updateGameArea() {
 
 function draw(Info) {
 	myGameAreas[0].context.save();
-	myGameAreas[0].context.translate(Info.Boardx - Player1Data.Boardx + Player1Data.x, Info.Boardy - Player1Data.Boardy + Player1Data.y);
+	myGameAreas[0].context.translate((Info.Boardx - Player1Data.Boardx + Player1Data.x) * Multiplier, (Info.Boardy - Player1Data.Boardy + Player1Data.y) * Multiplier);
 	myGameAreas[0].context.rotate(Info.angle);
-	myGameAreas[0].context.drawImage(Info.image, -(Info.width / 2), -(Info.height / 2), Info.width, Info.height);
+	myGameAreas[0].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 	myGameAreas[0].context.restore();
 
 	if (GameType == "twoPlayer") {
 		myGameAreas[1].context.save();
-		myGameAreas[1].context.translate(Info.Boardx - Player2Data.Boardx + Player2Data.x, Info.Boardy - Player2Data.Boardy + Player2Data.y);
+		myGameAreas[1].context.translate((Info.Boardx - Player2Data.Boardx + Player2Data.x) * Multiplier, (Info.Boardy - Player2Data.Boardy + Player2Data.y) * Multiplier);
 		myGameAreas[1].context.rotate(Info.angle);
-		myGameAreas[1].context.drawImage(Info.image, -(Info.width / 2), -(Info.height / 2), Info.width, Info.height);
+		myGameAreas[1].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 		myGameAreas[1].context.restore();
 	}
 }
@@ -318,31 +324,31 @@ function draw(Info) {
 function Player1Draw(Info) {
 
 	myGameAreas[0].context.save();
-	myGameAreas[0].context.translate(Info.x, Info.y);
+	myGameAreas[0].context.translate(Info.x * Multiplier, Info.y * Multiplier);
 	myGameAreas[0].context.rotate(Info.angle);
-	myGameAreas[0].context.drawImage(Info.image, -(Info.width / 2), -(Info.height / 2), Info.width, Info.height);
+	myGameAreas[0].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 	myGameAreas[0].context.restore();
 
 	if (GameType == "twoPlayer") {
 		myGameAreas[1].context.save();
-		myGameAreas[1].context.translate(Info.Boardx - Player2Data.Boardx + Player2Data.x, Info.Boardy - Player2Data.Boardy + Player2Data.y);
+		myGameAreas[1].context.translate((Info.Boardx - Player2Data.Boardx + Player2Data.x) * Multiplier, (Info.Boardy - Player2Data.Boardy + Player2Data.y) * Multiplier);
 		myGameAreas[1].context.rotate(Info.angle);
-		myGameAreas[1].context.drawImage(Info.image, -(Info.width / 2), -(Info.height / 2), Info.width, Info.height);
+		myGameAreas[1].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 		myGameAreas[1].context.restore();
 	}
 }
 
 function Player2Draw(Info) {
 	myGameAreas[1].context.save();
-	myGameAreas[1].context.translate(Info.x, Info.y);
+	myGameAreas[1].context.translate(Info.x * Multiplier, Info.y * Multiplier);
 	myGameAreas[1].context.rotate(Info.angle);
-	myGameAreas[1].context.drawImage(Info.image, -(Info.width / 2), -(Info.height / 2), Info.width, Info.height);
+	myGameAreas[1].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 	myGameAreas[1].context.restore();
 
 	myGameAreas[0].context.save();
-	myGameAreas[0].context.translate(Info.Boardx - Player1Data.Boardx + Player1Data.x, Info.Boardy - Player1Data.Boardy + Player1Data.y);
+	myGameAreas[0].context.translate((Info.Boardx - Player1Data.Boardx + Player1Data.x) * Multiplier, (Info.Boardy - Player1Data.Boardy + Player1Data.y) * Multiplier);
 	myGameAreas[0].context.rotate(Info.angle);
-	myGameAreas[0].context.drawImage(Info.image, -(Info.width / 2), -(Info.height / 2), Info.width, Info.height);
+	myGameAreas[0].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 	myGameAreas[0].context.restore();
 }
 
@@ -374,15 +380,15 @@ function GridDraw(Data, canvasNum) {
 			if (LandGrid[i][k] != 0) {
 
 				myGameAreas[canvasNum].context.save();
-				myGameAreas[canvasNum].context.translate(k * 20 + 10 - Data.Boardx + Data.x, i * 20 + 10 - Data.Boardy + Data.y);
-				myGameAreas[canvasNum].context.drawImage(Land[LandGrid[i][k] - 1], -10, -10, 20, 20);
+				myGameAreas[canvasNum].context.translate((k * 20 + 10 - Data.Boardx + Data.x) * Multiplier, (i * 20 + 10 - Data.Boardy + Data.y) * Multiplier);
+				myGameAreas[canvasNum].context.drawImage(Land[LandGrid[i][k] - 1], -10 * Multiplier, -10 * Multiplier, 20 * Multiplier, 20 * Multiplier);
 				myGameAreas[canvasNum].context.restore();
 			}
 			if (TrailGrid[i][k] != 0) {
 				myGameAreas[canvasNum].context.globalAlpha = .4;
 				myGameAreas[canvasNum].context.save();
-				myGameAreas[canvasNum].context.translate(k * 20 + 10 - Data.Boardx + Data.x, i * 20 + 10 - Data.Boardy + Data.y);
-				myGameAreas[canvasNum].context.drawImage(Land[TrailGrid[i][k] - 1], -10, -10, 20, 20);
+				myGameAreas[canvasNum].context.translate((k * 20 + 10 - Data.Boardx + Data.x) * Multiplier, (i * 20 + 10 - Data.Boardy + Data.y) * Multiplier);
+				myGameAreas[canvasNum].context.drawImage(Land[TrailGrid[i][k] - 1], -10 * Multiplier, -10 * Multiplier, 20 * Multiplier, 20 * Multiplier);
 				myGameAreas[canvasNum].context.restore();
 				myGameAreas[canvasNum].context.globalAlpha = 1;
 
@@ -1056,10 +1062,8 @@ function CreateBotCam(index) {
 		start: function () {
 
 			this.canvas.setAttribute("id", ("GameArea" + index));
-			this.canvas.setAttribute("width", Thecanvas.width);
-			this.canvas.setAttribute("height", Thecanvas.height);
-			this.canvas.width = Thecanvas.width;
-			this.canvas.height = Thecanvas.height;
+			this.canvas.width = Thecanvas.width * Multiplier;
+			this.canvas.height = Thecanvas.height * Multiplier;
 			this.context = this.canvas.getContext("2d");
 
 			document.body.insertBefore(this.canvas, document.body.childNodes[document.body.childNodes.length-1]);
