@@ -2,6 +2,10 @@ canvas {
   border: 1px solid #d3d3d3;
 }
 
+body {
+  position: fixed;
+}
+
 button {
   background: #222  repeat-x;
   font: 20px Helvetica Neue;

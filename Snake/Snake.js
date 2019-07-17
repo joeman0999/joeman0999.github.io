@@ -2,7 +2,7 @@ var Thecanvas = {
     width: 500,
     height: 500
 };
-
+var Multiplier = 1;
 var xDown = null;
 var yDown = null;
 var HighScore = 0;
@@ -12,6 +12,14 @@ SnakeImage.src = "images/Snake.png";
 var SnakeImage2 = new Image();
 SnakeImage2.src = "images/Snake2.png";
 var SnakeDirection2, SnakeDirection, GameSpeed, GameSpeed2, Snake, Snake2, OldSnakeDirection, OldSnakeDirection2, NumberofFruit, fruit
+
+window.onload = function () {
+    var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+    var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight) - 70;
+    var min = Math.min(screenW, screenH);
+    var size = Math.floor(min);
+    Multiplier = size / 500;
+}
 
 function CreateNewSnake(x, y) {
     var variable = {
@@ -102,8 +110,8 @@ var myGameArea = {
     canvas: document.createElement("canvas"),
     start: function () {
         this.canvas.setAttribute("id", "GameArea")
-        this.canvas.width = Thecanvas.width;
-        this.canvas.height = Thecanvas.height;
+        this.canvas.width = Thecanvas.width * Multiplier;
+        this.canvas.height = Thecanvas.height * Multiplier;
         this.context = this.canvas.getContext("2d");
 
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
@@ -418,11 +426,11 @@ function draw(image, Info) {
     myGameArea.context.save();
 
     // move to the middle of where we want to draw our image
-    myGameArea.context.translate(Info.x * 20 + 10, Info.y * 20 + 10);
+    myGameArea.context.translate((Info.x * 20 + 10) * Multiplier, (Info.y * 20 + 10) * Multiplier);
 
     // draw it up and to the left by half the width
     // and height of the image 
-    myGameArea.context.drawImage(image, -(image.width / 2), -(image.height / 2));
+    myGameArea.context.drawImage(image, -(image.width / 2) * Multiplier, -(image.height / 2) * Multiplier, image.width * Multiplier, image.height * Multiplier);
 
     // and restore the coords to how they were when we began
     myGameArea.context.restore();
@@ -450,15 +458,16 @@ function keydownhandler(e) {
 }
 
 function handleTouchStart(evt) {
+    evt.preventDefault();
     xDown = evt.touches[0].clientX;
     yDown = evt.touches[0].clientY;
 }
 
 function handleTouchMove(evt) {
+    evt.preventDefault();
     if (!xDown || !yDown) {
         return;
     }
-    evt.preventDefault();
     var xUp = evt.touches[0].clientX;
     var yUp = evt.touches[0].clientY;
     var xDiff = xDown - xUp;
@@ -555,14 +564,14 @@ function renderFruit(Data) {
     // Data.context.drawImage
     Data.context.drawImage(
         Data.image,
-        Data.xFrame * Data.width / Data.numberOfXFrames,
-        Data.yFrame * Data.height / Data.numberOfYFrames,
-        Data.width / Data.numberOfXFrames,
-        Data.height / Data.numberOfYFrames,
-        (Data.x * 20 + 10) - ((Data.width / Data.numberOfXFrames) / 2),
-        (Data.y * 20 + 10) - ((Data.height / Data.numberOfYFrames) / 2),
-        Data.width / Data.numberOfXFrames,
-        Data.height / Data.numberOfYFrames);
+        (Data.xFrame * Data.width / Data.numberOfXFrames),
+        (Data.yFrame * Data.height / Data.numberOfYFrames),
+        (Data.width / Data.numberOfXFrames) * Multiplier,
+        (Data.height / Data.numberOfYFrames) * Multiplier,
+        ((Data.x * 20 + 10) - ((Data.width / Data.numberOfXFrames) / 2)) * Multiplier,
+        ((Data.y * 20 + 10) - ((Data.height / Data.numberOfYFrames) / 2)) * Multiplier,
+        (Data.width / Data.numberOfXFrames) * Multiplier,
+        (Data.height / Data.numberOfYFrames) * Multiplier);
 
 };
 
