@@ -2,9 +2,10 @@ canvas {
   border: 5px solid #000000;
 }
 
-#ButtonArea{
-  float: right;
+body {
+  position: fixed;
 }
+
 button {
   background: #222  repeat-x;
   font: 20px Helvetica Neue;
