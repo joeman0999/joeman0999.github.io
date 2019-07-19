@@ -15,9 +15,9 @@ var SnakeDirection2, SnakeDirection, GameSpeed, GameSpeed2, Snake, Snake2, OldSn
 
 window.onload = function () {
     var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
-    var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight) - 70;
+    var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
     var min = Math.min(screenW, screenH);
-    var size = Math.floor(min);
+    var size = Math.floor(min * .85);
     Multiplier = size / 500;
 }
 
@@ -109,7 +109,7 @@ function Menu() {
 var myGameArea = {
     canvas: document.createElement("canvas"),
     start: function () {
-        this.canvas.setAttribute("id", "GameArea")
+        this.canvas.setAttribute("id", "GameArea");
         this.canvas.width = Thecanvas.width * Multiplier;
         this.canvas.height = Thecanvas.height * Multiplier;
         this.context = this.canvas.getContext("2d");
@@ -573,7 +573,7 @@ function renderFruit(Data) {
         (Data.width / Data.numberOfXFrames) * Multiplier,
         (Data.height / Data.numberOfYFrames) * Multiplier);
 
-};
+}
 
 function createnewfruit(x,y,xFrame,yFrame) {
     var fruitData = {

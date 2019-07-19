@@ -1,40 +1,45 @@
 canvas {
-  border: 1px solid #d3d3d3;
+  border: .5vmin solid #d3d3d3;
   background-image: url(images/Grass.png);
+  background-size: 100% 100%;
+}
+body {
+  position: fixed;
 }
 #ButtonArea{
   float: right;
 }
+
 button {
   background: #222  repeat-x;
-  font: 20px Helvetica Neue;
+  font: 5vmin Helvetica Neue;
   color: white;
-  text-shadow: 0 -1px 1px #222;
-  padding: 6px 10px 6px 10px;
+  text-shadow: 0 -1vmin 1vmin #222;
+  padding: 1vmin 2vmin 1vmin 2vmin;
   border: 0;
-  border-bottom: 1px solid #222;
-  min-width: 80px;
-  -moz-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px #999;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px #999;
-  margin: 5px;
+  border-bottom: 1vmin solid #222;
+  min-width: 5vmin;
+  -moz-border-radius: 2vmin;
+  -moz-box-shadow: 0 1vmin 1vmin #999;
+  border-radius: 2vmin;
+  box-shadow: 0 1vmin 2vmin #999;
+  margin: 1vmin;
 }
 
 button.Menu-Button {
   background: #222  repeat-x;
-  font: 50px Helvetica Neue;
+  font: 10vmin Helvetica Neue;
   color: white;
-  text-shadow: 0 -1px 1px #222;
-  padding: 6px 10px 6px 10px;
+  text-shadow: 0 -1vmin 1vmin #222;
+  padding: 1vmin 2vmin 1vmin 2vmin;
   border: 0;
-  border-bottom: 1px solid #222;
-  min-width: 80px;
-  -moz-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px #999;
-  border-radius: 7px;
-  box-shadow: 0 1px 3px #999;
-  margin: 5px;
+  border-bottom: 1vmin solid #222;
+  min-width: 10vmin;
+  -moz-border-radius: 2vmin;
+  -moz-box-shadow: 0 1vmin 2vmin #999;
+  border-radius: 3vmin;
+  box-shadow: 0 1vmin 2vmin #999;
+  margin: 2vmin;
 }
 
 button:hover {

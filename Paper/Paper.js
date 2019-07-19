@@ -73,9 +73,9 @@ var Player2Data = {
 
 window.onload = function () {
 	var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
-	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight) - 70;
+	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
 	var min = Math.min(screenW, screenH);
-	var size = Math.floor(min);
+	var size = Math.floor(min * .85);
 	Multiplier = size / 580;
 }
 
@@ -121,6 +121,12 @@ var myGameAreas = [
 ];
 
 function onePlayer() {
+	var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
+	var min = Math.min(screenW, screenH);
+	var size = Math.floor(min * .85);
+	Multiplier = size / 580;
+
 	GameType = "onePlayer";
 	myGameAreas[0].start();
 	Player2Data.Alive = false;
@@ -140,6 +146,20 @@ function onePlayer() {
 }
 
 function twoPlayer() {
+	var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
+	if (screenW < screenH) {
+		var size = Math.floor(screenW * .9 / 2);
+	} else {
+		if (screenW / 2 < screenH) {
+			var size = Math.floor(screenW * .9 / 2);
+		} else {
+			var size = Math.floor(screenH * .9 / 2);
+		}
+		
+	}
+	Multiplier = size / 580;
+
 	GameType = "twoPlayer";
 	myGameAreas[1].start();
 	myGameAreas[0].start();

@@ -23,6 +23,7 @@ var Salt_Molecules = 0;
 var Amino_Acids = 0;
 var Proteins = 0;
 var Multiplier = 0;
+var SizeMultiplier = 1;
 var Frames = {
     Current: 0,
     Molecule: 0
@@ -32,8 +33,8 @@ var myGameArea = {
     canvas: document.getElementById("GameArea"),
     start: function () {
         this.canvas = document.getElementById("GameArea");
-        this.canvas.width = 200;
-        this.canvas.height = 200;
+        this.canvas.width = 200 * SizeMultiplier;
+        this.canvas.height = 200 * SizeMultiplier;
         this.context = this.canvas.getContext("2d");
         this.frameNo = 0;
     },
@@ -46,6 +47,11 @@ var myGameArea = {
 }
 
 window.onload = function () {
+    var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+    var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
+    var min = Math.min(screenW, screenH);
+    var size = Math.floor(min * .55);
+    SizeMultiplier = size / 200;
     myGameArea.start();
 }
 
@@ -57,7 +63,7 @@ function render() {
 
             myGameArea.context.fillStyle = Objects.Atoms[i].color;
             myGameArea.context.beginPath();
-            myGameArea.context.arc(Objects.Atoms[i].x, Objects.Atoms[i].y, Objects.AtomSize, 0, Math.PI * 2);
+            myGameArea.context.arc(Objects.Atoms[i].x * SizeMultiplier, Objects.Atoms[i].y * SizeMultiplier, Objects.AtomSize * SizeMultiplier, 0, Math.PI * 2);
             myGameArea.context.closePath();
             myGameArea.context.fill();
 
@@ -69,7 +75,7 @@ function render() {
 
         myGameArea.context.fillStyle = Objects.Molecules[i].color;
         myGameArea.context.beginPath();
-        myGameArea.context.arc(Objects.Molecules[i].x, Objects.Molecules[i].y, Objects.MoleculeSize, 0, Math.PI * 2);
+        myGameArea.context.arc(Objects.Molecules[i].x * SizeMultiplier, Objects.Molecules[i].y * SizeMultiplier, Objects.MoleculeSize * SizeMultiplier, 0, Math.PI * 2);
         myGameArea.context.closePath();
         myGameArea.context.fill();
     }
@@ -78,7 +84,7 @@ function render() {
 
         myGameArea.context.fillStyle = "blue";
         myGameArea.context.beginPath();
-        myGameArea.context.arc(Objects.Water_Molecules[i].x, Objects.Water_Molecules[i].y, Objects.MoleculeSize, 0, Math.PI * 2);
+        myGameArea.context.arc(Objects.Water_Molecules[i].x * SizeMultiplier, Objects.Water_Molecules[i].y * SizeMultiplier, Objects.MoleculeSize * SizeMultiplier, 0, Math.PI * 2);
         myGameArea.context.closePath();
         myGameArea.context.fill();
     }
@@ -87,7 +93,7 @@ function render() {
 
         myGameArea.context.fillStyle = "grey";
         myGameArea.context.beginPath();
-        myGameArea.context.arc(Objects.Salt_Molecules[i].x, Objects.Salt_Molecules[i].y, Objects.MoleculeSize, 0, Math.PI * 2);
+        myGameArea.context.arc(Objects.Salt_Molecules[i].x * SizeMultiplier, Objects.Salt_Molecules[i].y * SizeMultiplier, Objects.MoleculeSize * SizeMultiplier, 0, Math.PI * 2);
         myGameArea.context.closePath();
         myGameArea.context.fill();
     }
@@ -98,7 +104,7 @@ function render() {
 
             myGameArea.context.fillStyle = Objects.Amino_Acids[i].color;
             myGameArea.context.beginPath();
-            myGameArea.context.arc(Objects.Amino_Acids[i].x, Objects.Amino_Acids[i].y, Objects.Amino_AcidSize, 0, Math.PI * 2);
+            myGameArea.context.arc(Objects.Amino_Acids[i].x * SizeMultiplier, Objects.Amino_Acids[i].y * SizeMultiplier, Objects.Amino_AcidSize * SizeMultiplier, 0, Math.PI * 2);
             myGameArea.context.closePath();
             myGameArea.context.fill();
         }
@@ -106,12 +112,12 @@ function render() {
         myGameArea.context.fillStyle = "Chartreuse";
         myGameArea.context.globalAlpha = .95;
         myGameArea.context.beginPath();
-        myGameArea.context.moveTo(100, 50);
-        myGameArea.context.quadraticCurveTo(140, 20, 140, 90);
-        myGameArea.context.quadraticCurveTo(160, 125, 130, 160);
-        myGameArea.context.quadraticCurveTo(90, 180, 70, 160);
-        myGameArea.context.quadraticCurveTo(40, 120, 50, 90);
-        myGameArea.context.quadraticCurveTo(40, 50, 100, 50);
+        myGameArea.context.moveTo(100 * SizeMultiplier, 50 * SizeMultiplier);
+        myGameArea.context.quadraticCurveTo(140 * SizeMultiplier, 20 * SizeMultiplier, 140 * SizeMultiplier, 90 * SizeMultiplier);
+        myGameArea.context.quadraticCurveTo(160 * SizeMultiplier, 125 * SizeMultiplier, 130 * SizeMultiplier, 160 * SizeMultiplier);
+        myGameArea.context.quadraticCurveTo(90 * SizeMultiplier, 180 * SizeMultiplier, 70 * SizeMultiplier, 160 * SizeMultiplier);
+        myGameArea.context.quadraticCurveTo(40 * SizeMultiplier, 120 * SizeMultiplier, 50 * SizeMultiplier, 90 * SizeMultiplier);
+        myGameArea.context.quadraticCurveTo(40 * SizeMultiplier, 50 * SizeMultiplier, 100 * SizeMultiplier, 50 * SizeMultiplier);
         myGameArea.context.fill();
 
         for (var i = 0; i < Objects.Proteins.length; i++) {
@@ -119,9 +125,9 @@ function render() {
             myGameArea.context.strokeStyle = Objects.Proteins[i].color;
             myGameArea.context.lineCap = 'round';
             myGameArea.context.beginPath();
-            myGameArea.context.setLineDash([1, 4]);
-            myGameArea.context.moveTo(Objects.Proteins[i].x1, Objects.Proteins[i].y1);
-            myGameArea.context.quadraticCurveTo(Objects.Proteins[i].conx, Objects.Proteins[i].cony, Objects.Proteins[i].x2, Objects.Proteins[i].y2);
+            myGameArea.context.setLineDash([1 * SizeMultiplier, 4 * SizeMultiplier]);
+            myGameArea.context.moveTo(Objects.Proteins[i].x1 * SizeMultiplier, Objects.Proteins[i].y1 * SizeMultiplier);
+            myGameArea.context.quadraticCurveTo(Objects.Proteins[i].conx * SizeMultiplier, Objects.Proteins[i].cony * SizeMultiplier, Objects.Proteins[i].x2 * SizeMultiplier, Objects.Proteins[i].y2 * SizeMultiplier);
             myGameArea.context.stroke();
         }
         
@@ -129,12 +135,12 @@ function render() {
             myGameArea.context.strokeStyle = "Lime";
             myGameArea.context.beginPath();
             myGameArea.context.setLineDash([]);
-            myGameArea.context.moveTo(100, 50);
-            myGameArea.context.quadraticCurveTo(140, 20, 140, 90);
-            myGameArea.context.quadraticCurveTo(160, 125, 130, 160);
-            myGameArea.context.quadraticCurveTo(90, 180, 70, 160);
-            myGameArea.context.quadraticCurveTo(40, 120, 50, 90);
-            myGameArea.context.quadraticCurveTo(40, 50, 100, 50);
+            myGameArea.context.moveTo(100 * SizeMultiplier, 50 * SizeMultiplier);
+            myGameArea.context.quadraticCurveTo(140 * SizeMultiplier, 20 * SizeMultiplier, 140 * SizeMultiplier, 90 * SizeMultiplier);
+            myGameArea.context.quadraticCurveTo(160 * SizeMultiplier, 125 * SizeMultiplier, 130 * SizeMultiplier, 160 * SizeMultiplier);
+            myGameArea.context.quadraticCurveTo(90 * SizeMultiplier, 180 * SizeMultiplier, 70 * SizeMultiplier, 160 * SizeMultiplier);
+            myGameArea.context.quadraticCurveTo(40 * SizeMultiplier, 120 * SizeMultiplier, 50 * SizeMultiplier, 90 * SizeMultiplier);
+            myGameArea.context.quadraticCurveTo(40 * SizeMultiplier, 50 * SizeMultiplier, 100 * SizeMultiplier, 50 * SizeMultiplier);
             myGameArea.context.stroke();
         }
     }
@@ -143,13 +149,13 @@ function render() {
         myGameArea.context.fillStyle = "Chartreuse";
         myGameArea.context.globalAlpha = .95;
         myGameArea.context.beginPath();
-        myGameArea.context.arc(100, 100, 70, 0, Math.PI * 2);
+        myGameArea.context.arc(100 * SizeMultiplier, 100 * SizeMultiplier, 70 * SizeMultiplier, 0, Math.PI * 2);
         myGameArea.context.closePath();
         myGameArea.context.fill();
 
         myGameArea.context.strokeStyle = "Lime";
         myGameArea.context.beginPath();
-        myGameArea.context.arc(100, 100, 70, 0, Math.PI * 2);
+        myGameArea.context.arc(100 * SizeMultiplier, 100 * SizeMultiplier, 70 * SizeMultiplier, 0, Math.PI * 2);
         myGameArea.context.closePath();
         myGameArea.context.stroke();
     }

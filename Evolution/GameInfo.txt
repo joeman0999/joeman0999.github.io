@@ -49,4 +49,30 @@ For example, all bacteria contain peptidoglycans (a molecule composed of both pr
 cell walls. However, archaea do not have this compound in their cell walls.
 
 B
-no peptidoglycans in the Cell wall (Bacteria)
+no peptidoglycans in the Cell wall (Archaea)
+
+
+
+https://www.ducksters.com/science/biology/protists.php
+
+Among the eukaryotes, some protists, and all fungi and plants, have cell walls. Cell walls are not 
+identical in these organisms, however. In fungi, the cell wall contains a polysaccharide called chitin. 
+Plant cells, in contrast, have no chitin; their cell walls are composed exclusively of the polysaccharide 
+cellulose.
+
+Microscopic, single-celled bacteria are Earth's simplest life forms. They are also some of Earth's 
+most successful organisms. Different types of bacteria have adaptations that allow them to live in 
+just about any environment. They fill our oceans and rivers, our soil, and even the insides of our 
+bodies. In fact, the total mass of bacteria on our planet is much greater than the collective mass 
+of all of Earth's animals.
+
+Archaea look a lot like bacteria: they are tiny, single-celled, and relatively simple. But they are 
+actually more closely related to eukaryotes, and they have some unique characteristics that put them 
+in a category of their own. For example, archaea have a more stable membrane chemistry than bacteria 
+and eukaryotes have, which may make them better able to survive in extreme environments. However, archaea 
+aren't restricted to extreme environments; they live in most of the same places as bacteria.
+
+Eukaryotes have larger, more-complex cells than bacteria or archaea. This category includes microscopic, 
+single-celled organisms like protists and yeast, and also multi-cellular organisms like plants and 
+animals. Eukaryotes that live in extreme environments often depend on bacteria and archaea for food, 
+much like we depend on plants and plant-eaters for our energy needs.

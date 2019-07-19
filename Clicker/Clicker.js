@@ -23,6 +23,15 @@ var JumpStats = {
 }
 var dollars = 0;
 var Knowledge = 0;
+
+window.onload = function () {
+    var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+    var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
+    var min = Math.min(screenW, screenH);
+    var size = Math.floor(min * .5);
+    Multiplier = size / 500;
+}
+
 function MainButtonClick() {
     if (Bottom == true) {
         Bottom = false;
@@ -54,8 +63,8 @@ var myGameArea = {
     },
     set: function () {
         this.canvas.setAttribute("id", "GameArea");
-        this.canvas.width = Thecanvas.width;
-        this.canvas.height = Thecanvas.height;
+        this.canvas.width = Thecanvas.width * Multiplier;
+        this.canvas.height = Thecanvas.height * Multiplier;
         this.context = this.canvas.getContext("2d");
         var GameAreaDiv = document.getElementById("GameAreaDiv");
         GameAreaDiv.insertBefore(this.canvas, GameAreaDiv.childNodes[1]);
@@ -103,7 +112,7 @@ function draw(image, Info) {
     myGameArea.context.save();
 
     // move to the middle of where we want to draw our image
-    myGameArea.context.translate(Info.x, Info.y);
+    myGameArea.context.translate(Info.x * Multiplier, Info.y * Multiplier);
 
     // rotate around that point, converting our 
     // angle from degrees to radians 
@@ -111,7 +120,7 @@ function draw(image, Info) {
 
     // draw it up and to the left by half the width
     // and height of the image 
-    myGameArea.context.drawImage(image, -(image.width / 2), -(image.height / 2));
+    myGameArea.context.drawImage(image, -(image.width / 2) * Multiplier, -(image.height / 2) * Multiplier, image.width * Multiplier, image.height * Multiplier);
 
     // and restore the coords to how they were when we began
     myGameArea.context.restore();
