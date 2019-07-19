@@ -8,32 +8,35 @@
 footer {
   color: white;
   position: relative;
-  left: 125px;
-  width: 375px;
-  padding: 10px 0px 20px 0px;
+  left: 5vw;
+  width: 30vw;
+  margin: 2vh 0px 2vh 0px;
+  font-size: 2vh;
 }
 
 .Game-Option {
-  height: 100px;
+  height: 12vh;
 }
 
 div.GameGroup {
   position: relative;
   left: 0px;
   margin: auto;
-  padding: 10px 0px 0px 50px;
+  margin: 2vh 0px 0px 4vw;
 }
 
 .Group-text {
   color: white;
+  font-size: 4vh;
 }
 
 .Game-Text-Button {
   background: rgba(0, 0, 0, 0.0);
-  font: 25px Helvetica Neue;
+  font: 3vh Helvetica Neue;
   color: blue;
   border: 0px;
-  margin: 5px;
+  margin: 1vh 0 1.5vh 0;
+  padding: 0;
 }
 
 button.Game-Text-Button:hover {
@@ -42,56 +45,53 @@ button.Game-Text-Button:hover {
 
 .Game-Image-Button {
   float: left;
-  width: 80px;
-  height: 70px;
+  width: 9vh;
+  height: 9vh;
   background-repeat: no-repeat;
   background-color: white;
-  border: 3px solid blue;
-  margin: 10px 10px 0px 0px;
+  background-position: center;
+  background-size: 102% 102%;
+  border: .5vh solid blue;
+  margin: 1.5vh 1vh 0px 0px;
+  padding: 0;
 }
 
 button.Game-Image-Button:hover {
-  border: 3px solid lightskyblue;
+  border: .5vh solid lightskyblue;
 }
 
 #Game-1-Image {
   background-image: url(GameImages/Tanks.png);
-  background-size: 76px 65px;
 }
 
 #Game-2-Image {
   background-image: url(GameImages/Checkers.png);
-  background-size: 76px 65px;
 }
 
 #Game-3-Image {
   background-image: url(GameImages/Snake.png);
-  background-size: 76px 65px;
 }
 
 #Game-4-Image {
   background-image: url(GameImages/Mouse.png);
-  background-size: 76px 65px;
 }
 
 #Game-5-Image {
   background-image: url(GameImages/Pong.png);
-  background-size: 76px 65px;
 }
 
 #Game-6-Image {
   background-image: url(GameImages/SkeletonBowling.png);
-  background-size: 76px 65px;
 }
 
 #Game-7-Image {
   background-image: url(GameImages/Paper.png);
-  background-size: 76px 65px;
 }
 
 .Game-Description{
   color: white;
-  padding: 0px 0px 10px 15px;
-  width: 500px;
+  padding: 0px 0px 1vh 2vw;
+  width: 60vh;
   margin: 0;
+  font-size: 2vh;
 }
