@@ -22,7 +22,7 @@ var myGameArea = {
 		this.canvas.width = Thecanvas.width * Multiplier;
 		this.canvas.height = Thecanvas.height * Multiplier;
 		this.context = this.canvas.getContext("2d");
-		this.context.font = (10 * Multiplier) + "px Arial";
+		this.context.font = "2vh Arial";
 		this.context.fillStyle = "black";
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 		this.interval = setInterval(updateGameArea, 20);
@@ -260,24 +260,25 @@ window.onload = function () {
 	var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
 	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
 	if (screenW / 900 < screenH / 600) {
-		var size = Math.floor(screenW * .85);
+		var size = Math.floor(screenW * .95);
 		Multiplier = size / 900;
 	} else {
-		var size = Math.floor(screenH * .85);
+		var size = Math.floor(screenH * .95);
 		Multiplier = size / 600;
 	}
 	window.addEventListener('resize', ResizeWindow);
 	window.addEventListener("orientationchange", ResizeWindow);
+	alert("Touch controls have now been enabled. They are in development. Any comments on them would be appreciated. Drag on the left side of the canvas to move character. Tap the right side to perform an action. A test action has been set up by the door to the house. Thank you.")
 }
 
 function ResizeWindow() {
 	var screenW = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
 	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
 	if (screenW / 900 < screenH / 600) {
-		var size = Math.floor(screenW * .85);
+		var size = Math.floor(screenW * .95);
 		Multiplier = size / 900;
 	} else {
-		var size = Math.floor(screenH * .85);
+		var size = Math.floor(screenH * .95);
 		Multiplier = size / 600;
 	}
 	try {
@@ -805,10 +806,13 @@ function DrawButton() {
 }
 
 function WriteText() {
+	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
+	var height = screenH / 50 * 1.2;
+	var dh = height - ((height - (screenH / 50)) / 2);
 	for (let i = 0; i < MyText.length; ++i) {
-		var width = (myGameArea.context.measureText(MyText[i].text).width + 4);
+		var width = (myGameArea.context.measureText(MyText[i].text).width * 1.1);
 		myGameArea.context.fillStyle = 'White';
-		myGameArea.context.fillRect((MyText[i].x - 2) * Multiplier, (MyText[i].y - 10) * Multiplier, width, 12 * Multiplier);
+		myGameArea.context.fillRect((MyText[i].x * Multiplier) - ((width - myGameArea.context.measureText(MyText[i].text).width) / 2), (MyText[i].y * Multiplier) - dh, width, height);
 		myGameArea.context.fillStyle = 'Black';
 		myGameArea.context.fillText(MyText[i].text, MyText[i].x * Multiplier, MyText[i].y * Multiplier);
 	}
