@@ -48,19 +48,17 @@ var myGameArea = {
 
 // Create sprite sheet
 var Person = new Image();
-
-// Load sprite sheet
 Person.src = "images/Walking Sprite.png";
 
 // Create sprite
 var PersonData = {
-	x: 50,
-	y: 50,
+	x: 70,
+	y: 70,
 	speedX: 0,
 	speedY: 0,
 	direction: "None",
 	width: 476,
-	height: 424,
+	height: 320,
 	image: Person,
 	ticksPerFrame: 4,
 	ticks: 0,
@@ -69,21 +67,23 @@ var PersonData = {
 	StartFrame: 4,
 	numberOfXFrames: 12,
 	numberOfYFrames: 8,
+	UsualFramesPerAnimation: 3,
 	TotalFramesPerAnimation: 1,
+	IdleX: 1,
 	Characterx: 0,
 	Charactery: 0,
-	Th: 15,
-	Bh: 15,
+	Th: 25,
+	Bh: 10,
 	Rw: 20,
 	Lw: 20,
-	angle: 0,
+	angle: 0
 }
 
 var FollowDog = new Image();
 FollowDog.src = "images/Dogs.png";
 var FollowDogData = {
-	x: 90,
-	y: 50,
+	x: 110,
+	y: 60,
 	speedX: 0,
 	speedY: 0,
 	width: 384,
@@ -96,6 +96,7 @@ var FollowDogData = {
 	StartFrame: 1,
 	numberOfXFrames: 12,
 	numberOfYFrames: 8,
+	UsualFramesPerAnimation: 3,
 	TotalFramesPerAnimation: 1,
 	Characterx: 0,
 	Charactery: 0,
@@ -237,7 +238,7 @@ var Maps = [
 			{
 				Object: "House 1 Enter",
 				x: 140,
-				y: 435,
+				y: 440,
 				Th: 3,
 				Bh: 3,
 				Rw: 3,
@@ -285,7 +286,7 @@ var Maps = [
 				area: 1,
 				newArea: 0,
 				newx: 140,
-				newy: 435,
+				newy: 440,
 			}
 		]
 	},
@@ -307,7 +308,7 @@ var Button = {
 	innerY: 0,
 	side: "left",
 	enter: false,
-	frame: 0,
+	frame: -40,
 	enterX: 0,
 	enterY: 0
 }
@@ -535,6 +536,11 @@ function StartGame() {
 	}
 	myGameArea.start();
 	document.getElementById("ButtonArea").hidden = false;
+	fadeit = 100;
+	fade = "in";
+	AreaSelect(0);
+	CharacterSelect();
+	AnimalSelect();
 }
 
 function Menu() {
@@ -572,40 +578,40 @@ function updateCharacter(Data) {
 	if (Data.direction == 'left') {
 		Data.speedX = -3;
 		if (Data.yFrame != Data.Charactery * 4 + 1) {
-			Data.TotalFramesPerAnimation = 3;
-			Data.StartFrame = Data.Characterx * 3;
-			Data.xFrame = Data.Characterx * 3;
+			Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+			Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+			Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 			Data.yFrame = Data.Charactery * 4 + 1;
 		}
 	} else if (Data.direction == 'right') {
 		Data.speedX = 3;
 		if (Data.yFrame != Data.Charactery * 4 + 2) {
-			Data.TotalFramesPerAnimation = 3;
-			Data.StartFrame = Data.Characterx * 3;
-			Data.xFrame = Data.Characterx * 3;
+			Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+			Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+			Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 			Data.yFrame = Data.Charactery * 4 + 2;
 		}
 	} else if (Data.direction == 'up') {
 		Data.speedY = 3;
 		if (Data.yFrame != Data.Charactery * 4 + 3) {
-			Data.TotalFramesPerAnimation = 3;
-			Data.StartFrame = Data.Characterx * 3;
-			Data.xFrame = Data.Characterx * 3;
+			Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+			Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+			Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 			Data.yFrame = Data.Charactery * 4 + 3;
 		}
 	} else if (Data.direction == 'down') {
 		Data.speedY = -3;
-		if (Data.yFrame != Data.Charactery * 4 || Data.StartFrame == Data.Characterx * 3 + 1) {
-			Data.TotalFramesPerAnimation = 3;
-			Data.StartFrame = Data.Characterx * 3;
-			Data.xFrame = Data.Characterx * 3;
+		if (Data.yFrame != Data.Charactery * 4 || Data.TotalFramesPerAnimation == 1) {
+			Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+			Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+			Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 			Data.yFrame = Data.Charactery * 4;
 		}
 	} else {
 		Data.TotalFramesPerAnimation = 1;
-		Data.xFrame = Data.Characterx * 3 + 1;
+		Data.xFrame = Data.IdleX;
 		Data.yFrame = Data.Charactery * 4;
-		Data.StartFrame = Data.Characterx * 3 + 1;
+		Data.StartFrame = Data.IdleX;
 	}
 	if (fade != "out") {
 		Data.x += Data.speedX;
@@ -690,21 +696,10 @@ function updateCharacter(Data) {
 			break;
 		}
 	}
+
 	Button.enter = false;
+	anim(Data);
 
-	Data.ticks += 1;
-
-	if (Data.ticks >= Data.ticksPerFrame) {
-
-		Data.ticks = 0;
-		// If the current frame index is in range
-		if (Data.xFrame < Data.TotalFramesPerAnimation + Data.StartFrame - 1) {
-			// Go to the next frame
-			Data.xFrame += 1;
-		} else if (Data.xFrame = Data.TotalFramesPerAnimation + Data.StartFrame - 1) {
-			Data.xFrame = Data.StartFrame;
-		} 
-	}
 	return Data;
 }
 
@@ -719,17 +714,17 @@ function updateFollowDog(Data) {
 		if (x < -10) {
 			Data.speedX = -2;
 			if (Data.yFrame != Data.Charactery * 4 + 1) {
-				Data.TotalFramesPerAnimation = 3;
-				Data.StartFrame = Data.Characterx * 3;
-				Data.xFrame = Data.Characterx * 3;
+				Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+				Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+				Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 				Data.yFrame = Data.Charactery * 4 + 1;
 			}
 		} else if (x > 10) {
 			Data.speedX = 2;
 			if (Data.yFrame != Data.Charactery * 4 + 2) {
-				Data.TotalFramesPerAnimation = 3;
-				Data.StartFrame = Data.Characterx * 3;
-				Data.xFrame = Data.Characterx * 3;
+				Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+				Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+				Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 				Data.yFrame = Data.Charactery * 4 + 2;
 			}
 		}
@@ -737,17 +732,17 @@ function updateFollowDog(Data) {
 		if (y > 0) {
 			Data.speedY = 2;
 			if (Data.yFrame != Data.Charactery * 4 + 3) {
-				Data.TotalFramesPerAnimation = 3;
-				Data.StartFrame = Data.Characterx * 3;
-				Data.xFrame = Data.Characterx * 3;
+				Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+				Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+				Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 				Data.yFrame = Data.Charactery * 4 + 3;
 			}
 		} else if (y < 0) {
 			Data.speedY = -2;
 			if (Data.yFrame != Data.Charactery * 4 || Data.StartFrame == Data.Characterx * 3 + 1) {
-				Data.TotalFramesPerAnimation = 3;
-				Data.StartFrame = Data.Characterx * 3;
-				Data.xFrame = Data.Characterx * 3;
+				Data.TotalFramesPerAnimation = Data.UsualFramesPerAnimation;
+				Data.StartFrame = Data.Characterx * Data.UsualFramesPerAnimation;
+				Data.xFrame = Data.Characterx * Data.UsualFramesPerAnimation;
 				Data.yFrame = Data.Charactery * 4;
 			}
 		}
@@ -809,7 +804,6 @@ function updateFollowDog(Data) {
 		}
 	}
 
-	Data.ticks += 1;
 	if (frame < Data.LastBark + Data.BarkDuration) {
 		let newText = {
 			text: "Woof!",
@@ -830,10 +824,16 @@ function updateFollowDog(Data) {
 		Data.BarkDuration = Math.random() * 10 + 25;
 	}
 
+	anim(Data);
+
+	return Data;
+}
+
+function anim(Data) {
+	Data.ticks += 1;
+
 	if (Data.ticks >= Data.ticksPerFrame) {
-
 		Data.ticks = 0;
-
 		// If the current frame index is in range
 		if (Data.xFrame < Data.TotalFramesPerAnimation + Data.StartFrame - 1) {
 			// Go to the next frame
@@ -842,7 +842,6 @@ function updateFollowDog(Data) {
 			Data.xFrame = Data.StartFrame;
 		}
 	}
-	return Data;
 }
 
 function render(Data) {
@@ -910,12 +909,94 @@ function CharacterSelect() {
 	var Selector, value
 	Selector = document.getElementById("Character-selector");
 	value = Selector.value;
-	if (value >= 0 && value <= 3) {
-		PersonData.Characterx = value;
-		PersonData.Charactery = 0;
-	} else {
-		PersonData.Characterx = value - 4;
-		PersonData.Charactery = 1;
+	
+	if (value < 4) {
+		Person.src = "images/Walking Sprite.png";
+		PersonData = {
+			x: 70,
+			y: 70,
+			speedX: 0,
+			speedY: 0,
+			direction: "None",
+			width: 476,
+			height: 320,
+			image: Person,
+			ticksPerFrame: 4,
+			ticks: 0,
+			xFrame: 4,
+			yFrame: 0,
+			StartFrame: 4,
+			numberOfXFrames: 12,
+			numberOfYFrames: 8,
+			UsualFramesPerAnimation: 3,
+			TotalFramesPerAnimation: 1,
+			IdleX: (value * 3) + 1,
+			Characterx: value,
+			Charactery: 0,
+			Th: 25,
+			Bh: 10,
+			Rw: 20,
+			Lw: 20,
+			angle: 0,
+		}
+	} else if (value < 8) {
+		Person.src = "images/Walking Sprite.png";
+		PersonData = {
+			x: 70,
+			y: 70,
+			speedX: 0,
+			speedY: 0,
+			direction: "None",
+			width: 476,
+			height: 320,
+			image: Person,
+			ticksPerFrame: 4,
+			ticks: 0,
+			xFrame: 4,
+			yFrame: 0,
+			StartFrame: 4,
+			numberOfXFrames: 12,
+			numberOfYFrames: 8,
+			UsualFramesPerAnimation: 3,
+			TotalFramesPerAnimation: 1,
+			IdleX: (value - 4) * 3 + 1,
+			Characterx: value - 4,
+			Charactery: 1,
+			Th: 25,
+			Bh: 10,
+			Rw: 20,
+			Lw: 20,
+			angle: 0,
+		}
+	} else if (value == 8) {
+		Person.src = "images/Joe.png";
+		PersonData = {
+			x: 70,
+			y: 70,
+			speedX: 0,
+			speedY: 0,
+			direction: "None",
+			width: 128,
+			height: 192,
+			image: Person,
+			ticksPerFrame: 4,
+			ticks: 0,
+			xFrame: 0,
+			yFrame: 0,
+			StartFrame: 4,
+			numberOfXFrames: 4,
+			numberOfYFrames: 4,
+			UsualFramesPerAnimation: 4,
+			TotalFramesPerAnimation: 1,
+			IdleX: 0,
+			Characterx: 0,
+			Charactery: 0,
+			Th: 26,
+			Bh: 20,
+			Rw: 15,
+			Lw: 15,
+			angle: 0,
+		}
 	}
 }
 
@@ -930,6 +1011,8 @@ function AnimalSelect() {
 		FollowDogData.Characterx = value - 4;
 		FollowDogData.Charactery = 1;
 	}
+	FollowDogData.x = 110;
+	FollowDogData.y = 60;
 }
 
 function Collision(obj1, obj2) {
@@ -1042,7 +1125,7 @@ function AreaSelect(area) {
 				xMin: 310,
 				yMin: 250,
 				xMax: 580,
-				yMax: 435
+				yMax: 445
 			}
 			break;
 	}
