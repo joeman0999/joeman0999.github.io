@@ -12,6 +12,8 @@ var Bounds = {
 
 var fadeit = 0;
 var fade = "None";
+var fadeComplete = false;
+var Area = 0;
 
 var myGameArea = {
 	canvas: document.createElement("canvas"),
@@ -52,7 +54,6 @@ Person.src = "images/Walking Sprite.png";
 
 // Create sprite
 var PersonData = {
-	context: myGameArea.canvas.getContext("2d"),
 	x: 50,
 	y: 50,
 	speedX: 0,
@@ -76,12 +77,11 @@ var PersonData = {
 	Rw: 20,
 	Lw: 20,
 	angle: 0,
-};
+}
 
 var FollowDog = new Image();
 FollowDog.src = "images/Dogs.png";
 var FollowDogData = {
-	context: myGameArea.canvas.getContext("2d"),
 	x: 90,
 	y: 50,
 	speedX: 0,
@@ -115,145 +115,201 @@ var Tree = new Image();
 Tree.src = "images/Tree.png";
 var RedHouse = new Image();
 RedHouse.src = "images/Red House.png";
-var Objects = [
+
+var Maps = [
 	{
-		Object: "Tree",
-		context: myGameArea.canvas.getContext("2d"),
-		x: 200,
-		y: 200,
-		width: 39,
-		height: 46,
-		image: Tree,
-		xFrame: 0,
-		yFrame: 0,
-		numberOfXFrames: 1,
-		numberOfYFrames: 1,
-		Th: 23,
-		Bh: 18,
-		Rw: 18,
-		Lw: 18,
-		angle: 0,
-	}, {
-		Object: "Tree",
-		context: myGameArea.canvas.getContext("2d"),
-		x: 400,
-		y: 400,
-		width: 39,
-		height: 46,
-		image: Tree,
-		xFrame: 0,
-		yFrame: 0,
-		numberOfXFrames: 1,
-		numberOfYFrames: 1,
-		Th: 23,
-		Bh: 18,
-		Rw: 18,
-		Lw: 18,
-		angle: 0,
-	}, {
-		Object: "Tree",
-		context: myGameArea.canvas.getContext("2d"),
-		x: 250,
-		y: 300,
-		width: 39,
-		height: 46,
-		image: Tree,
-		xFrame: 0,
-		yFrame: 0,
-		numberOfXFrames: 1,
-		numberOfYFrames: 1,
-		Th: 23,
-		Bh: 18,
-		Rw: 18,
-		Lw: 18,
-		angle: 0,
-	}, {
-		Object: "Tree",
-		context: myGameArea.canvas.getContext("2d"),
-		x: 281,
-		y: 92,
-		width: 39,
-		height: 46,
-		image: Tree,
-		xFrame: 0,
-		yFrame: 0,
-		numberOfXFrames: 1,
-		numberOfYFrames: 1,
-		Th: 23,
-		Bh: 18,
-		Rw: 18,
-		Lw: 18,
-		angle: 0,
-	}, {
-		Object: "Tree",
-		context: myGameArea.canvas.getContext("2d"),
-		x: 481,
-		y: 92,
-		width: 39,
-		height: 46,
-		image: Tree,
-		xFrame: 0,
-		yFrame: 0,
-		numberOfXFrames: 1,
-		numberOfYFrames: 1,
-		Th: 23,
-		Bh: 18,
-		Rw: 18,
-		Lw: 18,
-		angle: 0,
-	}, {
-		Object: "RedHouse",
-		context: myGameArea.canvas.getContext("2d"),
-		x: 130,
-		y: 375,
-		width: 96,
-		height: 96,
-		image: RedHouse,
-		xFrame: 0,
-		yFrame: 0,
-		numberOfXFrames: 1,
-		numberOfYFrames: 1,
-		Th: 34,
-		Bh: 39,
-		Rw: 39,
-		Lw: 39,
-		angle: 0,
-	}
+		Objects: [
+			{
+				Object: "Tree",
+				x: 200,
+				y: 200,
+				width: 39,
+				height: 46,
+				image: Tree,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 23,
+				Bh: 18,
+				Rw: 18,
+				Lw: 18,
+				angle: 0,
+			}, {
+				Object: "Tree",
+				x: 400,
+				y: 400,
+				width: 39,
+				height: 46,
+				image: Tree,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 23,
+				Bh: 18,
+				Rw: 18,
+				Lw: 18,
+				angle: 0,
+			}, {
+				Object: "Tree",
+				x: 250,
+				y: 300,
+				width: 39,
+				height: 46,
+				image: Tree,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 23,
+				Bh: 18,
+				Rw: 18,
+				Lw: 18,
+				angle: 0,
+			}, {
+				Object: "Tree",
+				x: 281,
+				y: 92,
+				width: 39,
+				height: 46,
+				image: Tree,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 23,
+				Bh: 18,
+				Rw: 18,
+				Lw: 18,
+				angle: 0,
+			}, {
+				Object: "Tree",
+				x: 481,
+				y: 92,
+				width: 39,
+				height: 46,
+				image: Tree,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 23,
+				Bh: 18,
+				Rw: 18,
+				Lw: 18,
+				angle: 0,
+			}, {
+				Object: "RedHouse",
+				x: 130,
+				y: 375,
+				width: 96,
+				height: 96,
+				image: RedHouse,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 34,
+				Bh: 39,
+				Rw: 39,
+				Lw: 39,
+				angle: 0,
+			}, {
+				Object: "RedHouse",
+				x: 530,
+				y: 275,
+				width: 96,
+				height: 96,
+				image: RedHouse,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 34,
+				Bh: 39,
+				Rw: 39,
+				Lw: 39,
+				angle: 0,
+			}
+		],
+		CollisionAreas: [
+			{
+				Object: "House 1 Enter",
+				x: 140,
+				y: 435,
+				Th: 3,
+				Bh: 3,
+				Rw: 3,
+				Lw: 3,
+				angle: 0,
+				text: "Enter",
+				area: 0,
+				newArea: 1,
+				newx: 450,
+				newy: 425
+			}, {
+				Object: "House 2 Enter",
+				x: 540,
+				y: 335,
+				Th: 3,
+				Bh: 3,
+				Rw: 3,
+				Lw: 3,
+				angle: 0,
+				text: "Locked",
+				area: 0,
+				newArea: 2,
+				newx: 450,
+				newy: 425
+			}
+		]
+	},
+	{
+		Objects: [
+
+		],
+		CollisionAreas: [
+			{
+				Object: "House 1 Exit",
+				x: 450,
+				y: 425,
+				width: 10,
+				height: 10,
+				Th: 3,
+				Bh: 3,
+				Rw: 3,
+				Lw: 3,
+				angle: 0,
+				text: "Exit",
+				area: 1,
+				newArea: 0,
+				newx: 140,
+				newy: 435,
+			}
+		]
+	},
 ]
 
-var CollisionAreas = [
-	{
-		Object: "House 1",
-		x: 140,
-		y: 430,
-		width: 10,
-		height: 10,
-		Th: 5,
-		Bh: 5,
-		Rw: 5,
-		Lw: 5,
-		angle: 0,
-		text: "Enter",
-		colliding: false
-	}
-];
-
 var MyText = [];
-
 var InnerButton = new Image();
 InnerButton.src = "images/InnerButton.png";
 var OuterButton = new Image();
 OuterButton.src = "images/OuterButton.png";
+var EnterButton = new Image();
+EnterButton.src = "images/EnterButton.png";
 
 var Button = {
-	context: myGameArea.canvas.getContext("2d"),
 	visible: false,
 	x: 0,
 	y: 0,
 	innerX: 0,
 	innerY: 0,
 	side: "left",
-	enter: false
+	enter: false,
+	frame: 0,
+	enterX: 0,
+	enterY: 0
 }
 
 window.onload = function () {
@@ -268,7 +324,7 @@ window.onload = function () {
 	}
 	window.addEventListener('resize', ResizeWindow);
 	window.addEventListener("orientationchange", ResizeWindow);
-	alert("Touch controls have now been enabled. They are in development. Any comments on them would be appreciated. Drag on the left side of the canvas to move character. Tap the right side to perform an action. A test action has been set up by the door to the house. Thank you.")
+	alert("Try out landscape!")
 }
 
 function ResizeWindow() {
@@ -328,48 +384,51 @@ function handleTouchStart(e) {
 	e.preventDefault();
 	Button.visible = false;
 	PersonData.direction = "None";
+	var distance = Thecanvas.width * Multiplier;
+	var index = -1;
 	if (Button.side == "left") {
 		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2) {
+			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < distance) {
+				distance = 0;
 				Button.visible = true;
+				index = i;
 				Button.x = e.touches[i].clientX;
 				Button.y = e.touches[i].clientY;
 				Button.innerX = e.touches[i].clientX;
 				Button.innerY = e.touches[i].clientY;
 			} else {
 				Button.enter = true;
+				Button.enterX = e.touches[i].clientX;
+				Button.enterY = e.touches[i].clientY;
+				Button.frame = frame;
 			}
 		}
 	}
 	if (Button.visible) {
-		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2) {
-				if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < 40 * Multiplier) {
-					Button.innerX = e.touches[i].clientX;
-					Button.innerY = e.touches[i].clientY;
-				} else {
-					var Theta = Math.atan2(e.touches[i].clientY - Button.y, e.touches[i].clientX - Button.x);
-					if (Theta >= Math.PI * 2) {
-						Theta -= Math.PI * 2;
-					} else if (Theta < 0) {
-						Theta += Math.PI * 2;
-					}
-					Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
-					Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
-				}
-				if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
-					if (Button.innerX - Button.x > 0) {
-						PersonData.direction = 'right';
-					} else {
-						PersonData.direction = 'left';
-					}
-				} else {
-					if (Button.y - Button.innerY > 0) {
-						PersonData.direction = 'up';
-					} else {
-						PersonData.direction = 'down';
-					}
-				}
+		if (distance < 40 * Multiplier) {
+			Button.innerX = e.touches[index].clientX;
+			Button.innerY = e.touches[index].clientY;
+		} else {
+			var Theta = Math.atan2(e.touches[index].clientY - Button.y, e.touches[index].clientX - Button.x);
+			if (Theta >= Math.PI * 2) {
+				Theta -= Math.PI * 2;
+			} else if (Theta < 0) {
+				Theta += Math.PI * 2;
+			}
+			Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
+			Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
+		}
+		if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
+			if (Button.innerX - Button.x > 0) {
+				PersonData.direction = 'right';
+			} else {
+				PersonData.direction = 'left';
+			}
+		} else {
+			if (Button.y - Button.innerY > 0) {
+				PersonData.direction = 'up';
+			} else {
+				PersonData.direction = 'down';
 			}
 		}
 	}
@@ -378,50 +437,47 @@ function handleTouchStart(e) {
 function handleTouchEnd(e) {
 	e.preventDefault();
 	Button.visible = false;
-	Button.enter = false;
 	PersonData.direction = "None";
+	var distance = Thecanvas.width * Multiplier;
+	var index = -1;
 	if (Button.side == "left") {
 		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2) {
+			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < distance) {
+				distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2));
 				Button.visible = true;
+				index = i;
 				Button.x = e.touches[i].clientX;
 				Button.y = e.touches[i].clientY;
 				Button.innerX = e.touches[i].clientX;
 				Button.innerY = e.touches[i].clientY;
-			} else {
-				Button.enter = true;
 			}
 		}
 	}
 	if (Button.visible) {
-		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2) {
-				if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < 40 * Multiplier) {
-					Button.innerX = e.touches[i].clientX;
-					Button.innerY = e.touches[i].clientY;
-				} else {
-					var Theta = Math.atan2(e.touches[i].clientY - Button.y, e.touches[i].clientX - Button.x);
-					if (Theta >= Math.PI * 2) {
-						Theta -= Math.PI * 2;
-					} else if (Theta < 0) {
-						Theta += Math.PI * 2;
-					}
-					Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
-					Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
-				}
-				if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
-					if (Button.innerX - Button.x > 0) {
-						PersonData.direction = 'right';
-					} else {
-						PersonData.direction = 'left';
-					}
-				} else {
-					if (Button.y - Button.innerY > 0) {
-						PersonData.direction = 'up';
-					} else {
-						PersonData.direction = 'down';
-					}
-				}
+		if (Math.sqrt(Math.pow(Button.x - e.touches[index].clientX, 2) + Math.pow(Button.y - e.touches[index].clientY, 2)) < 40 * Multiplier) {
+			Button.innerX = e.touches[index].clientX;
+			Button.innerY = e.touches[index].clientY;
+		} else {
+			var Theta = Math.atan2(e.touches[index].clientY - Button.y, e.touches[index].clientX - Button.x);
+			if (Theta >= Math.PI * 2) {
+				Theta -= Math.PI * 2;
+			} else if (Theta < 0) {
+				Theta += Math.PI * 2;
+			}
+			Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
+			Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
+		}
+		if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
+			if (Button.innerX - Button.x > 0) {
+				PersonData.direction = 'right';
+			} else {
+				PersonData.direction = 'left';
+			}
+		} else {
+			if (Button.y - Button.innerY > 0) {
+				PersonData.direction = 'up';
+			} else {
+				PersonData.direction = 'down';
 			}
 		}
 	}
@@ -430,33 +486,42 @@ function handleTouchEnd(e) {
 function handleTouchMove(e) {
 	e.preventDefault();
 	if (Button.visible) {
-		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2) {
-				if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < 40 * Multiplier) {
-					Button.innerX = e.touches[i].clientX;
-					Button.innerY = e.touches[i].clientY;
-				} else {
-					var Theta = Math.atan2(e.touches[i].clientY - Button.y, e.touches[i].clientX - Button.x);
-					if (Theta >= Math.PI * 2) {
-						Theta -= Math.PI * 2;
-					} else if (Theta < 0) {
-						Theta += Math.PI * 2;
-					}
-					Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
-					Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
+		var distance = Thecanvas.width * Multiplier;
+		var index = -1;
+		if (Button.side == "left") {
+			for (let i = 0; i < e.touches.length; ++i) {
+				if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < distance) {
+					distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2));
+					index = i;
 				}
-				if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
-					if (Button.innerX - Button.x > 0) {
-						PersonData.direction = 'right';
-					} else {
-						PersonData.direction = 'left';
-					}
+			}
+		}
+
+		if (Button.visible) {
+			if (distance < 40 * Multiplier) {
+				Button.innerX = e.touches[index].clientX;
+				Button.innerY = e.touches[index].clientY;
+			} else {
+				var Theta = Math.atan2(e.touches[index].clientY - Button.y, e.touches[index].clientX - Button.x);
+				if (Theta >= Math.PI * 2) {
+					Theta -= Math.PI * 2;
+				} else if (Theta < 0) {
+					Theta += Math.PI * 2;
+				}
+				Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
+				Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
+			}
+			if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
+				if (Button.innerX - Button.x > 0) {
+					PersonData.direction = 'right';
 				} else {
-					if (Button.y - Button.innerY > 0) {
-						PersonData.direction = 'up';
-					} else {
-						PersonData.direction = 'down';
-					}
+					PersonData.direction = 'left';
+				}
+			} else {
+				if (Button.y - Button.innerY > 0) {
+					PersonData.direction = 'up';
+				} else {
+					PersonData.direction = 'down';
 				}
 			}
 		}
@@ -484,20 +549,18 @@ function Menu() {
 
 function updateGameArea() {
 	myGameArea.clear();
-	frame += 1;
+	++frame;
 	PersonData = updateCharacter(PersonData);
 	render(PersonData);
 	if (FollowDogData.DogPresent) {
 		FollowDogData = updateFollowDog(FollowDogData);
 		render(FollowDogData);
 	}
-	for (var k = 0; k < Objects.length; k++) {
-		render(Objects[k])
+	for (var k = 0; k < Maps[Area].Objects.length; k++) {
+		render(Maps[Area].Objects[k])
 	}
 	WriteText();
-	if (Button.visible) {
-		DrawButton();
-	}
+	DrawButton();
 	if (fade == "out" || fade == "in") {
 		Fade();
 	}
@@ -544,8 +607,10 @@ function updateCharacter(Data) {
 		Data.yFrame = Data.Charactery * 4;
 		Data.StartFrame = Data.Characterx * 3 + 1;
 	}
-	Data.x += Data.speedX;
-	Data.y -= Data.speedY;
+	if (fade != "out") {
+		Data.x += Data.speedX;
+		Data.y -= Data.speedY;
+	}
 	if (Data.x + Data.Rw / 2 > Bounds.xMax || Data.x - Data.Rw / 2 < Bounds.xMin || Data.y + Data.Th / 2 > Bounds.yMax || Data.y - Data.Th / 2 < Bounds.yMin) {
 		Data.x -= Data.speedX;
 		Data.y += Data.speedY;
@@ -553,8 +618,8 @@ function updateCharacter(Data) {
 	} else if (FollowDogData.DogPresent && Collision(Data, FollowDogData)) {
 		FollowDogData.x += Data.speedX;
 		FollowDogData.y -= Data.speedY;
-		for (var ii = 0; ii < Objects.length; ii++) {
-			if (Collision(FollowDogData, Objects[ii])) {
+		for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
+			if (Collision(FollowDogData, Maps[Area].Objects[ii])) {
 				Data.x -= Data.speedX;
 				Data.y += Data.speedY;
 				break;
@@ -570,8 +635,8 @@ function updateCharacter(Data) {
 		} else {
 			FollowDogData.x -= Data.speedX;
 			FollowDogData.y += Data.speedY;
-			for (var ii = 0; ii < Objects.length; ii++) {
-				if (Collision(Data, Objects[ii])) {
+			for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
+				if (Collision(Data, Maps[Area].Objects[ii])) {
 					Data.x -= Data.speedX;
 					Data.y += Data.speedY;
 					objhit = true;
@@ -584,19 +649,28 @@ function updateCharacter(Data) {
 		}
 	} else {
 		FollowDogData.DogPush = false;
-		for(let ii = 0; ii< Objects.length; ii++) {
-			if (Collision(Data, Objects[ii])) {
+		for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
+			if (Collision(Data, Maps[Area].Objects[ii])) {
 				Data.x -= Data.speedX;
 				Data.y += Data.speedY;
 				break;
 			}
 		}
 	}
-	for (let ii = 0; ii < CollisionAreas.length; ii++) {
-		if (Collision(Data, CollisionAreas[ii])) {
-			CollisionAreas[ii].colliding = true;
+
+	for (let ii = 0; ii < Maps[Area].CollisionAreas.length; ii++) {
+		if (Area == Maps[Area].CollisionAreas[ii].area && Collision(Data, Maps[Area].CollisionAreas[ii])) {
+			if (fadeComplete) {
+				fadeComplete = false;
+				Data.x = Maps[Area].CollisionAreas[ii].newx;
+				Data.y = Maps[Area].CollisionAreas[ii].newy;
+				FollowDogData.x = Data.x + 40;
+				FollowDogData.y = Data.y;
+				AreaSelect(Maps[Area].CollisionAreas[ii].newArea);
+				break;
+			}
 			let newText = {
-				text: CollisionAreas[ii].text,
+				text: Maps[Area].CollisionAreas[ii].text,
 				x: Data.x,
 				y: Data.y
 			}
@@ -606,16 +680,17 @@ function updateCharacter(Data) {
 				newText.y -= 20;
 			}
 			MyText.push(newText);
-			if (myGameArea.keys && myGameArea.keys[13] || Button.enter) {
-				Button.enter = false;
-				fade = "out"
+			if (newText.text != "Locked") {
+				if ((myGameArea.keys && myGameArea.keys[13] || Button.enter) && fade == "None") {
+					fade = "out";
+				}
+			} else {
+
 			}
 			break;
-		} else {
-			CollisionAreas[ii].colliding = false;
 		}
-
 	}
+	Button.enter = false;
 
 	Data.ticks += 1;
 
@@ -726,8 +801,8 @@ function updateFollowDog(Data) {
 		Data.y += Data.speedY;
 	}
 
-	for (var ii = 0; ii < Objects.length; ii++) {
-		if (Collision(Data, Objects[ii])) {
+	for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
+		if (Collision(Data, Maps[Area].Objects[ii])) {
 			Data.x -= Data.speedX;
 			Data.y += Data.speedY;
 			break;
@@ -775,7 +850,7 @@ function render(Data) {
 	// Draw the animation
 	// Data.context.drawImage
 	
-	Data.context.drawImage(
+	myGameArea.context.drawImage(
 		Data.image,
 		Data.xFrame * Data.width / Data.numberOfXFrames,
 		Data.yFrame * Data.height / Data.numberOfYFrames,
@@ -789,11 +864,12 @@ function render(Data) {
 }
 
 function DrawButton() {
+	if (Button.visible) {
 	myGameArea.context.globalAlpha = .5;
 	myGameArea.context.drawImage(
 		OuterButton,
-		Button.x - ((120 * Multiplier) / 2),
-		Button.y - ((120 * Multiplier) / 2),
+		Button.x - (120 * Multiplier / 2),
+		Button.y - (120 * Multiplier / 2),
 		120 * Multiplier,
 		120 * Multiplier);
 	myGameArea.context.globalAlpha = 1;
@@ -803,12 +879,23 @@ function DrawButton() {
 		Button.innerY - (40 * Multiplier / 2),
 		40 * Multiplier,
 		40 * Multiplier);
+	}
+	if (Button.frame + 40 > frame) {
+		myGameArea.context.globalAlpha = (Button.frame + 40 - frame) / 40;
+		myGameArea.context.drawImage(
+			EnterButton,
+			Button.enterX - (20 * Multiplier / 2 / ((Button.frame + 50 - frame) / 40)),
+			Button.enterY - (20 * Multiplier / 2 / ((Button.frame + 50 - frame) / 40)),
+			20 * Multiplier / ((Button.frame + 50 - frame) / 40),
+			20 * Multiplier / ((Button.frame + 50 - frame) / 40));
+		myGameArea.context.globalAlpha = 1;
+	}
 }
 
 function WriteText() {
 	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
 	var height = screenH / 50 * 1.2;
-	var dh = height - ((height - (screenH / 50)) / 2);
+	var dh = height - ((height - (screenH / 50)));
 	for (let i = 0; i < MyText.length; ++i) {
 		var width = (myGameArea.context.measureText(MyText[i].text).width * 1.1);
 		myGameArea.context.fillStyle = 'White';
@@ -929,10 +1016,35 @@ function Fade() {
 	myGameArea.context.globalAlpha = 1;
 	if (fadeit >= 100) {
 		fadeit = 100;
-		fade = "in"
+		fade = "in";
+		fadeComplete = true;
 	} else if (fadeit <= 0) {
 		fadeit = 0;
-		fade = "None"
+		fade = "None";
+	}
+}
+
+function AreaSelect(area) {
+	Area = area;
+	switch (Area) {
+		case 0:
+			myGameArea.canvas.style.backgroundImage = "url('images/Grass.png')";
+			Bounds = {
+				xMin: 40,
+				yMin: 40,
+				xMax: 880,
+				yMax: 560
+			}
+			break;
+		case 1:
+			myGameArea.canvas.style.backgroundImage = "url('images/House1.png')";
+			Bounds = {
+				xMin: 310,
+				yMin: 250,
+				xMax: 580,
+				yMax: 435
+			}
+			break;
 	}
 }
 
