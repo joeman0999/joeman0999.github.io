@@ -24,33 +24,54 @@ var myGameArea = {
 		this.canvas.width = Thecanvas.width * Multiplier;
 		this.canvas.height = Thecanvas.height * Multiplier;
 		this.context = this.canvas.getContext("2d");
-		this.context.font = "2vh Arial";
+		myGameArea.context.font = "1rem Arial";
 		this.context.fillStyle = "black";
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
 		this.interval = setInterval(updateGameArea, 20);
 		window.addEventListener('keydown', keydownhandler);
 		window.addEventListener('keyup', keyuphandler);
 		document.getElementById("GameArea").addEventListener('touchstart', handleTouchStart);
-		document.getElementById("GameArea").addEventListener('touchend', handleTouchEnd);
 		document.getElementById("GameArea").addEventListener('touchmove', handleTouchMove);
-
+		document.getElementById("GameArea").addEventListener('touchend', handleTouchEnd);
 	},
 	stop: function () {
+		document.getElementById("GameArea").removeEventListener('touchstart', handleMenuButtons);
+		document.getElementById("GameArea").removeEventListener('mousedown', handleMenuButtons);
+	},
+	pause: function () {
 		myGameArea.keys = [];
 		clearInterval(this.interval);
+		document.getElementById("ButtonArea").hidden = true;
 		window.removeEventListener('keydown', keydownhandler);
 		window.removeEventListener('keyup', keyuphandler);
+		document.getElementById("GameArea").removeEventListener('touchstart', handleTouchStart);
+		document.getElementById("GameArea").removeEventListener('touchmove', handleTouchMove);
+		document.getElementById("GameArea").removeEventListener('touchend', handleTouchEnd);
+
+		PauseArea();
+		document.getElementById("GameArea").addEventListener('touchstart', handleMenuButtons);
+		document.getElementById("GameArea").addEventListener('mousedown', handleMenuButtons);
+	},
+	unpause: function () {
+		document.getElementById("ButtonArea").hidden = false;
+		document.getElementById("GameArea").removeEventListener('touchstart', handleMenuButtons);
+		document.getElementById("GameArea").removeEventListener('mousedown', handleMenuButtons);
+
+		this.interval = setInterval(updateGameArea, 20);
+		window.addEventListener('keydown', keydownhandler);
+		window.addEventListener('keyup', keyuphandler);
+		document.getElementById("GameArea").addEventListener('touchstart', handleTouchStart);
+		document.getElementById("GameArea").addEventListener('touchmove', handleTouchMove);
+		document.getElementById("GameArea").addEventListener('touchend', handleTouchEnd);
 	},
 	clear: function () {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 }
 
-// Create sprite sheet
 var Person = new Image();
 Person.src = "images/Walking Sprite.png";
 
-// Create sprite
 var PersonData = {
 	x: 70,
 	y: 70,
@@ -325,7 +346,7 @@ window.onload = function () {
 	}
 	window.addEventListener('resize', ResizeWindow);
 	window.addEventListener("orientationchange", ResizeWindow);
-	alert("Try out landscape!")
+	alert("Try out landscape!");
 }
 
 function ResizeWindow() {
@@ -338,10 +359,9 @@ function ResizeWindow() {
 		var size = Math.floor(screenH * .95);
 		Multiplier = size / 600;
 	}
-	try {
+	if (document.getElementById("GameArea")) {
 		myGameArea.canvas.width = Thecanvas.width * Multiplier;
 		myGameArea.canvas.height = Thecanvas.height * Multiplier;
-	} catch (err) {
 	}
 }
 
@@ -383,34 +403,38 @@ function keyuphandler(e) {
 
 function handleTouchStart(e) {
 	e.preventDefault();
-	Button.visible = false;
 	PersonData.direction = "None";
 	var distance = Thecanvas.width * Multiplier;
 	var index = -1;
 	if (Button.side == "left") {
 		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < distance) {
-				distance = 0;
-				Button.visible = true;
-				index = i;
-				Button.x = e.touches[i].clientX;
-				Button.y = e.touches[i].clientY;
-				Button.innerX = e.touches[i].clientX;
-				Button.innerY = e.touches[i].clientY;
+			if (e.touches[i].clientX - 10 < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
+				Button.innerX = e.touches[i].clientX - 10;
+				Button.innerY = e.touches[i].clientY - 10;
+				if (Button.visible) {
+					distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2));
+					index = i;
+				} else {
+					distance = 0;
+					Button.visible = true;
+					index = i;
+					Button.x = e.touches[i].clientX - 10;
+					Button.y = e.touches[i].clientY - 10;
+				}
 			} else {
 				Button.enter = true;
-				Button.enterX = e.touches[i].clientX;
-				Button.enterY = e.touches[i].clientY;
+				Button.enterX = e.touches[i].clientX - 10;
+				Button.enterY = e.touches[i].clientY - 10;
 				Button.frame = frame;
 			}
 		}
 	}
 	if (Button.visible) {
 		if (distance < 40 * Multiplier) {
-			Button.innerX = e.touches[index].clientX;
-			Button.innerY = e.touches[index].clientY;
+			Button.innerX = e.touches[index].clientX - 10;
+			Button.innerY = e.touches[index].clientY - 10;
 		} else {
-			var Theta = Math.atan2(e.touches[index].clientY - Button.y, e.touches[index].clientX - Button.x);
+			var Theta = Math.atan2(e.touches[index].clientY - 10 - Button.y, e.touches[index].clientX - 10 - Button.x);
 			if (Theta >= Math.PI * 2) {
 				Theta -= Math.PI * 2;
 			} else if (Theta < 0) {
@@ -425,56 +449,7 @@ function handleTouchStart(e) {
 			} else {
 				PersonData.direction = 'left';
 			}
-		} else {
-			if (Button.y - Button.innerY > 0) {
-				PersonData.direction = 'up';
-			} else {
-				PersonData.direction = 'down';
-			}
-		}
-	}
-}
-
-function handleTouchEnd(e) {
-	e.preventDefault();
-	Button.visible = false;
-	PersonData.direction = "None";
-	var distance = Thecanvas.width * Multiplier;
-	var index = -1;
-	if (Button.side == "left") {
-		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < distance) {
-				distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2));
-				Button.visible = true;
-				index = i;
-				Button.x = e.touches[i].clientX;
-				Button.y = e.touches[i].clientY;
-				Button.innerX = e.touches[i].clientX;
-				Button.innerY = e.touches[i].clientY;
-			}
-		}
-	}
-	if (Button.visible) {
-		if (Math.sqrt(Math.pow(Button.x - e.touches[index].clientX, 2) + Math.pow(Button.y - e.touches[index].clientY, 2)) < 40 * Multiplier) {
-			Button.innerX = e.touches[index].clientX;
-			Button.innerY = e.touches[index].clientY;
-		} else {
-			var Theta = Math.atan2(e.touches[index].clientY - Button.y, e.touches[index].clientX - Button.x);
-			if (Theta >= Math.PI * 2) {
-				Theta -= Math.PI * 2;
-			} else if (Theta < 0) {
-				Theta += Math.PI * 2;
-			}
-			Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
-			Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
-		}
-		if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
-			if (Button.innerX - Button.x > 0) {
-				PersonData.direction = 'right';
-			} else {
-				PersonData.direction = 'left';
-			}
-		} else {
+		} else if (Button.y != Button.innerY) {
 			if (Button.y - Button.innerY > 0) {
 				PersonData.direction = 'up';
 			} else {
@@ -491,19 +466,18 @@ function handleTouchMove(e) {
 		var index = -1;
 		if (Button.side == "left") {
 			for (let i = 0; i < e.touches.length; ++i) {
-				if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2)) < distance) {
-					distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX, 2) + Math.pow(Button.y - e.touches[i].clientY, 2));
+				if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
+					distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2));
 					index = i;
 				}
 			}
 		}
-
 		if (Button.visible) {
 			if (distance < 40 * Multiplier) {
-				Button.innerX = e.touches[index].clientX;
-				Button.innerY = e.touches[index].clientY;
+				Button.innerX = e.touches[index].clientX - 10;
+				Button.innerY = e.touches[index].clientY - 10;
 			} else {
-				var Theta = Math.atan2(e.touches[index].clientY - Button.y, e.touches[index].clientX - Button.x);
+				var Theta = Math.atan2(e.touches[index].clientY - 10 - Button.y, e.touches[index].clientX - 10 - Button.x);
 				if (Theta >= Math.PI * 2) {
 					Theta -= Math.PI * 2;
 				} else if (Theta < 0) {
@@ -518,12 +492,62 @@ function handleTouchMove(e) {
 				} else {
 					PersonData.direction = 'left';
 				}
-			} else {
+			} else if (Button.y != Button.innerY){
 				if (Button.y - Button.innerY > 0) {
 					PersonData.direction = 'up';
 				} else {
 					PersonData.direction = 'down';
 				}
+			}
+		}
+	}
+}
+
+function handleTouchEnd(e) {
+	if (Button.side == "left") {
+		for (let i = 0; i < e.touches.length; ++i) {
+			if (e.touches[i].clientX - 10 < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
+				return;
+			}
+		}
+		PersonData.direction = "None";
+		Button.visible = false;
+	}
+}
+
+function handleMenuButtons(e) {
+	var click = {
+		x: 0,
+		y: 0
+	}
+	if (e.touches) {
+		click.x = e.touches[0].clientX - 10;
+		click.y = e.touches[0].clientY - 10;
+	} else {
+		click.x = e.clientX - 10;
+		click.y = e.clientY - 10;
+	}
+
+	myGameArea.context.font = "2rem Arial";
+	var MenuText = [
+		{
+			text: "Resume",
+			y: 200
+		},
+		{
+			text: "Exit Game",
+			y: 400
+		}
+	];
+	
+	for (let i = 0; i < MenuText.length; ++i) {
+		var dw = (myGameArea.context.measureText(MenuText[i].text).width) / 2;
+		var dh = myGameArea.context.measureText("M").width;
+		if (click.x >= Thecanvas.width / 2 * Multiplier - dw && click.x <= Thecanvas.width / 2 * Multiplier + dw && click.y <= MenuText[i].y * Multiplier && click.y >= MenuText[i].y * Multiplier - dh) {
+			if (MenuText[i].text == "Resume") {
+				myGameArea.unpause();
+			} else {
+				Menu();
 			}
 		}
 	}
@@ -545,12 +569,36 @@ function StartGame() {
 
 function Menu() {
 	myGameArea.stop();
-	myGameArea.clear;
-	document.getElementById("ButtonArea").hidden = true;
+	myGameArea.clear();
 	if (document.getElementById("GameArea")) {
 		document.getElementById("GameArea").hidden = true;
 	}
 	document.getElementById("Menu").hidden = false;
+}
+
+function PauseArea() {
+	myGameArea.context.fillStyle = 'Black';
+	myGameArea.context.globalAlpha = .5;
+	myGameArea.context.fillRect(0, 0, Thecanvas.width * Multiplier, Thecanvas.height * Multiplier);
+	myGameArea.context.globalAlpha = 1;
+	
+	myGameArea.context.font = "2rem Arial";
+	var MenuText = [
+		{
+			text: "Resume",
+			y: 200
+		},
+		{
+			text: "Exit Game",
+			y: 400
+		}
+	];
+
+	for (let i = 0; i < MenuText.length; ++i) {
+		var dw = (myGameArea.context.measureText(MenuText[i].text).width) / 2;
+		myGameArea.context.fillStyle = 'Grey';
+		myGameArea.context.fillText(MenuText[i].text, Thecanvas.width / 2 * Multiplier - dw, MenuText[i].y * Multiplier);
+	}
 }
 
 function updateGameArea() {
@@ -704,7 +752,7 @@ function updateCharacter(Data) {
 }
 
 function updateFollowDog(Data) {
-	var x, y
+	var x, y;
 	x = PersonData.x - Data.x;
 	y = Data.y - PersonData.y;
 
@@ -746,7 +794,6 @@ function updateFollowDog(Data) {
 				Data.yFrame = Data.Charactery * 4;
 			}
 		}
-
 	} else if (Data.DogPush) {
 		if (PersonData.speedX == -3) {
 			Data.speedX = -3;
@@ -831,7 +878,6 @@ function updateFollowDog(Data) {
 
 function anim(Data) {
 	Data.ticks += 1;
-
 	if (Data.ticks >= Data.ticksPerFrame) {
 		Data.ticks = 0;
 		// If the current frame index is in range
@@ -845,10 +891,6 @@ function anim(Data) {
 }
 
 function render(Data) {
-
-	// Draw the animation
-	// Data.context.drawImage
-	
 	myGameArea.context.drawImage(
 		Data.image,
 		Data.xFrame * Data.width / Data.numberOfXFrames,
@@ -892,13 +934,13 @@ function DrawButton() {
 }
 
 function WriteText() {
-	var screenH = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
-	var height = screenH / 50 * 1.2;
-	var dh = height - ((height - (screenH / 50)));
+	myGameArea.context.font = "1rem Arial";
+	var height = myGameArea.context.measureText("M").width;
+	var dh = height;
 	for (let i = 0; i < MyText.length; ++i) {
-		var width = (myGameArea.context.measureText(MyText[i].text).width * 1.1);
+		var width = (myGameArea.context.measureText(MyText[i].text).width);
 		myGameArea.context.fillStyle = 'White';
-		myGameArea.context.fillRect((MyText[i].x * Multiplier) - ((width - myGameArea.context.measureText(MyText[i].text).width) / 2), (MyText[i].y * Multiplier) - dh, width, height);
+		myGameArea.context.fillRect((MyText[i].x * Multiplier) - ((width * 1.1 - width) / 2), (MyText[i].y * Multiplier) - dh, width * 1.1, height * 1.2);
 		myGameArea.context.fillStyle = 'Black';
 		myGameArea.context.fillText(MyText[i].text, MyText[i].x * Multiplier, MyText[i].y * Multiplier);
 	}
@@ -909,7 +951,6 @@ function CharacterSelect() {
 	var Selector, value
 	Selector = document.getElementById("Character-selector");
 	value = Selector.value;
-	
 	if (value < 4) {
 		Person.src = "images/Walking Sprite.png";
 		PersonData = {
@@ -968,8 +1009,12 @@ function CharacterSelect() {
 			Lw: 20,
 			angle: 0,
 		}
-	} else if (value == 8) {
-		Person.src = "images/Joe.png";
+	} else if (value > 8) {
+		if (value == 8) {
+			Person.src = "images/Joe.png";
+		} else if (value == 9) {
+			Person.src = "images/Nichole.png";
+		}
 		PersonData = {
 			x: 70,
 			y: 70,
@@ -1094,6 +1139,7 @@ function Fade() {
 	} else {
 		fadeit++;
 	}
+	myGameArea.context.fillStyle = 'Black';
 	myGameArea.context.globalAlpha = fadeit/100;
 	myGameArea.context.fillRect(0, 0, Thecanvas.width * Multiplier, Thecanvas.height * Multiplier);
 	myGameArea.context.globalAlpha = 1;
