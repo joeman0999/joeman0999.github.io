@@ -137,6 +137,8 @@ var Tree = new Image();
 Tree.src = "images/Tree.png";
 var RedHouse = new Image();
 RedHouse.src = "images/Red House.png";
+var PetStore = new Image();
+PetStore.src = "images/PetStore.png";
 
 var Maps = [
 	{
@@ -191,8 +193,8 @@ var Maps = [
 				angle: 0,
 			}, {
 				Object: "Tree",
-				x: 281,
-				y: 92,
+				x: 351,
+				y: 142,
 				width: 39,
 				height: 46,
 				image: Tree,
@@ -207,8 +209,24 @@ var Maps = [
 				angle: 0,
 			}, {
 				Object: "Tree",
-				x: 481,
-				y: 92,
+				x: 581,
+				y: 162,
+				width: 39,
+				height: 46,
+				image: Tree,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 23,
+				Bh: 18,
+				Rw: 18,
+				Lw: 18,
+				angle: 0,
+			}, {
+				Object: "Tree",
+				x: 811,
+				y: 362,
 				width: 39,
 				height: 46,
 				image: Tree,
@@ -253,6 +271,38 @@ var Maps = [
 				Rw: 39,
 				Lw: 39,
 				angle: 0,
+			}, {
+				Object: "RedHouse",
+				x: 730,
+				y: 475,
+				width: 96,
+				height: 96,
+				image: RedHouse,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 34,
+				Bh: 39,
+				Rw: 39,
+				Lw: 39,
+				angle: 0,
+			}, {
+				Object: "RedHouse",
+				x: 730,
+				y: 225,
+				width: 96,
+				height: 96,
+				image: RedHouse,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 34,
+				Bh: 39,
+				Rw: 39,
+				Lw: 39,
+				angle: 0,
 			}
 		],
 		CollisionAreas: [
@@ -281,13 +331,54 @@ var Maps = [
 				angle: 0,
 				text: "Locked",
 				area: 0,
-				newArea: 2,
+				newArea: 3,
 				newx: 450,
 				newy: 425
+			}, {
+				Object: "House 3 Enter",
+				x: 740,
+				y: 535,
+				Th: 3,
+				Bh: 3,
+				Rw: 3,
+				Lw: 3,
+				angle: 0,
+				text: "Locked",
+				area: 0,
+				newArea: 4,
+				newx: 450,
+				newy: 425
+			}, {
+				Object: "House 4 Enter",
+				x: 740,
+				y: 285,
+				Th: 3,
+				Bh: 3,
+				Rw: 3,
+				Lw: 3,
+				angle: 0,
+				text: "Locked",
+				area: 0,
+				newArea: 5,
+				newx: 450,
+				newy: 425
+			}, {
+				Object: "Map Area 2 Enter",
+				x: 425,
+				y: 25,
+				Th: 3,
+				Bh: 15,
+				Rw: 40,
+				Lw: 40,
+				angle: 0,
+				text: "Continue",
+				area: 0,
+				newArea: 2,
+				newx: 420,
+				newy: 540
 			}
 		]
-	},
-	{
+	}, {
 		Objects: [
 
 		],
@@ -307,10 +398,47 @@ var Maps = [
 				area: 1,
 				newArea: 0,
 				newx: 140,
-				newy: 440,
+				newy: 440
 			}
 		]
-	},
+	}, {
+		Objects: [
+			{
+				Object: "PetStore",
+				x: 350,
+				y: 275,
+				width: 213,
+				height: 159,
+				image: PetStore,
+				xFrame: 0,
+				yFrame: 0,
+				numberOfXFrames: 1,
+				numberOfYFrames: 1,
+				Th: 40,
+				Bh: 72,
+				Rw: 100,
+				Lw: 100,
+				angle: 0,
+			}
+		],
+		CollisionAreas: [
+			{
+				Object: "Map Area 1 Enter",
+				x: 425,
+				y: 565,
+				Th: 15,
+				Bh: 3,
+				Rw: 40,
+				Lw: 40,
+				angle: 0,
+				text: "Continue",
+				area: 2,
+				newArea: 0,
+				newx: 425,
+				newy: 55
+			}
+		]
+	}
 ]
 
 var MyText = [];
@@ -711,7 +839,6 @@ function updateCharacter(Data) {
 			}
 		}
 	}
-
 	for (let ii = 0; ii < Maps[Area].CollisionAreas.length; ii++) {
 		if (Area == Maps[Area].CollisionAreas[ii].area && Collision(Data, Maps[Area].CollisionAreas[ii])) {
 			if (fadeComplete) {
@@ -1009,7 +1136,7 @@ function CharacterSelect() {
 			Lw: 20,
 			angle: 0,
 		}
-	} else if (value > 8) {
+	} else {
 		if (value == 8) {
 			Person.src = "images/Joe.png";
 		} else if (value == 9) {
@@ -1172,6 +1299,15 @@ function AreaSelect(area) {
 				yMin: 250,
 				xMax: 580,
 				yMax: 445
+			}
+			break;
+		case 2:
+			myGameArea.canvas.style.backgroundImage = "url('images/Grass2.png')";
+			Bounds = {
+				xMin: 40,
+				yMin: 40,
+				xMax: 880,
+				yMax: 560
 			}
 			break;
 	}
