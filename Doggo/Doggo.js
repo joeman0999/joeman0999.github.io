@@ -100,6 +100,12 @@ var PersonData = {
 	angle: 0
 }
 
+var PersonItems = {
+	misc: [],
+	money: 0,
+	petFood: 0
+};
+
 var FollowDog = new Image();
 FollowDog.src = "images/Dogs.png";
 var FollowDogData = {
@@ -330,10 +336,12 @@ var Maps = [
 				Lw: 3,
 				angle: 0,
 				text: "Locked",
+				additionalText: ["Enter"],
 				area: 0,
 				newArea: 3,
 				newx: 450,
-				newy: 425
+				newy: 425,
+				requirment: "Key 1"
 			}, {
 				Object: "House 3 Enter",
 				x: 740,
@@ -345,9 +353,10 @@ var Maps = [
 				angle: 0,
 				text: "Locked",
 				area: 0,
-				newArea: 4,
+				newArea: 5,
 				newx: 450,
-				newy: 425
+				newy: 425,
+				requirment: "Key?"
 			}, {
 				Object: "House 4 Enter",
 				x: 740,
@@ -359,9 +368,10 @@ var Maps = [
 				angle: 0,
 				text: "Locked",
 				area: 0,
-				newArea: 5,
+				newArea: 6,
 				newx: 450,
-				newy: 425
+				newy: 425,
+				requirment: "Key?"
 			}, {
 				Object: "Map Area 2 Enter",
 				x: 425,
@@ -419,6 +429,22 @@ var Maps = [
 				Rw: 100,
 				Lw: 100,
 				angle: 0,
+			}, {
+				Object: "Old Man",
+				x: 310,
+				y: 365,
+				width: 476,
+				height: 320,
+				image: Person,
+				xFrame: 1,
+				yFrame: 0,
+				numberOfXFrames: 12,
+				numberOfYFrames: 8,
+				Th: 25,
+				Bh: 10,
+				Rw: 20,
+				Lw: 20,
+				angle: 0,
 			}
 		],
 		CollisionAreas: [
@@ -436,6 +462,62 @@ var Maps = [
 				newArea: 0,
 				newx: 425,
 				newy: 55
+			}, {
+				Object: "Pet Store Enter",
+				x: 350,
+				y: 355,
+				Th: 5,
+				Bh: 5,
+				Rw: 5,
+				Lw: 5,
+				angle: 0,
+				text: "Locked",
+				additionalText: ["Enter"],
+				area: 2,
+				newArea: 4,
+				newx: 450,
+				newy: 425,
+				requirment: "Key 2"
+			}, {
+				Object: "Find Keys",
+				x: 350,
+				y: 355,
+				Th: 5,
+				Bh: 5,
+				Rw: 5,
+				Lw: 5,
+				angle: 0,
+				text: "Can you help me?",
+				additionalText: ["I seem to have left the store keys at my house.", "Would you go get them for me I'm old and slow?", "Thank you! Here are my house keys."],
+				area: 2,
+				newx: 450,
+				newy: 425,
+				gives: "Key 1",
+				gave: false,
+				timer: 50
+			}
+		]
+	}, {
+		Objects: [
+
+		],
+		CollisionAreas: [
+			{
+				Object: "House 1 Exit",
+				x: 450,
+				y: 425,
+				width: 10,
+				height: 10,
+				Th: 3,
+				Bh: 3,
+				Rw: 3,
+				Lw: 3,
+				angle: 0,
+				text: "Exit",
+				area: 3,
+				newArea: 0,
+				newx: 540,
+				newy: 345
 			}
 		]
 	}
@@ -474,7 +556,7 @@ window.onload = function () {
 	}
 	window.addEventListener('resize', ResizeWindow);
 	window.addEventListener("orientationchange", ResizeWindow);
-	alert("Try out landscape!");
+	alert("New Update!!! Sorry it's been a while. This game is really hard to add to. Also, I've been busy with a brand new game!! Releasing soon!");
 }
 
 function ResizeWindow() {
@@ -800,8 +882,8 @@ function updateCharacter(Data) {
 	} else if (FollowDogData.DogPresent && Collision(Data, FollowDogData)) {
 		FollowDogData.x += Data.speedX;
 		FollowDogData.y -= Data.speedY;
-		for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
-			if (Collision(FollowDogData, Maps[Area].Objects[ii])) {
+		for (let i = 0; i < Maps[Area].Objects.length; i++) {
+			if (Collision(FollowDogData, Maps[Area].Objects[i])) {
 				Data.x -= Data.speedX;
 				Data.y += Data.speedY;
 				break;
@@ -817,8 +899,8 @@ function updateCharacter(Data) {
 		} else {
 			FollowDogData.x -= Data.speedX;
 			FollowDogData.y += Data.speedY;
-			for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
-				if (Collision(Data, Maps[Area].Objects[ii])) {
+			for (let i = 0; i < Maps[Area].Objects.length; i++) {
+				if (Collision(Data, Maps[Area].Objects[i])) {
 					Data.x -= Data.speedX;
 					Data.y += Data.speedY;
 					objhit = true;
@@ -831,27 +913,27 @@ function updateCharacter(Data) {
 		}
 	} else {
 		FollowDogData.DogPush = false;
-		for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
-			if (Collision(Data, Maps[Area].Objects[ii])) {
+		for (let i = 0; i < Maps[Area].Objects.length; i++) {
+			if (Collision(Data, Maps[Area].Objects[i])) {
 				Data.x -= Data.speedX;
 				Data.y += Data.speedY;
 				break;
 			}
 		}
 	}
-	for (let ii = 0; ii < Maps[Area].CollisionAreas.length; ii++) {
-		if (Area == Maps[Area].CollisionAreas[ii].area && Collision(Data, Maps[Area].CollisionAreas[ii])) {
+	for (let i = 0; i < Maps[Area].CollisionAreas.length; i++) {
+		if (Area == Maps[Area].CollisionAreas[i].area && Collision(Data, Maps[Area].CollisionAreas[i])) {
 			if (fadeComplete) {
 				fadeComplete = false;
-				Data.x = Maps[Area].CollisionAreas[ii].newx;
-				Data.y = Maps[Area].CollisionAreas[ii].newy;
+				Data.x = Maps[Area].CollisionAreas[i].newx;
+				Data.y = Maps[Area].CollisionAreas[i].newy;
 				FollowDogData.x = Data.x + 40;
 				FollowDogData.y = Data.y;
-				AreaSelect(Maps[Area].CollisionAreas[ii].newArea);
+				AreaSelect(Maps[Area].CollisionAreas[i].newArea);
 				break;
 			}
 			let newText = {
-				text: Maps[Area].CollisionAreas[ii].text,
+				text: Maps[Area].CollisionAreas[i].text,
 				x: Data.x,
 				y: Data.y
 			}
@@ -860,15 +942,46 @@ function updateCharacter(Data) {
 			} else {
 				newText.y -= 20;
 			}
-			MyText.push(newText);
-			if (newText.text != "Locked") {
+			if (newText.text == "Enter" || newText.text == "Continue" || newText.text == "Exit") {
 				if ((myGameArea.keys && myGameArea.keys[13] || Button.enter) && fade == "None") {
 					fade = "out";
 				}
+			} else if (Maps[Area].CollisionAreas[i].additionalText && Maps[Area].CollisionAreas[i].additionalText.length != 0) {
+				if (newText.text == "Locked") {
+					for (let ii = 0; ii < PersonItems.misc.length; ++ii) {
+						if (PersonItems.misc[ii] == Maps[Area].CollisionAreas[i].requirment) {
+							newText.text = "Unlock";
+						}
+					}
+					if ((myGameArea.keys && myGameArea.keys[13] || Button.enter) && fade == "None") {
+						for (let ii = 0; ii < PersonItems.misc.length; ++ii) {
+							if (PersonItems.misc[ii] == Maps[Area].CollisionAreas[i].requirment) {
+								Maps[Area].CollisionAreas[i].text = Maps[Area].CollisionAreas[i].additionalText[0];
+								Maps[Area].CollisionAreas[i].additionalText.splice(0, 1);
+								PersonItems.misc.splice(ii, 1);
+							}
+						}
+					}
+				} else {
+					if ((myGameArea.keys && myGameArea.keys[13] || Button.enter) && fade == "None") {
+						Maps[Area].CollisionAreas[i].text = Maps[Area].CollisionAreas[i].additionalText[0];
+						Maps[Area].CollisionAreas[i].additionalText.splice(0, 1);
+						myGameArea.keys[13] = false; 
+						Button.enter = false;
+						if (Maps[Area].CollisionAreas[i].additionalText.length == 0 && Maps[Area].CollisionAreas[i].gives && !Maps[Area].CollisionAreas[i].gave) {
+							PersonItems.misc.push(Maps[Area].CollisionAreas[i].gives);
+							Maps[Area].CollisionAreas[i].gave = true;
+						}
+					}
+				}
 			} else {
-
+				if (Maps[Area].CollisionAreas[i].timer > 0) {
+					--Maps[Area].CollisionAreas[i].timer;
+				} else {
+					continue;
+				}
 			}
-			break;
+			MyText.push(newText);
 		}
 	}
 
@@ -970,8 +1083,8 @@ function updateFollowDog(Data) {
 		Data.y += Data.speedY;
 	}
 
-	for (let ii = 0; ii < Maps[Area].Objects.length; ii++) {
-		if (Collision(Data, Maps[Area].Objects[ii])) {
+	for (let i = 0; i < Maps[Area].Objects.length; i++) {
+		if (Collision(Data, Maps[Area].Objects[i])) {
 			Data.x -= Data.speedX;
 			Data.y += Data.speedY;
 			break;
@@ -1310,6 +1423,15 @@ function AreaSelect(area) {
 				yMax: 560
 			}
 			break;
+		case 3:
+			myGameArea.canvas.style.backgroundImage = "url('images/House1.png')";
+			Bounds = {
+				xMin: 310,
+				yMin: 250,
+				xMax: 580,
+				yMax: 445
+			}
+			break;
 	}
 }
 
@@ -1318,4 +1440,6 @@ Fix the gray around the characters
 Come up with Concept
 Cut out rooms and different floors from the paint files you currently have
 Same with buildings
+Cool map in the menu.
+Name of the location you're entering in the top left corner with a nice background banner
 */
