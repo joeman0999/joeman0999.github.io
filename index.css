@@ -25,6 +25,13 @@ div.GameGroup {
   margin: 2vh 0px 0px 2vw;
 }
 
+div.Extra {
+  position: relative;
+  left: 0px;
+  margin: auto;
+  margin: 2vh 0px 0px 2vw;
+}
+
 .Group-text {
   color: white;
   font-size: 4vh;
@@ -40,6 +47,19 @@ div.GameGroup {
 }
 
 button.Game-Text-Button:hover {
+  color: lightskyblue;
+}
+
+.Link-Button {
+  background: rgba(0, 0, 0, 0.0);
+  font: 3vh Helvetica Neue;
+  color: blue;
+  border: 0px;
+  margin: 1vh 0 1.5vh 0;
+  padding: 0;
+}
+
+button.Link-Button:hover {
   color: lightskyblue;
 }
 
