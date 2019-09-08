@@ -1,25 +1,9 @@
 var love = 0;
+var loveMult = 1;
 var dollars = 0;
 var TapTimeout;
 var peopleNames = [
 
-];
-var peopleAmounts = [
-    0
-];
-
-var upgradeNames = [
-
-];
-var upgradeAmounts = [
-    0
-];
-
-var giftNames = [
-
-];
-var giftAmounts = [
-    0
 ];
 
 window.onload = function () {
@@ -28,6 +12,7 @@ window.onload = function () {
     var min = Math.min(screenW, screenH);
     var size = Math.floor(min * .5);
     Multiplier = size / 500;
+    alert("I thought I'd be able to get alot further with this game but work and school have been killer. I'm sorry to everyone. Here is the basic Demo and I will try harder.")
 }
 
 function tapScreen() {
@@ -81,9 +66,11 @@ function gender(input) {
 }
 
 function loveClick() {
-    love++;
+    love += 1*loveMult;
     if (love >= 100) {
         document.getElementById('peopleScreenButton').hidden = false;
+    } else if (love > 1000) {
+        //document.getElementById('upgradeScreen').hidden = false;
     }
     updateText();
     var element = document.getElementById("loveArea");
@@ -93,7 +80,7 @@ function loveClick() {
         }
     }
     var para = document.createElement("p");
-    var node = document.createTextNode("+1");
+    var node = document.createTextNode("+" + (1 * loveMult));
     para.appendChild(node);
     var left = (Math.random() - .6) * 15 + 50;
     var top = (Math.random() - .5) * 20 + 30;
@@ -113,7 +100,16 @@ function moneyClick() {
 }
 
 function people(input) {
-
+    if (input == 1 && love >= 100) {
+        loveMult = 2;
+        document.getElementById('people 1').hidden = true;
+        love -= 100;
+    } else if (input == 2 && love >= 200 && loveMult == 2) {
+        loveMult = 4;
+        document.getElementById('people 2').hidden = true;
+        love -= 200;
+    }
+    updateText();
 }
 
 function upgrade(input) {
