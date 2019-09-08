@@ -556,7 +556,6 @@ window.onload = function () {
 	}
 	window.addEventListener('resize', ResizeWindow);
 	window.addEventListener("orientationchange", ResizeWindow);
-	alert("New Update!!! Sorry it's been a while. This game is really hard to add to. Also, I've been busy with a brand new game!! Releasing soon!");
 }
 
 function ResizeWindow() {
