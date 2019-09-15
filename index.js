@@ -24,7 +24,6 @@ window.onload = function () {
 
     window.addEventListener('resize', ResizeWindow);
     setInterval(animate, 1000 / fps);
-    alert("Please wait as long as it takes. I will wait for you forever if I have to. I love you. I'm sorry it's taking so long. Have faith. <3 Always! Boop!")
 }
 
 function ResizeWindow() {
