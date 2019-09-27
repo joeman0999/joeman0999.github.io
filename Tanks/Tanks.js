@@ -26,6 +26,7 @@ var VsGame = false;
 var Player1Tank = {
     Tank: "images/Tank1.png",
     Move: "WASD",
+    TankNumber: 1,
     Forward: 87,
     Backward: 83,
     Clockwise: 68,
@@ -36,6 +37,7 @@ var Player1Tank = {
 var Player2Tank = {
     Tank: "images/Tank2.png",
     Move: "Arrow",
+    TankNumber: 2,
     Forward: 38,
     Backward: 40,
     Clockwise: 39,
@@ -55,7 +57,60 @@ var Max_Level = 1;
 var CoOpMax_Level = 1;
 var AIEnemyData = [];
 var Bullets = [];
-var Level, Tank1, Tank2, Tank1Data, Tank2Data, frame
+var Button = {
+    visible: false,
+    enter: false,
+    x: 0,
+    y: 0,
+    innerX: 0,
+    innerY: 0
+}
+var InnerButton = new Image();
+InnerButton.src = "images/InnerButton.png";
+var OuterButton = new Image();
+OuterButton.src = "images/OuterButton.png";
+var Level, Tank1, Tank2, Tank1Data, Tank2Data, frame, Multiplier
+
+window.onload = function () {
+    FindMultiplier();
+    window.addEventListener('resize', ResizeWindow);
+    window.addEventListener("orientationchange", ResizeWindow);
+}
+
+function ResizeWindow() {
+    FindMultiplier();
+    if (document.getElementById("GameArea")) {
+        myGameArea.canvas.width = Thecanvas.width * Multiplier;
+        myGameArea.canvas.height = Thecanvas.height * Multiplier;
+    }
+    
+}
+
+function FindMultiplier() {
+    
+    if (SoloGame && Level == 0) {
+        var screenW = Math.max(document.documentElement.clientWidth);
+        var screenH = Math.max(document.documentElement.clientHeight);
+        if (screenW * .49 / Thecanvas.width < screenH * .9 / Thecanvas.height) {
+            var size = Math.floor(screenW * .49);
+            Multiplier = size / Thecanvas.width;
+        } else {
+            var size = Math.floor(screenH * .85);
+            Multiplier = size / Thecanvas.height;
+        }
+    } else {
+        var x = .9;
+        var screenW = Math.max(document.documentElement.clientWidth);
+        var screenH = Math.max(document.documentElement.clientHeight);
+        if (screenW / Thecanvas.width < screenH / Thecanvas.height) {
+            var size = Math.floor(screenW * x);
+            Multiplier = size / Thecanvas.width;
+        } else {
+            var size = Math.floor(screenH * x);
+            Multiplier = size / Thecanvas.height;
+        }
+    }
+}
 
 function Menu() {
     clearInterval(myGameArea.interval);
@@ -83,6 +138,13 @@ function Menu() {
     try {
         window.removeEventListener('keyup', keyuphandler);
     } catch (err) {
+    }
+    try {
+        document.getElementById("GameArea").removeEventListener('touchstart', handleTouchStart);
+        document.getElementById("GameArea").removeEventListener('touchmove', handleTouchMove);
+        document.getElementById("GameArea").removeEventListener('touchend', handleTouchEnd);
+    } catch (err) {
+
     }
 
     document.getElementById("Solo_Level_List").hidden = true;
@@ -124,6 +186,8 @@ function Reset() {
         myGameArea.interval = setInterval(updateSoloGameArea, 20);
         document.getElementById("wins").innerHTML = "Level: " + Level;
         SoloLevelSelector(Level);
+        Button.visible = false;
+        Button.enter = false;
     } else if (CoOpGame) {
         myGameArea.interval = setInterval(updateCoOpGameArea, 20);
         document.getElementById("wins").innerHTML = "Level: " + Level;
@@ -139,8 +203,9 @@ var myGameArea = {
         document.getElementById("Pause-Button").disabled = false;
         frame = 0;
         this.canvas.setAttribute("id", "GameArea");
-        this.canvas.width = Thecanvas.width;
-        this.canvas.height = Thecanvas.height;
+        FindMultiplier();
+        this.canvas.width = Thecanvas.width * Multiplier;
+        this.canvas.height = Thecanvas.height * Multiplier;
         this.context = this.canvas.getContext("2d");
 
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
@@ -156,13 +221,15 @@ var myGameArea = {
         } else if (Level_Editor) {
             this.interval = setInterval(updateLevelEditorArea, 20);
             document.getElementById("GameArea").addEventListener('mousedown', mousedownhandler);
-
             document.getElementById("GameArea").addEventListener('mouseup', mouseuphandler);
             document.getElementById("GameArea").addEventListener('mousemove', mousemovehandler);
         }
 
         window.addEventListener('keydown', keydownhandler);
         window.addEventListener('keyup', keyuphandler);
+        document.getElementById("GameArea").addEventListener('touchstart', handleTouchStart);
+        document.getElementById("GameArea").addEventListener('touchmove', handleTouchMove);
+        document.getElementById("GameArea").addEventListener('touchend', handleTouchEnd);
 
     },
     stop: function () {
@@ -285,6 +352,80 @@ function mousemovehandler(e) {
     }
 }
 
+function handleTouchStart(e) {
+    e.preventDefault();
+    var distance = Thecanvas.width * Multiplier;
+    var index = -1;
+    for (let i = 0; i < e.touches.length; ++i) {
+        if (e.touches[i].clientX - 10 < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
+            if (Button.visible) {
+                distance = Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2));
+                index = i;
+            } else {
+                distance = 0;
+                Button.visible = true;
+                index = i;
+                Button.x = e.touches[i].clientX - 10;
+                Button.y = e.touches[i].clientY - 10;
+            }
+        } else {
+            Button.enter = true;
+        }
+    }
+    if (Button.visible) {
+        var distance = Thecanvas.width * Multiplier;
+        var index = -1;
+        for (let i = 0; i < e.touches.length; ++i) {
+            if (Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2)) < distance) {
+                distance = Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2));
+                index = i;
+            }
+        }
+        if (Button.visible) {
+            var Theta = Atan2((e.touches[index].clientY - 10) - Button.y, (e.touches[index].clientX - 10) - Button.x);
+            Button.innerX = Math.cos(Theta) * Math.min(distance, 40) * Multiplier + Button.x;
+            Button.innerY = Math.sin(Theta) * Math.min(distance, 40) * Multiplier + Button.y;
+        }
+    }
+}
+
+function handleTouchMove(e) {
+    e.preventDefault();
+    if (Button.visible) {
+        var distance = Thecanvas.width * Multiplier;
+        var index = -1;
+        for (let i = 0; i < e.touches.length; ++i) {
+            if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
+                distance = Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2));
+                index = i;
+            }
+        }
+        if (Button.visible) {
+            var Theta = Atan2((e.touches[index].clientY - 10) - Button.y, (e.touches[index].clientX - 10) - Button.x);
+            Button.innerX = Math.cos(Theta) * Math.min(distance, 40) * Multiplier + Button.x;
+            Button.innerY = Math.sin(Theta) * Math.min(distance, 40) * Multiplier + Button.y;
+        }
+    }
+}
+
+function handleTouchEnd(e) {
+    var LeftTouch = false;
+    var RightTouch = false;
+    for (let i = 0; i < e.touches.length; ++i) {
+        if (e.touches[i].clientX - 10 < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
+            LeftTouch = true;
+        } else {
+            RightTouch = true;
+        }
+    }
+    if (!LeftTouch) {
+        Button.visible = false;
+    }
+    if (!RightTouch) {
+        Button.enter = false;
+    }
+}
+
 function SettingsScreen() {
     document.getElementById("Settings-Area").hidden = false;
     document.getElementById("Menu").hidden = true;
@@ -294,14 +435,16 @@ function TankSelect(Tank, Property, Option) {
     if (Property == "Image") {
         if (Tank == 1) {
             var index = Player1Tank.Tank[4];
-            document.getElementById("Tank1-" + index + "-Button").disabled = false;
+            document.getElementById("Tank1-" + Player1Tank.TankNumber + "-Button").disabled = false;
             document.getElementById("Tank1-" + Option + "-Button").disabled = true;
             Player1Tank.Tank = "images/Tank" + Option + ".png";
+            Player1Tank.TankNumber = Option;
         } else if (Tank == 2) {
             var index = Player2Tank.Tank[4];
-            document.getElementById("Tank2-" + index + "-Button").disabled = false;
+            document.getElementById("Tank2-" + Player2Tank.TankNumber + "-Button").disabled = false;
             document.getElementById("Tank2-" + Option + "-Button").disabled = true;
             Player2Tank.Tank = "images/Tank" + Option + ".png";
+            Player2Tank.TankNumber = Option;
         }
     } else if (Property == "Move") {
         if (Option == "WASD") {
@@ -521,10 +664,10 @@ function component(width, height, color, x, y, angle, Shape) { // makes bullets
     this.update = function () {
         ctx = myGameArea.context;
         ctx.save();
-        ctx.translate(this.x, this.y);
+        ctx.translate(this.x * Multiplier, this.y * Multiplier);
         ctx.rotate(this.angle);
         ctx.fillStyle = color;
-        ctx.fillRect(this.width / -2, this.height / -2, this.width, this.height);
+        ctx.fillRect(this.width / -2 * Multiplier, this.height / -2 * Multiplier, this.width * Multiplier, this.height * Multiplier);
         ctx.restore();
     }
     this.newPos = function () {
@@ -592,11 +735,42 @@ function updateSoloGameArea() {
         myGameArea.stop();
     }
 
-    if (myGameArea.keys && myGameArea.keys[Player1Tank.Shoot] && frame - 25 > Tank1Data.frame) {
+    if (((myGameArea.keys && myGameArea.keys[Player1Tank.Shoot]) || Button.enter) && frame - 25 > Tank1Data.frame) {
         Tank1Data.frame = frame;
         x = Tank1Data.x + Math.sin(Tank1Data.angle) * (Tank1Data.Th + 10);
         y = Tank1Data.y - Math.cos(Tank1Data.angle) * (Tank1Data.Th + 10);
         Bullets.push(new component(2, 4, "blue", x, y, Tank1Data.angle, "Bullet"));
+    }
+
+    if (Button.visible && Math.max(Math.abs(Button.innerY - Button.y), Math.abs(Button.innerX - Button.x)) > 0) {
+
+        var Theta = Atan2(Button.innerY - Button.y, Button.innerX - Button.x) + Math.PI/2;
+        if (Theta > Math.PI*2) {
+            Theta -= Math.PI*2;
+        }
+
+        if (Theta > Tank1Data.angle) {
+            AngleDif = Theta - Tank1Data.angle;
+            if (AngleDif > Math.PI) {
+                Tank1Data.moveAngle = -5;
+            } else {
+                Tank1Data.moveAngle = 5;
+            }
+        } else if (Theta < Tank1Data.angle) {
+            AngleDif = Tank1Data.angle - Theta;
+            if (AngleDif > Math.PI) {
+                Tank1Data.moveAngle = 5;
+            } else {
+                Tank1Data.moveAngle = -5;
+            }
+        } else {
+            AngleDif = 0;
+        }
+        if (AngleDif < Math.PI / 180 * 10) {
+            Tank1Data.moveAngle = 0;
+            Tank1Data.angle = Theta
+        }
+        Tank1Data.speed = 3;
     }
 
     if (myGameArea.keys && myGameArea.keys[Player1Tank.Counter]) {
@@ -620,6 +794,7 @@ function updateSoloGameArea() {
     drawTank(Tank1, Tank1Data)
     AiDraw();
     drawWallsAndBullets();
+    DrawButton();
 }
 
 function updateCoOpGameArea() {
@@ -809,6 +984,7 @@ function Atan2(x, y) {
 }
 
 function updateAI(Info) {
+    var DodgeDistance = 75;
     if (Info.angle >= Math.PI * 2) {
         Info.angle = Info.angle - Math.PI * 2;
     } else if (Info.angle < 0) {
@@ -879,7 +1055,7 @@ function updateAI(Info) {
             Theta = Atan2(x, y);
 
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
+            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < DodgeDistance) {
                 Info.AIType = "Dodge";
                 return Info;
             }
@@ -952,7 +1128,7 @@ function updateAI(Info) {
             Theta = Atan2(x, y);
 
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            if (Math.abs(Bullets[i].angle - Theta) < Math.PI * 25 / 180 && distance < 150) {
+            if (Math.abs(Bullets[i].angle - Theta) < Math.PI * 25 / 180 && distance < DodgeDistance) {
                 Path = true;
                 Distances.push(distance);
                 indexes.push(i);
@@ -1015,7 +1191,7 @@ function updateAI(Info) {
             Theta = Atan2(x, y);
 
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
+            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < DodgeDistance) {
                 Info.AIType = "Dodge";
                 Info.Path = [];
                 return Info;
@@ -1112,6 +1288,7 @@ function updateAI(Info) {
 
 function updateCoOpAI(Info) {
     var Theta, AngleDif, x, y
+    var DodgeDistance = 75;
     if (Info.angle >= Math.PI * 2) {
         Info.angle = Info.angle - Math.PI * 2
     } else if (Info.angle < 0) {
@@ -1322,8 +1499,6 @@ function updateCoOpAI(Info) {
             }
         }
 
-
-
         if (Theta > Info.angle) {
             AngleDif = Theta - Info.angle;
             if (AngleDif > Math.PI) {
@@ -1361,7 +1536,7 @@ function updateCoOpAI(Info) {
             y = Bullets[i].y - Info.y;
             Theta = Atan2(x, y);
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 30 / 180 && distance < 150) {
+            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 30 / 180 && distance < DodgeDistance) {
                 Info.AIType = "Dodge";
                 break;
             }
@@ -1378,7 +1553,7 @@ function updateCoOpAI(Info) {
             Theta = Atan2(x, y);
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 
-            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
+            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < DodgeDistance) {
                 Path = true;
                 Distances.push(distance);
                 indexes.push(i);
@@ -1440,7 +1615,7 @@ function updateCoOpAI(Info) {
             y = Bullets[i].y - Info.y;
             Theta = Atan2(x, y);
             distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < 150) {
+            if (Math.abs(Math.abs(Bullets[i].angle) - Theta) < Math.PI * 25 / 180 && distance < DodgeDistance) {
                 Info.AIType = "Dodge";
                 Info.Path = [];
                 return Info;
@@ -1580,7 +1755,7 @@ function drawTank(image, Info) {
     myGameArea.context.save();
 
     // move to the middle of where we want to draw our image
-    myGameArea.context.translate(Info.x, Info.y);
+    myGameArea.context.translate(Info.x * Multiplier, Info.y * Multiplier);
 
     // rotate around that point, converting our 
     // angle from degrees to radians 
@@ -1588,7 +1763,7 @@ function drawTank(image, Info) {
 
     // draw it up and to the left by half the width
     // and height of the image 
-    myGameArea.context.drawImage(image, -(image.width / 2), -(image.height / 2));
+    myGameArea.context.drawImage(image, -(image.width / 2) * Multiplier, -(image.height / 2) * Multiplier, image.width * Multiplier, image.height * Multiplier);
 
     // and restore the coords to how they were when we began
     myGameArea.context.restore();
@@ -1602,7 +1777,7 @@ function drawWall(image, Info) {
     myGameArea.context.save();
 
     // move to the middle of where we want to draw our image
-    myGameArea.context.translate(Info.x, Info.y);
+    myGameArea.context.translate(Info.x * Multiplier, Info.y * Multiplier);
 
     // rotate around that point, converting our 
     // angle from degrees to radians 
@@ -1610,7 +1785,7 @@ function drawWall(image, Info) {
 
     // draw it up and to the left by half the width
     // and height of the image 
-    myGameArea.context.drawImage(image, -(Info.width / 2), -(Info.height / 2), Info.width, Info.height);
+    myGameArea.context.drawImage(image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 
     // and restore the coords to how they were when we began
     myGameArea.context.restore();
@@ -1654,6 +1829,25 @@ function AiDraw() {
         }
         AIEnemyData[k] = update(AIEnemyData[k]);
         drawTank(AIEnemyData[k].img, AIEnemyData[k])
+    }
+}
+
+function DrawButton() {
+    if (Button.visible) {
+        myGameArea.context.globalAlpha = .5;
+        myGameArea.context.drawImage(
+            OuterButton,
+            Button.x - (120 * Multiplier / 2),
+            Button.y - (120 * Multiplier / 2),
+            120 * Multiplier,
+            120 * Multiplier);
+        myGameArea.context.globalAlpha = 1;
+        myGameArea.context.drawImage(
+            InnerButton,
+            Button.innerX - (40 * Multiplier / 2),
+            Button.innerY - (40 * Multiplier / 2),
+            40 * Multiplier,
+            40 * Multiplier);
     }
 }
 
@@ -2154,6 +2348,41 @@ function SoloLevelSelector(selectedLevel) {
                 AIEnemyData[i].img = new Image();
                 AIEnemyData[i].img.src = "images/Tank3.png";
             }
+            break;
+        case 11:
+            walls = [];
+            AIEnemyData = [{
+                x: 900 + Math.random() * 300,
+                y: 400,
+                Lw: 15,
+                Rw: 15,
+                Th: 15,
+                Bh: 30,
+                angle: -Math.PI / 2,
+                moveAngle: 0,
+                speed: 2,
+                AIType: "Chase",
+                Shape: "Rect",
+                FireRate: 30,
+                Fireframe: 0,
+                Pathframe: 0,
+                Path: []
+            }, {
+                x: 700 + Math.random() * 500,
+                y: 200,
+                angle: -Math.PI / 2,
+                moveAngle: 0,
+                speed: 0,
+                radius: 30,
+                AIType: "Turret",
+                Shape: "Circle",
+                FireRate: 50,
+                Fireframe: 0
+            }];
+            AIEnemyData[0].img = new Image();
+            AIEnemyData[0].img.src = "images/Tank3.png";
+            AIEnemyData[1].img = new Image();
+            AIEnemyData[1].img.src = "images/Turret.png";
             break;
         default:
             alert("All Levels Completed!!!");

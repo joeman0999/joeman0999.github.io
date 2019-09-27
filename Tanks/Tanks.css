@@ -2,42 +2,45 @@ canvas {
   border: 1px solid #d3d3d3;
   background-image: url(images/Bricks.png);
 }
+
 #ButtonArea{
   float: right;
 }
+
 button {
   background: #222  repeat-x;
-  font: 20px Helvetica Neue;
+  font: 3vmin Helvetica Neue;
   color: white;
-  text-shadow: 0 -1px 1px #222;
-  padding: 6px 10px 6px 10px;
+  text-shadow: 0 -.1vmin .1vmin #222;
+  padding: .5vmin 1vmin .5vmin 1vmin;
   border: 0;
-  border-bottom: 1px solid #222;
-  min-width: 80px;
-  -moz-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px #999;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px #999;
-  margin: 5px;
+  border-bottom: .5vmin solid #222;
+  min-width: 9vmin;
+  -moz-border-radius: 2vmin;
+  -moz-box-shadow: 0 1vmin 1vmin #999;
+  border-radius: 2vmin;
+  box-shadow: 0 1vmin 2vmin #999;
+  margin: .5vmin;
 }
 
 button.Menu-Button {
   background: #222  repeat-x;
-  font: 50px Helvetica Neue;
+  font: 5vmin Helvetica Neue;
   color: white;
-  text-shadow: 0 -1px 1px #222;
-  padding: 6px 10px 6px 10px;
+  text-shadow: 0 -.1vmin .1vmin #222;
+  padding: 1vmin 2vmin 1vmin 2vmin;
   border: 0;
-  border-bottom: 1px solid #222;
-  min-width: 80px;
-  -moz-border-radius: 5px;
-  -moz-box-shadow: 0 1px 3px #999;
-  border-radius: 7px;
-  box-shadow: 0 1px 3px #999;
-  margin: 5px;
+  border-bottom: 1vmin solid #222;
+  min-width: 7vmin;
+  -moz-border-radius: 2vmin;
+  -moz-box-shadow: 0 1vmin 2vmin #999;
+  border-radius: 3vmin;
+  box-shadow: 0 1vmin 2vmin #999;
+  margin: 1vmin;
 }
+
 #Help-Area #Menu-Button {
-  font-size: 25px;
+  font-size: 5vmin;
 }
 
 button:hover {
@@ -49,33 +52,34 @@ button:disabled {
 }
 
 .Level-Button {
-  font-size: 45px;
-  border-radius: 9px;
-  margin-left: 15px;
-  margin-right: 15px;
-  margin-bottom: 10px;
+  font-size: 9vmin;
+  border-radius: 1vmin;
+  margin-left: 2vmin;
+  margin-right: 2vmin;
+  margin-bottom: 2vmin;
 }
 
 #Help-Info {
   position: absolute;
-  top: 20px;
-  left: 850px;
-  font-size: 21px;
+  top: 4vmin;
+  left: 50vw;
+  font-size: 3vmin;
 }
 
 #wins {
-  font-size: 20px;
+  font-size: 3vmin;
 }
 
 .Settings-Text {
-  font-size: 30px;
+  font-size: 6vmin;
 }
 
 .Tank-Images {
-  height: 70px;
-  min-width: 50px;
+  height: 11vmin;
+  min-width: 9vmin;
   background-repeat: no-repeat;
-  background-position: 10px 5px;
+  background-position: center;
+  background-size: contain;
 }
 
 #Tank1-1-Button {
