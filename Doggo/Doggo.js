@@ -617,11 +617,9 @@ function handleTouchStart(e) {
 	var index = -1;
 	if (Button.side == "left") {
 		for (let i = 0; i < e.touches.length; ++i) {
-			if (e.touches[i].clientX - 10 < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
-				Button.innerX = e.touches[i].clientX - 10;
-				Button.innerY = e.touches[i].clientY - 10;
+			if (e.touches[i].clientX - 10 < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2)) < distance) {
 				if (Button.visible) {
-					distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2));
+					distance = Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2));
 					index = i;
 				} else {
 					distance = 0;
@@ -639,19 +637,15 @@ function handleTouchStart(e) {
 		}
 	}
 	if (Button.visible) {
-		if (distance < 40 * Multiplier) {
-			Button.innerX = e.touches[index].clientX - 10;
-			Button.innerY = e.touches[index].clientY - 10;
-		} else {
-			var Theta = Math.atan2(e.touches[index].clientY - 10 - Button.y, e.touches[index].clientX - 10 - Button.x);
-			if (Theta >= Math.PI * 2) {
-				Theta -= Math.PI * 2;
-			} else if (Theta < 0) {
-				Theta += Math.PI * 2;
-			}
-			Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
-			Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
+		var Theta = Math.atan2((e.touches[index].clientY - 10) - Button.y, (e.touches[index].clientX - 10) - Button.x);
+		if (Theta >= Math.PI * 2) {
+			Theta -= Math.PI * 2;
+		} else if (Theta < 0) {
+			Theta += Math.PI * 2;
 		}
+		Button.innerX = Math.cos(Theta) * Math.min(distance, 40) * Multiplier + Button.x;
+		Button.innerY = Math.sin(Theta) * Math.min(distance, 40) * Multiplier + Button.y;
+
 		if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
 			if (Button.innerX - Button.x > 0) {
 				PersonData.direction = 'right';
@@ -675,33 +669,29 @@ function handleTouchMove(e) {
 		var index = -1;
 		if (Button.side == "left") {
 			for (let i = 0; i < e.touches.length; ++i) {
-				if (Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
-					distance = Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2));
+				if (Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2)) < distance) {
+					distance = Math.sqrt(Math.pow(Button.x - (e.touches[i].clientX - 10), 2) + Math.pow(Button.y - (e.touches[i].clientY - 10), 2));
 					index = i;
 				}
 			}
 		}
 		if (Button.visible) {
-			if (distance < 40 * Multiplier) {
-				Button.innerX = e.touches[index].clientX - 10;
-				Button.innerY = e.touches[index].clientY - 10;
-			} else {
-				var Theta = Math.atan2(e.touches[index].clientY - 10 - Button.y, e.touches[index].clientX - 10 - Button.x);
-				if (Theta >= Math.PI * 2) {
-					Theta -= Math.PI * 2;
-				} else if (Theta < 0) {
-					Theta += Math.PI * 2;
-				}
-				Button.innerX = Math.cos(Theta) * 40 * Multiplier + Button.x;
-				Button.innerY = Math.sin(Theta) * 40 * Multiplier + Button.y;
+			var Theta = Math.atan2((e.touches[index].clientY - 10) - Button.y, (e.touches[index].clientX - 10) - Button.x);
+			if (Theta >= Math.PI * 2) {
+				Theta -= Math.PI * 2;
+			} else if (Theta < 0) {
+				Theta += Math.PI * 2;
 			}
+			Button.innerX = Math.cos(Theta) * Math.min(distance, 40) * Multiplier + Button.x;
+			Button.innerY = Math.sin(Theta) * Math.min(distance, 40) * Multiplier + Button.y;
+
 			if (Math.abs(Button.innerX - Button.x) > Math.abs(Button.y - Button.innerY)) {
 				if (Button.innerX - Button.x > 0) {
 					PersonData.direction = 'right';
 				} else {
 					PersonData.direction = 'left';
 				}
-			} else if (Button.y != Button.innerY){
+			} else if (Button.y != Button.innerY) {
 				if (Button.y - Button.innerY > 0) {
 					PersonData.direction = 'up';
 				} else {
