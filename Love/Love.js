@@ -12,7 +12,6 @@ window.onload = function () {
     var min = Math.min(screenW, screenH);
     var size = Math.floor(min * .5);
     Multiplier = size / 500;
-    alert("I thought I'd be able to get alot further with this game but work and school have been killer. I'm sorry to everyone. Here is the basic Demo and I will try harder.")
 }
 
 function tapScreen() {
