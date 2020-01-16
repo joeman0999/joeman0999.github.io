@@ -411,6 +411,7 @@ function handleTouchMove(e) {
 function handleTouchEnd(e) {
     var LeftTouch = false;
     var RightTouch = false;
+    var distance = Thecanvas.width * Multiplier;
     for (let i = 0; i < e.touches.length; ++i) {
         if (e.touches[i].clientX - 10 < Thecanvas.width * Multiplier / 2 && Math.sqrt(Math.pow(Button.x - e.touches[i].clientX - 10, 2) + Math.pow(Button.y - e.touches[i].clientY - 10, 2)) < distance) {
             LeftTouch = true;
