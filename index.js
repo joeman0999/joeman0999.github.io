@@ -67,6 +67,14 @@ var Games = [
         Desktop: true,
         Mobile: true,
         Multi: true
+    }, {
+        Name: 'Breakout',
+        Location: 'Breakout/Breakout.html',
+        Image: "url('GameImages/Breakout.png')",
+        Description: 'Destroy all the bricks!',
+        Desktop: true,
+        Mobile: true,
+        Multi: true
     }
 ]
 

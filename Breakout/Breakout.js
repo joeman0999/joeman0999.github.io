@@ -21,6 +21,8 @@ var Breakout = new Phaser.Class({
 
     create: function ()
     {
+        this.game.canvas.id = 'GameArea';
+
         this.lives = this.add.text(16, 16, 'Lives: 3', { fontSize: '32px', fill: '#ffffff' });
         //  Enable world bounds, but disable the floor
         this.physics.world.setBoundsCollision(true, true, true, false);
