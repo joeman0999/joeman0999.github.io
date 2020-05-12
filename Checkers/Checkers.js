@@ -826,7 +826,7 @@ function RunComputersSmartTurn() {
     }
 
     for (let i = 0; i < ComputersMoveList.length; i++) {
-        Scores.push(Score(ComputersMoveList[i]));
+        Scores.push(Score(ComputersMoveList[i], 0));
         if (Scores[i] > best && PlayersTurn == "Red") {
             best = Scores[i];
         } else if (Scores[i] < best && PlayersTurn == "Black") {
@@ -1373,20 +1373,20 @@ function DetermineBoardState(Red, Black) {//indexing is y then x so BoardState[y
     return Board;
 }
 
-function Score(MoveList) {
+function Score(MoveList, depth) {
     if (MoveList.next.length > 0) {
         var sum = 0;
         for (let i = 0; i < MoveList.next.length; i++) {
-            sum += Score(MoveList.next[i]);
+            sum += Score(MoveList.next[i], depth+1);
         }
         var average = sum / MoveList.next.length;
     } else {
         if (checkforwin("Red", MoveList.Red, MoveList.Black)) {
-            var average = -5;
+            var average = -10 / depth;
         } else if (checkforwin("Black", MoveList.Red, MoveList.Black)) {
-            var average = 5;
+            var average = 10 / depth;
         } else {
-            var average = MoveList.Red.length - MoveList.Black.length;
+            var average = (MoveList.Red.length - MoveList.Black.length) / (depth + 1);
         }
         
     }

@@ -15,7 +15,14 @@ var Objects = {
     Proteins: [] // same size as amino acids as is a chain of them
 }
 
-var State = "Atom";
+var Structures = {
+    Atom: true,
+    Protein: false,
+    Membrane: false,
+    Skeleton: false
+}
+
+var State = "Blob";
 var Atoms = 0;
 var Molecules = 0;
 var Water_Molecules = 0;
@@ -58,7 +65,7 @@ window.onload = function () {
 function render() {
     myGameArea.clear();
     ObjectCreation();
-    if (State == "Atom") {
+    if (Structures.Atom) {
         for (var i = 0; i < Objects.Atoms.length; i++) {
 
             myGameArea.context.fillStyle = Objects.Atoms[i].color;
@@ -98,7 +105,7 @@ function render() {
         myGameArea.context.fill();
     }
 
-    if (State == "Cytoplasm" || State == "Protein" || State == "Membrane") {
+    if (Structures.Protein || Structures.Membrane) {
 
         for (var i = 0; i < Objects.Amino_Acids.length; i++) {
 
@@ -131,7 +138,7 @@ function render() {
             myGameArea.context.stroke();
         }
         
-        if (State == "Membrane") {
+        if (Structures.Membrane) {
             myGameArea.context.strokeStyle = "Lime";
             myGameArea.context.beginPath();
             myGameArea.context.setLineDash([]);
@@ -145,7 +152,7 @@ function render() {
         }
     }
 
-    if (State == "Skeleton") {
+    if (Structures.Skeleton) {
         myGameArea.context.fillStyle = "Chartreuse";
         myGameArea.context.globalAlpha = .95;
         myGameArea.context.beginPath();
@@ -161,58 +168,52 @@ function render() {
     }
 }
 
-function GainAtoms() {
-    Atoms++;
-    WriteValues();
-}
-
 function CreateMolecules(type) {
     switch (type) {
+        case 'Atom':
+            Atoms++;
         case 'Molecule':
             if (Atoms > 9) {
                 Molecules++;
                 Atoms -= 10;
-                WriteValues();
             }
             break;
         case 'Water':
             if (Atoms > 2) {
                 Water_Molecules++;
                 Atoms -= 3;
-                WriteValues();
             }
             break;
         case 'Salt':
             if (Atoms > 1) {
                 Salt_Molecules++;
                 Atoms -= 2;
-                WriteValues();
             }
             break;
         case 'Amino_Acids':
             if (Atoms > 8) {
                 Amino_Acids++;
                 Atoms -= 9;
-                WriteValues();
             }
             break;
         case 'Proteins':
             if (Amino_Acids > 29) {
                 Proteins++;
                 Amino_Acids -= 30;
-                WriteValues();
             }
             break;
     }
+
+    WriteValues();
 }
 
 function Upgrade(number) {
     switch(number) {
         case 0:
-            GainAtoms();
+            Atoms++;
             document.getElementById("GameAreaDiv").hidden = false;
-            document.getElementById('Upgrade1').hidden = true;
-            document.getElementById('Upgrade2').hidden = false;
+            document.getElementById('Upgrade0').hidden = true;
+            document.getElementById('Upgrade1').hidden = false;
             break;
         case 1:
             if (Atoms > 19) {
@@ -220,8 +221,8 @@ function Upgrade(number) {
                 Molecules++;
                 document.getElementById("CreateMolecules").hidden = false;
                 document.getElementById("Molecules").hidden = false;
-                document.getElementById('Upgrade2').hidden = true;
-                document.getElementById('Upgrade3').hidden = false;
+                document.getElementById('Upgrade1').hidden = true;
+                document.getElementById('Upgrade2').hidden = false;
                 Objects.AtomSize = 3;
             }
             break;
@@ -231,8 +232,8 @@ function Upgrade(number) {
                 Water++;
                 document.getElementById("CreateWater").hidden = false;
                 document.getElementById("Water").hidden = false;
-                document.getElementById('Upgrade3').hidden = true;
-                document.getElementById('Upgrade4').hidden = false;
+                document.getElementById('Upgrade2').hidden = true;
+                document.getElementById('Upgrade3').hidden = false;
             }
             break;
         case 3:
@@ -241,28 +242,29 @@ function Upgrade(number) {
                 Salt++;
                 document.getElementById("CreateSalt").hidden = false;
                 document.getElementById("Salt").hidden = false;
-                document.getElementById('Upgrade4').hidden = true;
-                document.getElementById('Upgrade5').hidden = false;
+                document.getElementById('Upgrade3').hidden = true;
+                document.getElementById('Upgrade4').hidden = false;
             }
             break;
         case 4:
-            if (Water_Molecules > 19 && Salt_Molecules > 4) {
-                Water_Molecules -= 20;
-                Salt_Molecules -= 5;
-                Molecules += Water_Molecules + Salt_Molecules;   /// ******turns water and salt into molecules as are never used again
+            if (Water_Molecules > 49 && Salt_Molecules > 49) {
+                Water_Molecules -= 50;
+                Salt_Molecules -= 50;
+                Molecules += Water_Molecules + Salt_Molecules;   /// ******turns water and salt into molecules as are not used again
                 Multiplier = 1;
                 Objects.Atoms = [];
                 Objects.MoleculeSize = 3;
                 Water_Molecules = 0;
                 Salt_Molecules = 0;
-                State = "Cytoplasm";
+                Structures.Atom = false;
+                Structures.Protein = true;
                 interval = setInterval(Update, 1000);
                 document.getElementById("Salt").hidden = true;
                 document.getElementById("CreateSalt").hidden = true;
                 document.getElementById("CreateWater").hidden = true;
                 document.getElementById("Water").hidden = true;
-                document.getElementById('Upgrade5').hidden = true;
-                document.getElementById('Upgrade6').hidden = false;
+                document.getElementById('Upgrade4').hidden = true;
+                document.getElementById('Upgrade5').hidden = false;
             }
             break;
         case 5:
@@ -270,8 +272,8 @@ function Upgrade(number) {
                 Molecules -= 30;
                 document.getElementById("CreateAmino_Acids").hidden = false;
                 document.getElementById("Amino_Acids").hidden = false;
-                document.getElementById('Upgrade6').hidden = true;
-                document.getElementById('Upgrade7').hidden = false;
+                document.getElementById('Upgrade5').hidden = true;
+                document.getElementById('Upgrade6').hidden = false;
             }
             break;
         case 6:
@@ -280,11 +282,10 @@ function Upgrade(number) {
                 Proteins++;
                 Objects.MoleculeSize = 2;
                 Objects.Amino_AcidSize = 3;
-                State = "Protein";
                 document.getElementById("CreateProteins").hidden = false;
                 document.getElementById("Proteins").hidden = false;
-                document.getElementById('Upgrade7').hidden = true;
-                document.getElementById('Upgrade8').hidden = false;
+                document.getElementById('Upgrade6').hidden = true;
+                document.getElementById('Upgrade7').hidden = false;
             }
             break;
         case 7:
@@ -296,18 +297,20 @@ function Upgrade(number) {
                 document.getElementById('CreateMolecules').hidden = true;
                 document.getElementById("Molecules").hidden = true;
                 Multiplier++;
-                State = "Membrane";
-                document.getElementById('Upgrade8').hidden = true;
-                document.getElementById('Upgrade9').hidden = false;
+                Structures.Protein = false;
+                Structures.Membrane = true;
+                document.getElementById('Upgrade7').hidden = true;
+                document.getElementById('Upgrade8').hidden = false;
             }
             break;
         case 8:
             if (Proteins > 19) {
                 Proteins -= 20;
                 Multiplier++;
-                State = "Skeleton";
-                document.getElementById('Upgrade9').hidden = true;
-                document.getElementById('Upgrade10').hidden = false;
+                Structures.Membrane = false;
+                Structures.Skeleton = true;
+                document.getElementById('Upgrade8').hidden = true;
+                document.getElementById('Upgrade9').hidden = false;
             }
             break;
         case 9:
@@ -315,9 +318,54 @@ function Upgrade(number) {
                 Proteins -= 20;
                 Amino_Acids -= 10;
                 Multiplier++;
+                document.getElementById('Upgrade9').hidden = true;
+                document.getElementById('Upgrade10').hidden = false;
+                document.getElementById('Upgrade11').hidden = false;
+            }
+            break;
+        case 10:
+            if (Proteins > 49) {
+                Proteins -= 50;
+                Multiplier++;
+                State = "Eukaryotic Cell";
                 document.getElementById('Upgrade10').hidden = true;
-                //document.getElementById('Upgrade11').hidden = false;
-                //document.getElementById('Upgrade12').hidden = false;
+                document.getElementById('Upgrade11').hidden = true;
+                document.getElementById('Upgrade12').hidden = false;
+            }
+            break;
+        case 11:
+            if (Proteins > 49) {
+                Proteins -= 50;
+                Multiplier++;
+                document.getElementById('Upgrade10').hidden = true;
+                document.getElementById('Upgrade11').hidden = true;
+                document.getElementById('Upgrade13').hidden = false;
+                document.getElementById('Upgrade14').hidden = false;
+            }
+            break;
+        case 12:
+            if (Proteins > 99) {
+                Proteins -= 100;
+                Multiplier++;
+                document.getElementById('Upgrade12').hidden = true;
+            }
+            break;
+        case 13:
+            if (Proteins > 199) {
+                Proteins -= 200;
+                Multiplier++;
+                State = "Bacteria Cell";
+                document.getElementById('Upgrade13').hidden = true;
+                document.getElementById('Upgrade14').hidden = true;
+            }
+            break;
+        case 14:
+            if (Proteins > 199) {
+                Proteins -= 200;
+                Multiplier++;
+                State = "Archaea Cell";
+                document.getElementById('Upgrade13').hidden = true;
+                document.getElementById('Upgrade14').hidden = true;
             }
             break;
         default:
@@ -328,6 +376,7 @@ function Upgrade(number) {
 }
 
 function WriteValues() {
+    document.getElementById("State").innerHTML = 'You Are A: ' + State;
     document.getElementById("Atoms").innerHTML = 'Atoms: ' + Atoms;
     document.getElementById("Molecules").innerHTML = 'Molecules: ' + Molecules;
     document.getElementById("Water").innerHTML = 'Water: ' + Water_Molecules;
@@ -350,7 +399,7 @@ function Update() {
 }
 
 function ObjectCreation() {
-    if (State == "Atom") {
+    if (Structures.Atom) {
         if (Atoms < Objects.Atoms.length) {
             var ToRemove = Objects.Atoms.length - Atoms;
             for (var i = 0; i < ToRemove; i++) {

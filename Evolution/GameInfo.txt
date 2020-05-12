@@ -9,7 +9,7 @@ upgrade to create water H2O, salt NaCl.
 upgrades to create amino acids (9 Atoms), proteins (30 amino acids), Carbohydrates (24 Atoms).
 
 Cytoplasm
-a jelly-like fluid (5 Salt and 20 water)
+a jelly-like fluid (50 Salt and 50 water)
 
 Plasma membrane (10 Proteins 10 Molecules)
 The plasma membrane is the outer lining of the cell. 
@@ -27,24 +27,24 @@ These organelles can float freely in the cytoplasm or be connected to the endopl
 Branch!!!!!!
 
 A
-Nucleus (20 DNA 20 Proteins) (Eukaryota)
+Nucleus (50 Proteins) (Eukaryotic)
 The nucleus serves as the cell's command center, sending directions to the cell to grow, mature, divide, or die. 
 It also houses DNA (deoxyribonucleic acid), the cell's hereditary material.
 
-Mitochondria (30 Proteins) (Eukaryota) (Start Creating Proteins)
+Mitochondria (100 Proteins) (Eukaryotic) (Start Creating Proteins)
 complex organelles that convert energy from food into a form that the cell can use. 
 They have their own genetic material, separate from the DNA in the nucleus, and can make copies of themselves.
 
 
 B
-Nucleoid (20 DNA 20 Proteins) (Bacteria and Archaea) (Start Creating Proteins)
+Nucleoid (50 Proteins) (Bacteria and Archaea) (Start Creating Proteins)
 The nucleus serves as the cell's command center, sending directions to the cell to grow, mature, divide, or die. 
 It also houses DNA (deoxyribonucleic acid), the cell's hereditary material.
 
 Branch!!!!!!
 
 A
-Peptidoglycans in the Cell wall (Bacteria)
+Peptidoglycans in Cell wall (200 Proteins) (Bacteria)
 For example, all bacteria contain peptidoglycans (a molecule composed of both protein and sugar rings) in their 
 cell walls. However, archaea do not have this compound in their cell walls.
 
