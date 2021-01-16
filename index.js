@@ -74,7 +74,15 @@ var Games = [
         Description: 'Destroy all the bricks!',
         Desktop: true,
         Mobile: true,
-        Multi: true
+        Multi: false
+    }, {
+        Name: 'Blackjack',
+        Location: 'Blackjack/Blackjack.html',
+        Image: "url('GameImages/Blackjack.png')",
+        Description: "It's you against the dealer. Get Twenty-One to win!",
+        Desktop: true,
+        Mobile: true,
+        Multi: false
     }
 ]
 
