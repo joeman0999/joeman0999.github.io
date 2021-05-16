@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
+    <button onclick="location.href='../index.html'">Exit Game</button>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600></canvas>
       <div id="unity-loading-bar">
@@ -21,17 +22,16 @@
       </div>
       <div id="unity-footer">
         <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
         <div id="unity-build-title">Skeleton Bowling</div>
       </div>
     </div>
     <script>
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Build.loader.js";
+      var loaderUrl = buildUrl + "/Skeleton Bowling.loader.js";
       var config = {
-        dataUrl: buildUrl + "/Build.data",
-        frameworkUrl: buildUrl + "/Build.framework.js",
-        codeUrl: buildUrl + "/Build.wasm",
+        dataUrl: buildUrl + "/Skeleton Bowling.data",
+        frameworkUrl: buildUrl + "/Skeleton Bowling.framework.js",
+        codeUrl: buildUrl + "/Skeleton Bowling.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Skeleton Bowling",
