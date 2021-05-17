@@ -15,10 +15,18 @@ Land.push(new Image());
 Land[0].src = "images/Land1.png";
 Land.push(new Image());
 Land[1].src = "images/Land2.png";
+var BotImages = [];
+var num = 0;
 for (let i = 0; i < NumberBots; ++i) {
 	Land.push(new Image());
-	Land[i+2].src = "images/Land3.png";
+	BotImages.push(new Image());
+	num = Math.round(Math.random() * 6) + 3;
+	Land[i + 2].src = "images/Land" + num + ".png";
+	BotImages[i].src = "images/Player" + num + ".png";
 }
+
+
+
 
 var Thecanvas = {
 	BoardWidth: 5000,
@@ -156,7 +164,7 @@ function twoPlayer() {
 		} else {
 			var size = Math.floor(screenH * .9 / 2);
 		}
-		
+
 	}
 	Multiplier = size / 580;
 
@@ -172,7 +180,7 @@ function twoPlayer() {
 	if (document.getElementById("GameArea2")) {
 		document.getElementById("GameArea2").hidden = false;
 	}
-	
+
 	Player1Data = Respawn(Player1Data);
 	Player2Data = Respawn(Player2Data);
 
@@ -183,7 +191,7 @@ function twoPlayer() {
 		Bots[i].id = i + 3;
 		Bots[i] = Respawn(Bots[i]);
 	}
-	
+
 }
 
 function Menu() {
@@ -258,18 +266,19 @@ function handleTouchMove(evt) {
 }
 
 function newBot() {
-	
+
 	bot = {
 		Alive: true,
 		Boardx: 0,
 		Boardy: 0,
 		speedX: 0,
 		speedY: 0,
+		Directions: [],
+		moveCount: 0,
 		id: 0,
 		angle: 0,
 		width: 20,
 		height: 20,
-		image: Person3,
 		x: 290,
 		y: 290
 	}
@@ -308,12 +317,12 @@ function updateGameArea() {
 		Player2Data = updatePlayer(Player2Data);
 		GridDraw(Player2Data, 1);
 	}
-	
+
 	GridDraw(Player1Data, 0);
-	
+
 	for (let i = 0; i < NumberBots; ++i) {
 		if (Bots[i].Alive) {
-			draw(Bots[i]);
+			draw(Bots[i], i);
 		}
 	}
 	if (Player1Data.Alive) {
@@ -325,18 +334,18 @@ function updateGameArea() {
 	DrawBotCams();
 }
 
-function draw(Info) {
+function draw(Info, i) {
 	myGameAreas[0].context.save();
 	myGameAreas[0].context.translate((Info.Boardx - Player1Data.Boardx + Player1Data.x) * Multiplier, (Info.Boardy - Player1Data.Boardy + Player1Data.y) * Multiplier);
 	myGameAreas[0].context.rotate(Info.angle);
-	myGameAreas[0].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
+	myGameAreas[0].context.drawImage(BotImages[i], -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 	myGameAreas[0].context.restore();
 
 	if (GameType == "twoPlayer") {
 		myGameAreas[1].context.save();
 		myGameAreas[1].context.translate((Info.Boardx - Player2Data.Boardx + Player2Data.x) * Multiplier, (Info.Boardy - Player2Data.Boardy + Player2Data.y) * Multiplier);
 		myGameAreas[1].context.rotate(Info.angle);
-		myGameAreas[1].context.drawImage(Info.image, -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
+		myGameAreas[1].context.drawImage(BotImages[i], -(Info.width / 2) * Multiplier, -(Info.height / 2) * Multiplier, Info.width * Multiplier, Info.height * Multiplier);
 		myGameAreas[1].context.restore();
 	}
 }
@@ -421,7 +430,7 @@ function updatePlayer(Data) {
 	if (Data.Alive) {
 		if (Data.Direction != Data.NewDirection && Data.NewDirection != "") {
 			if (Data.NewDirection == "left" && Data.Direction != "right") {
-				if (((Data.Boardy + 10) % 20)  == 0) {
+				if (((Data.Boardy + 10) % 20) == 0) {
 					Data.speedX = -5;
 					Data.speedY = 0;
 					Data.Direction = Data.NewDirection;
@@ -469,10 +478,10 @@ function updatePlayer(Data) {
 					Player2Data.Alive = false;
 					Kill(2);
 				} else {
-					Bots[TrailGrid[r][c]-3].Alive = false;
+					Bots[TrailGrid[r][c] - 3].Alive = false;
 					Kill(TrailGrid[r][c]);
 				}
-			} 
+			}
 			if (LandGrid[r][c] != Data.id && Data.Alive) {
 				TrailGrid[r][c] = Data.id;
 				Data.Trail = true;
@@ -490,7 +499,7 @@ function updatePlayer(Data) {
 			} else {
 				if (Data.Boardx <= Thecanvas.width / 2) {
 					Data.x = Data.Boardx;
-				} else if (Data.Boardx > Thecanvas.BoardWidth - Thecanvas.width / 2){
+				} else if (Data.Boardx > Thecanvas.BoardWidth - Thecanvas.width / 2) {
 					Data.x = 290 + 290 - (Thecanvas.BoardWidth - Data.Boardx);
 				} else {
 					Data.x = 290;
@@ -513,7 +522,7 @@ function updatePlayer(Data) {
 			}
 		}
 	} else { // used as a spectator
-		
+
 		if (myGameAreas[0].frame % 4 == 0) { // Right now you respawn whenever this happens because I said so
 			Data = Respawn(Data);
 			return Data;
@@ -577,10 +586,41 @@ function updateBot(Data) {
 		if (((Data.Boardx + 10) % 20) == 0 && ((Data.Boardy + 10) % 20) == 0) {
 			var r = ((Data.Boardy + 10) / 20) - 1;
 			var c = ((Data.Boardx + 10) / 20) - 1;
+			Data.moveCount++;
 			if (LandGrid[r][c] == Data.id) {
 				if (Data.Trail == true) {
 					Data.Trail = false;
 					Fill(Data.id, [r, c]);
+					Data = setRandomDirection(Data);
+
+				} else {
+					if (Data.moveCount == Data.Directions[0][0]) {
+						Data = setRandomDirection(Data);
+					}
+				}
+			} else {
+				if (Data.Trail) {
+					if (Data.moveCount == Data.Directions[0][0]) {
+						if (Data.Directions.length > 1) {
+							Data.Directions.splice(0, 1);
+							Data.moveCount = 0;
+							var newDirection = Data.Directions[0][1];
+							Data.speedY = 0;
+							Data.speedX = 0;
+							if (newDirection == "Up") {
+								Data.speedY = 5;
+							} else if (newDirection == "Right") {
+								Data.speedX = 5;
+							} else if (newDirection == "Left") {
+								Data.speedX = -5;
+							} else if (newDirection == "Down") {
+								Data.speedY = -5;
+							}
+
+						} else {
+							Data = setRandomDirection(Data);
+						}
+					}
 				}
 			}
 
@@ -592,14 +632,17 @@ function updateBot(Data) {
 					Player2Data.Alive = false;
 					Kill(2);
 				} else {
-					Bots[TrailGrid[r][c]-3].Alive = false;
+					Bots[TrailGrid[r][c] - 3].Alive = false;
 					Kill(TrailGrid[r][c]);
 				}
-			} 
+			}
 
 			if (LandGrid[r][c] != Data.id && Data.Alive) {
 				TrailGrid[r][c] = Data.id;
-				Data.Trail = true;
+				if (!Data.Trail) {
+					Data.Trail = true;
+					Data = setShapeDirection(Data);
+				}
 			}
 
 		}
@@ -644,6 +687,97 @@ function updateBot(Data) {
 	return Data;
 }
 
+function setRandomDirection(Data) {
+	var option = Math.round(Math.random() * 100) % 3;
+	var Directions;
+	if (Data.speedY != 0) {
+		if (Data.speedY < 0) {
+			Directions = ["Down", "Left", "Right"];
+		} else {
+			Directions = ["Up", "Right", "Left"];
+		}
+	} else {
+		if (Data.speedX > 0) {
+			Directions = ["Right", "Down", "Up"];
+		} else {
+			Directions = ["Left", "Up", "Down"];
+		}
+	}
+	var newDirection = Directions[option];
+	Data.speedY = 0;
+	Data.speedX = 0;
+	if (newDirection == "Up") {
+		Data.speedY = 5;
+	} else if (newDirection == "Right") {
+		Data.speedX = 5;
+	} else if (newDirection == "Left") {
+		Data.speedX = -5;
+	} else if (newDirection == "Down") {
+		Data.speedY = -5;
+	}
+	Data.moveCount = 0;
+	Data.Directions = [[Math.round(Math.random() * 10) + 1, newDirection]];
+	return Data;
+}
+
+function setShapeDirection(Data) {
+	Data.moveCount = 0;
+	var direction = "";
+	var x = Math.round(Math.random() * 10) + 2;
+	var y = Math.round(Math.random() * 10) + 2;
+	Data.Directions = [];
+	if (Data.speedY != 0) {
+		if (Data.speedY < 0) {
+			Data.Directions.push([y, "Down"]);
+			if (Math.random() < .5) {
+				Data.Directions.push([x, "Left"]);
+				Data.Directions.push([y + 1, "Up"]);
+				Data.Directions.push([x, "Right"]);
+			} else {
+				Data.Directions.push([x, "Right"]);
+				Data.Directions.push([y + 1, "Up"]);
+				Data.Directions.push([x, "Left"]);
+			}
+		} else {
+			Data.Directions.push([y, "Up"]);
+			if (Math.random() < .5) {
+				Data.Directions.push([x, "Left"]);
+				Data.Directions.push([y + 1, "Down"]);
+				Data.Directions.push([x, "Right"]);
+			} else {
+				Data.Directions.push([x, "Right"]);
+				Data.Directions.push([y + 1, "Down"]);
+				Data.Directions.push([x, "Left"]);
+			}
+		}
+	} else {
+		if (Data.speedX > 0) {
+			Data.Directions.push([x, "Right"]);
+			if (Math.random() < .5) {
+				Data.Directions.push([y, "Up"]);
+				Data.Directions.push([x + 1, "Left"]);
+				Data.Directions.push([y, "Down"]);
+			} else {
+				Data.Directions.push([y, "Down"]);
+				Data.Directions.push([x + 1, "Left"]);
+				Data.Directions.push([y, "Up"]);
+			}
+		} else {
+			Data.Directions.push([x, "Left"]);
+			if (Math.random() < .5) {
+				Data.Directions.push([y, "Up"]);
+				Data.Directions.push([x + 1, "Right"]);
+				Data.Directions.push([y, "Down"]);
+			} else {
+				Data.Directions.push([y, "Down"]);
+				Data.Directions.push([x + 1, "Right"]);
+				Data.Directions.push([y, "Up"]);
+			}
+		}
+	}
+	return Data;
+}
+
 function randomSpawnLoc() {
 	var Loc = [];
 	var r = Math.round(Math.random() * 246) + 2;
@@ -674,14 +808,14 @@ function Spawn(Loc, id) {
 	var r = Loc[0];
 	var c = Loc[1];
 
-	LandGrid[r][c]         = id;
-	LandGrid[r - 1][c]     = id;
+	LandGrid[r][c] = id;
+	LandGrid[r - 1][c] = id;
 	LandGrid[r - 1][c + 1] = id;
-	LandGrid[r][c + 1]     = id;
+	LandGrid[r][c + 1] = id;
 	LandGrid[r + 1][c + 1] = id;
-	LandGrid[r + 1][c]     = id;
+	LandGrid[r + 1][c] = id;
 	LandGrid[r + 1][c - 1] = id;
-	LandGrid[r][c - 1]     = id;
+	LandGrid[r][c - 1] = id;
 	LandGrid[r - 1][c - 1] = id;
 }
 
@@ -1029,7 +1163,7 @@ function Respawn(Data) {
 			} else if (Loc[1] > 240) {
 				Data.Direction = "left";
 			} else {
-				var d = Math.round(Math.random()*100) % 4;
+				var d = Math.round(Math.random() * 100) % 4;
 				if (d == 0) {
 					Data.Direction = "up";
 				} else if (d == 1) {
@@ -1056,22 +1190,9 @@ function Respawn(Data) {
 		}
 		//Data = updatePlayer(Data);
 	} else {
-		var d = Math.round(Math.random() * 100) % 4;
-		if (d == 0) {
-			Data.speedX = 0;
-			Data.speedY = 5;
-		} else if (d == 1) {
-			Data.speedX = 5;
-			Data.speedY = 0;
-		} else if (d == 2) {
-			Data.speedX = 0;
-			Data.speedY = -5;
-		} else {
-			Data.speedX = -5;
-			Data.speedY = 0;
-		}
+		setRandomDirection(Data);
 	}
-	
+
 	return Data;
 }
 
@@ -1086,14 +1207,14 @@ function CreateBotCam(index) {
 			this.canvas.height = Thecanvas.height * Multiplier;
 			this.context = this.canvas.getContext("2d");
 
-			document.body.insertBefore(this.canvas, document.body.childNodes[document.body.childNodes.length-1]);
+			document.body.insertBefore(this.canvas, document.body.childNodes[document.body.childNodes.length - 1]);
 		},
 		clear: function () {
 			this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		}
 	}
 	myGameAreas.push(newGameArea);
-	myGameAreas[myGameAreas.length-1].start();
+	myGameAreas[myGameAreas.length - 1].start();
 	BotCams.push(index);
 }
 
@@ -1125,9 +1246,9 @@ function DrawBotCams() {
 				myGameAreas[i].context.restore();
 			} else {
 				myGameAreas[i].context.save();
-				myGameAreas[i].context.translate(Bots[BotCams[i - 2]].x, Bots[BotCams[i - 2]].y);
+				myGameAreas[i].context.translate(Bots[BotCams[i - 2]].x * Multiplier, Bots[BotCams[i - 2]].y * Multiplier);
 				myGameAreas[i].context.rotate(Bots[BotCams[i - 2]].angle);
-				myGameAreas[i].context.drawImage(Bots[BotCams[i - 2]].image, -(Bots[BotCams[i - 2]].width / 2), -(Bots[BotCams[i - 2]].height / 2), Bots[BotCams[i - 2]].width, Bots[BotCams[i - 2]].height);
+				myGameAreas[i].context.drawImage(Bots[BotCams[i - 2]].image, -(Bots[BotCams[i - 2]].width / 2) * Multiplier, -(Bots[BotCams[i - 2]].height / 2) * Multiplier, Bots[BotCams[i - 2]].width * Multiplier, Bots[BotCams[i - 2]].height * Multiplier);
 				myGameAreas[i].context.restore();
 			}
 		}
