@@ -83,6 +83,14 @@ var Games = [
         Desktop: true,
         Mobile: true,
         Multi: false
+    }, {
+        Name: 'Lights Out',
+        Location: 'LightsOut/LightsOut.html',
+        Image: "url('GameImages/LightsOut.png')",
+        Description: "Try to turn off all the lights!",
+        Desktop: true,
+        Mobile: true,
+        Multi: false
     }
 ]
 
