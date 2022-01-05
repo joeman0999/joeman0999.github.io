@@ -42,4 +42,48 @@
     </div>
 </body>
 
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <script src="Doggo.js"></script>
+    <link rel="stylesheet" href="Doggo.css" />
+    <title>Doggo</title>
+</head>
+
+<body>
+    <div id="Menu">
+
+        <button id="Start-Button" class="Menu-Button" onclick="StartGame()">Start</button>
+        <button class="Menu-Button" onclick="location.href='../index.html'">Exit Game</button>
+
+        <select id="Character-selector" onchange="CharacterSelect()">
+            <option value=0>Old Man</option>
+            <option value=1>Boy</option>
+            <option value=2>Boy Scout</option>
+            <option value=3>Girl Scout</option>
+            <option value=4>Sailor</option>
+            <option value=5>French Girl</option>
+            <option value=6>Gandalf</option>
+            <option value=7>Wise Woman</option>
+            <option value=8>Joe</option>
+            <!-- <option value=9>Nichole</option> -->
+        </select>
+        <select id="Animal-selector" onchange="AnimalSelect()">
+            <option value=0>Ella</option>
+            <option value=1>Lady</option>
+            <option value=2>Titan</option>
+            <option value=3>Autumn</option>
+            <option value=4>Octopus</option>
+            <option value=5>Peaches</option>
+            <option value=6>Platypus</option>
+            <option value=7>Cali</option>
+        </select>
+    </div>
+    <div id="ButtonArea" hidden="true">
+        <button id="Menu-Button" onclick="myGameArea.pause()">Main Menu</button>
+    </div>
+</body>
+
 </html>
