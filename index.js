@@ -91,6 +91,14 @@ var Games = [
         Desktop: true,
         Mobile: true,
         Multi: false
+    }, {
+        Name: 'Geography',
+        Location: 'Geography/Geography.html',
+        Image: "url('GameImages/Geography.png')",
+        Description: "Test your geography skills of US States or the Countries of the World!!",
+        Desktop: true,
+        Mobile: true,
+        Multi: false
     }
 ]
 
