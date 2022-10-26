@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="Love.css" />
+    <script src="Love.js"></script>
+    <title>Love Tap</title>
+</head>
+
+<body>
+    <div id="Menu">
+        <button class="Menu-Button" onclick="tapScreen()">Tap</button>
+        <button id="peopleScreenButton" class="Menu-Button" hidden=true onclick="peopleScreen()">Guys</button>
+        <button id="upgradeScreenButton" class="Menu-Button" hidden=true onclick="upgradeScreen()">Upgrades</button>
+        <button id="giftScreenButton" class="Menu-Button" hidden=true onclick="giftScreen()">Gifts</button>
+        <button class="Menu-Button" hidden=true onclick="settings()">Settings</button>
+        <button class="Menu-Button" onclick="location.href='../index.html'">Exit Game</button>
+    </div>
+    <div>
+        <text id="love">Love: 0</text>
+        <text id="dollars" hidden=true>Money: 0</text>
+    </div>
+    <div id="Buttons">
+        <button id="Heart" onclick="loveClick()"></button>
+        <div id="loveArea">
+            
+        </div>
+        
+    </div>
+    <div id="settingsScreen" hidden=true>
+        <text>Who are you looking for?</text>
+        <button onclick="gender(0)">Men</button>
+        <button onclick="gender(1)">Women</button>
+    </div>
+    <div id="peopleScreen" hidden=true>
+        <ul style="list-style-type:none;">
+            <li><td><button id="people 1" onclick="people(1)">Player 100 Love</button></td></li>
+            <li><td><button id="people 2" onclick="people(2)">High School Crush 200 Love</button></td></li>
+            <li><td><button id="people 2" onclick="people(100)">Devoted Boyfriend Alot Love</button></td></li>
+        </ul>        
+    </div>
+    <div id="upgradeScreen" hidden=true>
+        <button id="upgrade 1" onclick="upgrade(1)">New Outfit</button>
+        <button id="upgrade 2" onclick="upgrade(1)">Perfume</button>
+        <button id="upgrade 3" onclick="upgrade(1)">Flirt to get a crappy job</button>
+    </div>
+    <div id="giftScreen" hidden=true>
+        <button id="gift 1" onclick="gift(1)">Flowers</button>
+    </div>
+</body>
+
+</html>

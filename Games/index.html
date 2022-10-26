@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="index.css" />
+    <title>Joe's Games</title>
+
+</head>
+
+<body>
+    <canvas id="space"></canvas>
+    <ul>
+        <li id="MainSite" onclick="location.href='../index.html'">Back</li>
+        <li id="HomeMenu" class="active" onclick="LoadGames('Home')">Home</li>
+        <li id="DesktopMenu" onclick="LoadGames('Desktop')">Desktop</li>
+        <li id="MobileMenu" onclick="LoadGames('Mobile')">Mobile</li>
+        <li id="MultiMenu" onclick="LoadGames('Multi')">Multiplayer</li>
+        <li id="A-ZMenu" onclick="LoadGames('A-Z')">A-Z</li>
+        <li class="dropdown">In Development ˅
+            <div class="dropdown-content">
+                <a href='Evolution/Evolution.html'>Evolution</a>
+                <a href='Doggo/Doggo.html'>Doggo</a>
+            </div>
+        </li>
+        <li style="float:right" onclick="location.href='ChangeLog/ChangeLog.html'">Change Log</li>
+    </ul>
+    <div id="GameArea" class="GameGroup">
+        <h1 class="Group-text"></h1>
+    </div>
+    <footer>
+        <p>All games written by Joseph Oglio. </p>
+        <p>To contact creater for suggestions, bugs, or comments, Email ogliojoseph2@gmail.com</p>
+    </footer>
+</body>
+
+</html>
