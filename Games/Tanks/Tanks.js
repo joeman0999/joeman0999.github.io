@@ -1243,7 +1243,11 @@ function updateAI(Info) {
         if (Info.Path.length == 0 || frame - 200 > Info.Pathframe) {
             Info.Pathframe = frame;
             Info.Path = FindConnectingPath(Point1, Point2);
-            Info.PathIndex = 1;
+            if (Info.Path.length > 0) {
+                Info.PathIndex = 1;
+            } else {
+                Info.PathIndex = 1;
+            }
         } else {
             x = ((Info.Path[Info.PathIndex].x) * 50 + 25) - Info.x;
             y = Info.y - ((Info.Path[Info.PathIndex].y) * 50 + 25);
