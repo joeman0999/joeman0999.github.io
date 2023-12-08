@@ -60,14 +60,6 @@ var Games = [
         Mobile: true,
         Multi: true
     }, {
-        Name: 'Star Catcher',
-        Location: 'https://joeman0999.herokuapp.com/',
-        Image: "url('GameImages/StarCatcher.png')",
-        Description: 'This game is multiplayer so if no one else is online invite someone to play. Let the battle for the galaxy commence!',
-        Desktop: true,
-        Mobile: true,
-        Multi: true
-    }, {
         Name: 'Breakout',
         Location: 'Breakout/Breakout.html',
         Image: "url('GameImages/Breakout.png')",
