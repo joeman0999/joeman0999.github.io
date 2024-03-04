@@ -36,7 +36,7 @@ li {
   text-align: center;
   padding: 1.5vh 1.5vh;
   text-decoration: none;
-  font-size: 4vh;
+  font-size: 3vh;
 }
 
 li:hover, .dropdown:hover .dropbtn, .dropdown-content a:hover{
@@ -80,7 +80,7 @@ div.GameGroup {
   position: relative;
   left: 0px;
   margin: auto;
-  margin: 2vh 0px 0px 2vw;
+  margin: 2px 0px 0px 2px;
 }
 
 div.Extra {
@@ -93,12 +93,12 @@ div.Extra {
 .Game-Option {
   height: 21vh;
   padding: 1.5vh;
-  margin: 1.5vh
+  margin: 1.5px 0px 1.5px 0px
 }
 
 .Group-text {
   color: white;
-  font-size: 6vh;
+  font-size: 5vh;
 }
 
 .Game-Text-Button {
@@ -130,8 +130,8 @@ button.Link-Button:hover {
 
 .Game-Image-Button {
   float: left;
-  width: 16vh;
-  height: 16vh;
+  width: 120px;
+  height: 120px;
   background-repeat: no-repeat;
   background-color: white;
   background-position: center;
@@ -148,9 +148,9 @@ button.Game-Image-Button:hover {
 .Game-Description{
   color: white;
   padding: 0px 0px 1vh 1vw;
-  width: 80vh;
+  max-width: 450px;
   margin: 0;
-  font-size: 4vh;
+  font-size: 3vh;
   position:relative;
   top: 7vh;
 }
@@ -159,7 +159,7 @@ footer {
   color: white;
   position: relative;
   left: 4vw;
-  width: 40vw;
+  width: 50%;
   margin: 1vh 0px 1vh 0px;
-  font-size: 3vh;
+  font-size: 2.5vh;
 }
