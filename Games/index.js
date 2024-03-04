@@ -23,7 +23,7 @@ var Games = [
         Name: 'Snake',
         Location: 'Snake/Snake.html',
         Image: "url('GameImages/Snake.png')",
-        Description: "Slither around and eat fruit to grow your snake as long as possible. But don't hit the wall, your tail, or your friend!",
+        Description: "Slither around and eat fruit to grow as long as possible. But don't hit the wall, your tail, or your friend!",
         Desktop: true,
         Mobile: true,
         Multi: true
@@ -44,7 +44,7 @@ var Games = [
         Mobile: false,
         Multi: true
     }, {
-        Name: 'Skeleton Bowling',
+        Name: 'Skull Bowling',
         Location: 'Skeleton Bowling/index.html',
         Image: "url('GameImages/SkeletonBowling.png')",
         Description: "Bowl with your own skull! It's a good thing your pain nerves have decayed!",

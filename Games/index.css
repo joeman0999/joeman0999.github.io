@@ -75,6 +75,8 @@ div.Extra {
 
 .Game-Option {
   height: 21vh;
+  padding: 1.5vh;
+  margin: 1.5vh
 }
 
 .Group-text {
@@ -89,6 +91,7 @@ div.Extra {
   border: 0px;
   margin: 1vh 0 1.5vh 0;
   padding: 0;
+  position:absolute;
 }
 
 button.Game-Text-Button:hover {
@@ -127,17 +130,19 @@ button.Game-Image-Button:hover {
 
 .Game-Description{
   color: white;
-  padding: 0px 0px 1vh 2vw;
+  padding: 0px 0px 1vh 1vw;
   width: 80vh;
   margin: 0;
   font-size: 4vh;
+  position:relative;
+  top: 7vh;
 }
 
 footer {
   color: white;
   position: relative;
-  left: 5vw;
-  width: 30vw;
-  margin: 2vh 0px 2vh 0px;
+  left: 4vw;
+  width: 40vw;
+  margin: 1vh 0px 1vh 0px;
   font-size: 3vh;
 }
