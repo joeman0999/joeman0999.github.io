@@ -1,6 +1,6 @@
-#MainTable {
-  width: 80%;
-  margin: auto;
+div {
+  box-sizing: border-box;
+  padding: 0 8% 0 8%;
 }
 
 h2 {
@@ -19,13 +19,6 @@ hr {
 
 p {
   font-size: 3vh;
-  width: 80%;
-  margin: auto;
-}
-
-#ContactInfo {
-  padding: 0;
-  font-size: 3vh;
 }
 
 .page {
@@ -40,6 +33,36 @@ p {
   font-size: 3.5vh;
 }
 
-/* ul {
-  float: left;
-} */
+.centerText {
+  text-align: center;
+}
+
+@media all {
+  #ContactInfo {
+    width: 350px;
+    margin: auto;
+    font-size: 3vh;
+    border: 1px solid black;
+  }
+  
+  img {
+    display: block;
+    margin: auto;
+  }
+}
+
+@media all and (min-width: 800px) {
+  #ContactInfo {
+    width: 350px;
+    margin: 2vh;
+    font-size: 3vh;
+    float: right;
+    border: 1px solid black;
+  }
+  img {
+    display: block;
+    margin: auto;
+    direction:ltr;
+  }
+
+}
