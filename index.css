@@ -1,6 +1,6 @@
 #MainTable {
   width: 80%;
-  margin: 0 10% 0 10%;
+  margin: auto;
 }
 
 h2 {
@@ -19,8 +19,8 @@ hr {
 
 p {
   font-size: 3vh;
-  width: 85%;
-  margin: 0 10% 0 10%;
+  width: 80%;
+  margin: auto;
 }
 
 #ContactInfo {
@@ -36,7 +36,7 @@ p {
 
 #ContentTable {
   width: 80%;
-  margin: 0 10% 0 10%;
+  margin: auto;
   font-size: 3.5vh;
 }
 
