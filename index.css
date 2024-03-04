@@ -22,15 +22,20 @@ p {
 }
 
 .page {
+  box-sizing: border-box;
   vertical-align: top;
-  padding:4px;
-  width: 33%;
+  padding:1vh;
+  width: 30%;
 }
 
 #ContentTable {
   width: 80%;
   margin: auto;
-  font-size: 3.5vh;
+  font-size: 2.5vh;
+}
+
+#ContentTable ul {
+  padding: 0px;
 }
 
 .centerText {
