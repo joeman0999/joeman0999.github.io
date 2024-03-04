@@ -2,6 +2,8 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
     <script src="index.js"></script>
     <link rel="stylesheet" href="index.css" />
     <title>Joe's Games</title>
@@ -10,33 +12,35 @@
 
 <body>
     <canvas id="space"></canvas>
-    <ul>
-        <li id="MainSite" onclick="location.href='../index.html'">Back</li>
-        <li id="HomeMenu" class="active" onclick="LoadGames('Home')">Home</li>
-        <li id="DesktopMenu" onclick="LoadGames('Desktop')">Desktop</li>
-        <li id="MobileMenu" onclick="LoadGames('Mobile')">Mobile</li>
-        <li id="MultiMenu" onclick="LoadGames('Multi')">Multiplayer</li>
-        <li id="A-ZMenu" onclick="LoadGames('A-Z')">A-Z</li>
-        <li class="dropdown">In Development ˅
-            <div class="dropdown-content">
-                <a href='Evolution/Evolution.html'>Evolution</a>
-                <a href='Doggo/Doggo.html'>Doggo</a>
-                <a href='https://joeman0999.herokuapp.com/'>Star Catcher</a>
-                <!-- 
-                    {
-        Name: 'Star Catcher',
-        Location: 'https://joeman0999.herokuapp.com/',
-        Image: "url('GameImages/StarCatcher.png')",
-        Description: 'This game is multiplayer so if no one else is online invite someone to play. Let the battle for the galaxy commence!',
-        Desktop: true,
-        Mobile: true,
-        Multi: true
-    },
-                 -->
-            </div>
-        </li>
-        <li style="float:right" onclick="location.href='ChangeLog/ChangeLog.html'">Change Log</li>
-    </ul>
+    <div class="flex-container">
+        <ul class="flex-container">
+            <li id="MainSite" onclick="location.href='../index.html'">Back</li>
+            <li id="HomeMenu" class="active" onclick="LoadGames('Home')">Home</li>
+            <li id="DesktopMenu" onclick="LoadGames('Desktop')">Desktop</li>
+            <li id="MobileMenu" onclick="LoadGames('Mobile')">Mobile</li>
+            <li id="MultiMenu" onclick="LoadGames('Multi')">Multiplayer</li>
+            <li id="A-ZMenu" onclick="LoadGames('A-Z')">A-Z</li>
+            <li class="dropdown">In Development ˅
+                <div class="dropdown-content">
+                    <a href='Evolution/Evolution.html'>Evolution</a>
+                    <a href='Doggo/Doggo.html'>Doggo</a>
+                    <a href='https://joeman0999.herokuapp.com/'>Star Catcher</a>
+                    <!-- 
+                        {
+            Name: 'Star Catcher',
+            Location: 'https://joeman0999.herokuapp.com/',
+            Image: "url('GameImages/StarCatcher.png')",
+            Description: 'This game is multiplayer so if no one else is online invite someone to play. Let the battle for the galaxy commence!',
+            Desktop: true,
+            Mobile: true,
+            Multi: true
+        },
+                    -->
+                </div>
+            </li>
+            <li id="ChangeLog" onclick="location.href='ChangeLog/ChangeLog.html'">Change Log</li>
+        </ul>
+    </div>
     <div id="GameArea" class="GameGroup">
         <h1 class="Group-text"></h1>
     </div>

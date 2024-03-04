@@ -1,3 +1,9 @@
+body, html{
+  margin:0;
+  padding:0;
+  min-width: 100%;
+}
+
 #space {
   position: absolute;
 	top: 0;
@@ -10,15 +16,22 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   background-color: #333;
   top: 0;
   width: 100%;
+  white-space: nowrap;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 0 100%; /* flex-grow, flex-shrink, flex-basis */
+  align-content: stretch;
 }
 
 li {
-  float: left;
-  display: block;
+  display: inline-block;
   color: white;
   text-align: center;
   padding: 1.5vh 1.5vh;
@@ -57,6 +70,10 @@ li.dropdown {
 
 .active {
   background-color: blue;
+}
+
+#ChangeLog {
+  margin-left: auto
 }
 
 div.GameGroup {
