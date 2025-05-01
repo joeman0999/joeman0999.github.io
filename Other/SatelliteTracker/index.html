@@ -1,21 +1,71 @@
-
-
-
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/satellite.js/4.0.0/satellite.min.js"></script>
-    <script src="SatelliteTracker.js"></script>
-    <!-- <link rel="stylesheet" href="index.css" /> -->
-    <!-- <title>Joe's Games</title> -->
-
+  <meta charset="UTF-8">
+  <title>Live Satellite Tracker</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
 </head>
-
 <body>
 
+<nav class="navbar">
+    <div class="navbar-container">
+        <a href="../../index.html" class="nav-logo">Joseph Oglio</a>
+        <div class="nav-links">
+            <a href="../../index.html">Home</a>
+            <a href="index.html" class="active">Satellite Tracker</a>
+        </div>
+    </div>
+</nav>
 
+<div id="controls" class="panel">
+  <button class="toggle-button" onclick="togglePanel('controls')">Satellites</button>
+  <div class="panel-content">
+    <h3>Satellites</h3>
+    <div id="satelliteList"></div>
+    <hr>
+    <label><input type="checkbox" id="wrapToggle" onchange="applyWrapSetting()"> Infinite Wrapping</label>
+  </div>
+</div>
+
+<div id="timeControls" class="panel">
+  <button id="settings" class="toggle-button" stlye="float: right;"onclick="togglePanel('timeControls')">Settings</button>
+  <div class="panel-content">
+    <label>Start Time: 
+      <input type="datetime-local" id="startTimeInput">
+    </label><br><br>
+
+    <label>Speed (x real time): 
+      <input type="number" id="speedInput" value="1" step="1">
+    </label><br><br>
+
+    <label>Past Trail (hrs): 
+      <input type="number" id="pastHoursInput" value="3">
+    </label><br><br>
+
+    <label>Future Trail (hrs): 
+      <input type="number" id="futureHoursInput" value="3">
+    </label><br><br>
+
+    <button class="toggle-button" onclick="applyTimeSettings()">Apply Settings</button>
+  </div>
+</div>
+
+<div id="simControls">
+    <div class="sim-row">
+        <button id="toggleSimButton" class="toggle-button" onclick="toggleSimulation()">Pause</button>
+        <div><strong>Simulation Time:</strong></div>
+        <div id="simClock" style="font-family: monospace;"></div>
+    </div>
+</div>
+
+
+<div id="map"></div>
+<script src="leaflet-terminator.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://unpkg.com/satellite.js/dist/satellite.min.js"></script>
+<script src="https://unpkg.com/suncalc@1.9.0/suncalc.js"></script>
+<script src="script.js"></script>
 
 </body>
-
 </html>

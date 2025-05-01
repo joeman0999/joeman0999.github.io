@@ -12,56 +12,64 @@ body, html{
   z-index: -1;
 }
 
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  background-color: #333;
+.navbar {
+  background-color: #2c3e50;
+  padding: 0.8rem 1.2rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  position: sticky;
   top: 0;
-  width: 100%;
-  white-space: nowrap;
+  z-index: 1000;
 }
 
-.flex-container {
+.navbar-container {
+  max-width: 1000px;
+  margin: auto;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-  flex: 0 0 100%; /* flex-grow, flex-shrink, flex-basis */
-  align-content: stretch;
 }
 
-li {
-  display: inline-block;
+.nav-logo {
+  font-size: 1.2rem;
   color: white;
-  text-align: center;
-  padding: 1.5vh 1.5vh;
   text-decoration: none;
-  font-size: 3vh;
+  font-weight: bold;
+  margin-right: 1.5rem;
 }
 
-li:hover, .dropdown:hover .dropbtn, .dropdown-content a:hover{
-  background-color: rgb(0, 153, 255);
+.nav-links a, .nav-links span {
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
 }
 
-li.dropdown {
+.nav-links a:hover, .nav-links span:hover {
+  color: #66b2ff;
+}
+
+.dropdown {
+  position: relative;
   display: inline-block;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  background-color: #2c3e50;
+  color: white;
+  min-width: 100%;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 999;
 }
 
 .dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
   display: block;
-  text-align: left;
+  padding: 10px;
+  text-decoration: none;
+  color: white;
 }
 
 .dropdown:hover .dropdown-content {
@@ -69,7 +77,8 @@ li.dropdown {
 }
 
 .active {
-  background-color: blue;
+  border-bottom: 2px solid #66b2ff;
+  color: #66b2ff;
 }
 
 #ChangeLog {
@@ -91,8 +100,8 @@ div.Extra {
 }
 
 .Game-Option {
-  height: 21vh;
-  padding: 1.5vh;
+  height: 120px;
+  padding: 7px;
   margin: 1.5px 0px 1.5px 0px
 }
 
@@ -153,13 +162,4 @@ button.Game-Image-Button:hover {
   font-size: 3vh;
   position:relative;
   top: 7vh;
-}
-
-footer {
-  color: white;
-  position: relative;
-  left: 4vw;
-  width: 50%;
-  margin: 1vh 0px 1vh 0px;
-  font-size: 2.5vh;
 }
