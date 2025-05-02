@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
     <script src="index.js"></script>
     <link rel="stylesheet" href="index.css" />
+    <link rel="icon" href="../favicon.png" type="image/png">
     <title>Joe's Games</title>
 
 </head>
@@ -15,30 +16,34 @@
     
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="../index.html" class="nav-logo">Joseph Oglio</a>
+            <a href="../index.html" class="nav-logo">
+                <img src="../favicon.png" alt="Logo" class="nav-icon">
+                Joseph Oglio
+            </a>
             <div class="nav-links">
-            <a id="HomeMenu" class="active" onclick="LoadGames('Home')">Games</a>
-            <a id="DesktopMenu" onclick="LoadGames('Desktop')">Desktop</a>
-            <a id="MobileMenu" onclick="LoadGames('Mobile')">Mobile</a>
-            <a id="MultiMenu" onclick="LoadGames('Multi')">Multiplayer</a>
-            <a id="A-ZMenu" onclick="LoadGames('A-Z')">A-Z</a>
-            <div class="dropdown">
-                <span>Archived ▾</span>
-                <div class="dropdown-content">
-                    <a href='Evolution/Evolution.html'>Evolution</a>
-                    <a href='Doggo/Doggo.html'>Doggo</a>
-                    <a href='https://joeman0999.herokuapp.com/'>Star Catcher</a>
-                    <a href='Love/Love.html'>Love Tap</a>
-                    <a href='JumpToSpace/JumpToSpace.html'>Jump To Space</a>
+                <a id="HomeMenu" class="active" onclick="LoadGames('Home')">Games</a>
+                <a id="DesktopMenu" onclick="LoadGames('Desktop')">Desktop</a>
+                <a id="MobileMenu" onclick="LoadGames('Mobile')">Mobile</a>
+                <a id="MultiMenu" onclick="LoadGames('Multi')">Multiplayer</a>
+                <a id="A-ZMenu" onclick="LoadGames('A-Z')">A-Z</a>
+                <div class="dropdown">
+                    <span>Archived ▾</span>
+                    <div class="dropdown-content">
+                        <a href='Evolution/Evolution.html'>Evolution</a>
+                        <a href='Doggo/Doggo.html'>Doggo</a>
+                        <a href='https://joeman0999.herokuapp.com/'>Star Catcher</a>
+                        <a href='Love/Love.html'>Love Tap</a>
+                        <a href='JumpToSpace/JumpToSpace.html'>Jump To Space</a>
+                    </div>
                 </div>
-            </div>
-            <a id="ChangeLog" href="ChangeLog/ChangeLog.html">Change Log</a>
+                <a id="ChangeLog" href="ChangeLog/ChangeLog.html">Change Log</a>
             </div>
         </div>
     </nav>
-
+    
+    <h1 id="Group-text">All Games</h1>
     <div id="GameArea" class="GameGroup">
-        <h1 class="Group-text"></h1>
+        
     </div>
 </body>
 

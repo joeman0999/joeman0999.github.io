@@ -1,8 +1,17 @@
 body, html{
   margin:0;
   padding:0;
-  min-width: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
+
+html {
+  overflow-y: scroll;
+}
+/* 
+* {
+  outline: 1px solid red;
+} */
 
 #space {
   position: absolute;
@@ -28,6 +37,7 @@ body, html{
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .nav-logo {
@@ -35,34 +45,78 @@ body, html{
   color: white;
   text-decoration: none;
   font-weight: bold;
-  margin-right: 1.5rem;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
-.nav-links a, .nav-links span {
-  color: white;
+.nav-logo:hover {
   text-decoration: none;
-  font-size: 1rem;
-  padding: 0.5rem;
-  cursor: pointer;
 }
 
-.nav-links a:hover, .nav-links span:hover {
+.nav-icon {
+  height: 1.2rem;
+  width: 1.2rem;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  color: white;
+}
+
+.nav-links a {
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+  padding-bottom: 0.2rem;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+}
+
+.nav-links a:hover {
+  color: #66b2ff;
+  text-decoration: none;
+}
+
+.nav-links a.active {
+  border-bottom-color: #66b2ff;
   color: #66b2ff;
 }
 
 .dropdown {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  color: white;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+  padding-bottom: 0.2rem;
+  border-bottom: 2px solid transparent;
+  cursor: default;
+  text-decoration: none;
+  color: white;
 }
 
 .dropdown-content {
   display: none;
   position: absolute;
+  top: 100%;
+  left: 0;
   background-color: #2c3e50;
   color: white;
   min-width: 100%;
   box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
   z-index: 999;
+  border-radius: 0 0 4px 4px;
 }
 
 .dropdown-content a {
@@ -85,39 +139,41 @@ body, html{
   margin-left: auto
 }
 
-div.GameGroup {
-  position: relative;
-  left: 0px;
-  margin: auto;
-  margin: 2px 0px 0px 2px;
-}
-
-div.Extra {
-  position: relative;
-  left: 0px;
-  margin: auto;
-  margin: 2vh 0px 0px 2vw;
+.GameGroup {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 2vh 2vw;
+  padding: 2vh 1vw;
+  justify-items: center;
 }
 
 .Game-Option {
-  height: 120px;
-  padding: 7px;
-  margin: 1.5px 0px 1.5px 0px
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  gap: 1vw;
+  background-color: rgba(255, 255, 255, 0.05); /* optional */
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-.Group-text {
+#Group-text {
   color: white;
   font-size: 5vh;
+  text-align: center;
 }
 
 .Game-Text-Button {
-  background: rgba(0, 0, 0, 0.0);
+  background: none;
   font: 5vh Helvetica Neue;
   color: blue;
-  border: 0px;
-  margin: 1vh 0 1.5vh 0;
+  border: none;
+  margin: 0;
   padding: 0;
-  position:absolute;
+  text-align: left;
 }
 
 button.Game-Text-Button:hover {
@@ -138,7 +194,7 @@ button.Link-Button:hover {
 }
 
 .Game-Image-Button {
-  float: left;
+  flex-shrink: 0;
   width: 120px;
   height: 120px;
   background-repeat: no-repeat;
@@ -146,7 +202,7 @@ button.Link-Button:hover {
   background-position: center;
   background-size: 102% 102%;
   border: .5vh solid blue;
-  margin: 2vh 1.5vh 0vh 0vh;
+  margin-top: 1vh;
   padding: 0;
 }
 
@@ -154,12 +210,17 @@ button.Game-Image-Button:hover {
   border: 1vh solid lightskyblue;
 }
 
-.Game-Description{
+.Game-Info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: calc(100% - 140px); /* Prevent overflow */
+}
+
+.Game-Description {
   color: white;
-  padding: 0px 0px 1vh 1vw;
-  max-width: 450px;
-  margin: 0;
   font-size: 3vh;
-  position:relative;
-  top: 7vh;
+  margin: 1vh 0 0 0;
+  padding-right: 1vw;
+  line-height: 1.4;
 }

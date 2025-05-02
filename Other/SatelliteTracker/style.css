@@ -101,12 +101,12 @@ html {
 
 .navbar-container {
   max-width: 1000px;
-  width: 100%;
   margin: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .nav-logo {
@@ -114,15 +114,33 @@ html {
   color: white;
   text-decoration: none;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.nav-icon {
+  height: 1.2rem;
+  width: 1.2rem;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .nav-links a {
-  margin-left: 1rem;
   color: white;
   text-decoration: none;
   font-weight: 500;
   font-size: 0.95rem;
   transition: color 0.3s ease;
+  padding-bottom: 0.2rem;
+  border-bottom: 2px solid transparent;
 }
 
 .nav-links a:hover {
@@ -130,7 +148,6 @@ html {
 }
 
 .nav-links a.active {
-  border-bottom: 2px solid #66b2ff;
+  border-bottom-color: #66b2ff;
   color: #66b2ff;
-  padding-bottom: 0.2rem;
 }

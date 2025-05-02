@@ -96,33 +96,48 @@ var Games = [
 
 window.onload = function () {
     LoadGames('Home');
-
-    var canvas = document.getElementById("space");
-    screenW = canvas.width = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
-    screenH = canvas.height = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
-    
+    const canvas = document.getElementById("space");
     context = canvas.getContext("2d");
+    setCanvasSize(canvas);
+
     for (let i = 0; i < numStars; i++) {
-        var x = Math.round(Math.random() * screenW);
-        var y = Math.round(Math.random() * screenH);
-        var length = 2 + Math.random() * 2;
-        var opacity = Math.random();
-
-        // Create a new star and draw
-        var star = newStar(x, y, length, opacity);
-
-        // Add the the stars array
-        stars.push(star);
+        stars.push(createRandomStar());
     }
 
-    window.addEventListener('resize', ResizeWindow);
-    setInterval(animate, 1000 / fps);
+    window.addEventListener('resize', () => {
+        setCanvasSize(canvas);
+        for (let s of stars) {
+            if (s.x > screenW) s.x = Math.random() * screenW;
+            if (s.y > screenH) s.y = Math.random() * screenH;
+        }
+    });
+
+    requestAnimationFrame(animate); // smoother than setInterval
+};
+
+function setCanvasSize(canvas) {
+    screenW = canvas.width = document.documentElement.clientWidth;
+    // screenH = canvas.height = window.innerHeight;
+
+    // screenW = canvas.width = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+    screenH = canvas.height = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
 }
+
+function createRandomStar() {
+    return newStar(
+        Math.random() * screenW,
+        Math.random() * screenH,
+        2 + Math.random() * 2,
+        Math.random()
+    );
+}
+
 
 function ResizeWindow() {
     var canvas = document.getElementById("space");
-    screenW = canvas.width = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
-    screenH = canvas.height = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
+    setCanvasSize(canvas)
+    // screenW = canvas.width = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
+    // screenH = canvas.height = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
 
     stars = [];
     for (let i = 0; i < numStars; i++) {
@@ -144,6 +159,7 @@ function animate() {
     for (let i = 0; i < numStars; ++i) {
         draw(stars[i]);
     }
+    requestAnimationFrame(animate);
 }
 
 function newStar(x, y, length, opacity) {
@@ -208,36 +224,39 @@ function updateGames(Games) {
         var newElement = document.createElement('div');
         newElement.className = 'Game-Option';
 
-        var child1 = document.createElement('button');
-        child1.className = 'Game-Image-Button';
-        child1.style.backgroundImage = Games[i].Image;
-        child1.onclick = function () { location.href =  Games[i].Location; };
-        newElement.appendChild(child1);
+        var imageButton = document.createElement('button');
+        imageButton.className = 'Game-Image-Button';
+        imageButton.style.backgroundImage = Games[i].Image;
+        imageButton.onclick = function () { location.href = Games[i].Location; };
+        newElement.appendChild(imageButton);
 
-        var child2 = document.createElement('button');
-        child2.className = 'Game-Text-Button';
-        child2.onclick = function () { location.href = Games[i].Location; };
-        child2.innerHTML = Games[i].Name;
-        newElement.appendChild(child2);
+        var infoDiv = document.createElement('div');
+        infoDiv.className = 'Game-Info';
 
-        var child3 = document.createElement('p');
-        child3.className = 'Game-Description';
-        child3.innerHTML = Games[i].Description;
-        newElement.appendChild(document.createElement('div').appendChild(child3));
+        var nameButton = document.createElement('button');
+        nameButton.className = 'Game-Text-Button';
+        nameButton.onclick = function () { location.href = Games[i].Location; };
+        nameButton.innerHTML = Games[i].Name;
+        infoDiv.appendChild(nameButton);
 
+        var description = document.createElement('p');
+        description.className = 'Game-Description';
+        description.innerHTML = Games[i].Description;
+        infoDiv.appendChild(description);
+
+        newElement.appendChild(infoDiv);
         GameArea.appendChild(newElement);
     }
 }
 
 function LoadGames(method) {
-    var newElement = document.createElement('h1');
-    newElement.className = 'Group-text';
+    var newElement = document.getElementById('Group-text');
     document.getElementsByClassName("active")[0].className = "";
 
     switch (method) {
         case 'Home':
             updateGames(Games);
-            //newElement.innerHTML = '';
+            newElement.innerHTML = 'All Games';
             document.getElementById("HomeMenu").className = "active";
             break;
         case 'Desktop':
@@ -276,5 +295,5 @@ function LoadGames(method) {
             break;
     }
     
-    document.getElementById('GameArea').insertBefore(newElement, document.getElementById('GameArea').childNodes[0]);
+    // document.getElementById('GameArea').insertBefore(newElement, document.getElementById('GameArea').childNodes[0]);
 }
