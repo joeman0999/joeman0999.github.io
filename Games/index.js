@@ -1,6 +1,6 @@
 var stars = [];
-var fps = 50;
-var numStars = 1000;
+var numStars = 200;
+var speed = .4;
 var context, screenW, screenH;
 var Games = [
     {
@@ -60,14 +60,6 @@ var Games = [
         Mobile: true,
         Multi: true
     }, {
-        Name: 'Breakout',
-        Location: 'Breakout/Breakout.html',
-        Image: "url('GameImages/Breakout.png')",
-        Description: 'Destroy all the bricks!',
-        Desktop: true,
-        Mobile: true,
-        Multi: false
-    }, {
         Name: 'Blackjack',
         Location: 'Blackjack/Blackjack.html',
         Image: "url('GameImages/Blackjack.png')",
@@ -93,9 +85,23 @@ var Games = [
         Multi: false
     }
 ]
+/*
+{
+    Name: 'Breakout',
+    Location: 'Breakout/Breakout.html',
+    Image: "url('GameImages/Breakout.png')",
+    Description: 'Destroy all the bricks!',
+    Desktop: true,
+    Mobile: true,
+    Multi: false
+}
+*/
+
 
 window.onload = function () {
-    LoadGames('Home');
+    const params = new URLSearchParams(window.location.search);
+    let page = params.get("page") || "Home";
+    LoadGames(page);
     const canvas = document.getElementById("space");
     context = canvas.getContext("2d");
     setCanvasSize(canvas);
@@ -115,43 +121,13 @@ window.onload = function () {
     requestAnimationFrame(animate); // smoother than setInterval
 };
 
-function setCanvasSize(canvas) {
-    screenW = canvas.width = document.documentElement.clientWidth;
-    // screenH = canvas.height = window.innerHeight;
-
-    // screenW = canvas.width = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
-    screenH = canvas.height = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
-}
-
 function createRandomStar() {
     return newStar(
         Math.random() * screenW,
         Math.random() * screenH,
-        2 + Math.random() * 2,
+        .5 + Math.random() * 2.5,
         Math.random()
     );
-}
-
-
-function ResizeWindow() {
-    var canvas = document.getElementById("space");
-    setCanvasSize(canvas)
-    // screenW = canvas.width = Math.max(document.body.scrollWidth, document.documentElement.offsetWidth, document.documentElement.clientWidth);
-    // screenH = canvas.height = Math.max(document.body.scrollHeight, document.documentElement.offsetHeight, document.documentElement.clientHeight);
-
-    stars = [];
-    for (let i = 0; i < numStars; i++) {
-        var x = Math.round(Math.random() * screenW);
-        var y = Math.round(Math.random() * screenH);
-        var length = 2 + Math.random() * 2;
-        var opacity = Math.random();
-
-        // Create a new star and draw
-        var star = newStar(x, y, length, opacity);
-
-        // Add the the stars array
-        stars.push(star);
-    }
 }
 
 function animate() {
@@ -169,50 +145,64 @@ function newStar(x, y, length, opacity) {
         length: length,
         opacity: opacity,
         factor: 1,
-        increment: Math.random() * .03 + .001,
+        increment: Math.random() * .015 + .003,
+        rotation: Math.PI * Math.random()
     }
     return Star;
 }
 
+function setCanvasSize(canvas) {
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  // CSS pixels:
+  screenW = window.innerWidth;
+  screenH = window.innerHeight;
+
+  const bufW = Math.floor(screenW * dpr);
+  const bufH = Math.floor(screenH * dpr);
+
+  if (canvas.width !== bufW || canvas.height !== bufH) {
+    canvas.width = bufW;
+    canvas.height = bufH;
+    // Draw in CSS pixels:
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+}
+
 function draw(Star) {
-    context.rotate((Math.PI * 1 / 10));
+  // DO NOT rotate before save; that accumulates globally.
+  context.save();
 
-    // Save the context
-    context.save();
+  // twinkle update
+  if (Star.opacity > 1) {
+    Star.factor = -1;
+  } else if (Star.opacity <= 0) {
+    Star.factor = 1;
+    Star.x = Math.random() * screenW;
+    Star.y = Math.random() * screenH;
+  }
+  Star.opacity += Star.increment * Star.factor;
 
-    // move into the middle of the canvas, just to make room
-    context.translate(Star.x, Star.y);
-
-    // Change the opacity
-    if (Star.opacity > 1) {
-        Star.factor = -1;
-    }
-    else if (Star.opacity <= 0) {
-        Star.factor = 1;
-
-        Star.x = Math.round(Math.random() * screenW);
-        Star.y = Math.round(Math.random() * screenH);
-    }
-
-    Star.opacity += Star.increment * Star.factor;
-
-    context.beginPath()
-    for (var i = 5; i--;) {
-        context.lineTo(0, Star.length);
-        context.translate(0, Star.length);
-        context.rotate((Math.PI * 2 / 10));
-        context.lineTo(0, - Star.length);
-        context.translate(0, - Star.length);
-        context.rotate(-(Math.PI * 6 / 10));
-    }
+  // draw star at its position
+  context.translate(Star.x, Star.y);
+  context.rotate(Star.rotation);
+  context.beginPath();
+  for (let i = 5; i--;) {
     context.lineTo(0, Star.length);
-    context.closePath();
-    context.fillStyle = "rgba(255, 255, 200, " + Star.opacity + ")";
-    context.shadowBlur = 5;
-    context.shadowColor = '#ffff33';
-    context.fill();
+    context.translate(0, Star.length);
+    context.rotate((Math.PI * 2) / 10);
+    context.lineTo(0, -Star.length);
+    context.translate(0, -Star.length);
+    context.rotate(-(Math.PI * 6) / 10);
+  }
+  context.lineTo(0, Star.length);
+  context.closePath();
 
-    context.restore();
+  context.fillStyle = `rgba(255, 255, 200, ${Star.opacity})`;
+  context.shadowBlur = 5;
+  context.shadowColor = '#ffff33';
+  context.fill();
+
+  context.restore();
 }
 
 function updateGames(Games) {
@@ -251,13 +241,17 @@ function updateGames(Games) {
 
 function LoadGames(method) {
     var newElement = document.getElementById('Group-text');
-    document.getElementsByClassName("active")[0].className = "";
+    const el = document.querySelector('site-navbar');
+    
+    // return;
+    if (el.shadowRoot.querySelector(".active"))
+        el.shadowRoot.querySelector(".active").className = "";
 
     switch (method) {
         case 'Home':
             updateGames(Games);
             newElement.innerHTML = 'All Games';
-            document.getElementById("HomeMenu").className = "active";
+            el.shadowRoot.querySelector("#HomeMenu").className = "active";
             break;
         case 'Desktop':
             var List = [];
@@ -266,7 +260,7 @@ function LoadGames(method) {
             }
             updateGames(List);
             newElement.innerHTML = 'Desktop Games';
-            document.getElementById("DesktopMenu").className = "active";
+            el.shadowRoot.querySelector("#DesktopMenu").className = "active";
             break;
         case 'Mobile':
             var List = [];
@@ -275,7 +269,7 @@ function LoadGames(method) {
             }
             updateGames(List);
             newElement.innerHTML = 'Mobile Games';
-            document.getElementById("MobileMenu").className = "active";
+            el.shadowRoot.querySelector("#MobileMenu").className = "active";
             break;
         case 'Multi':
             var List = [];
@@ -284,14 +278,14 @@ function LoadGames(method) {
             }
             updateGames(List);
             newElement.innerHTML = 'Multiplayer Games';
-            document.getElementById("MultiMenu").className = "active";
+            el.shadowRoot.querySelector("#MultiMenu").className = "active";
             break;
         case 'A-Z':
             var List = JSON.parse(JSON.stringify(Games));
             List.sort((a, b) => (a.Name > b.Name) ? 1 : -1);
             updateGames(List);
             newElement.innerHTML = 'All Games A-Z';
-            document.getElementById("A-ZMenu").className = "active";
+            el.shadowRoot.querySelector("#A-ZMenu").className = "active";
             break;
     }
     

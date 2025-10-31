@@ -1,6 +1,8 @@
 var Thecanvas = {
     width: 544,
-    height: 544
+    height: 544,
+    tlx: 0,
+    tly: 0
 };
 var Computer = "None";
 var PlayersTurn = "Red";
@@ -175,7 +177,7 @@ var myGameArea = {
         this.canvas.width = Thecanvas.width;
         this.canvas.height = Thecanvas.height;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        document.body.insertBefore(this.canvas, document.body.childNodes[5]);
         this.frameNo = 0;
         document.getElementById("GameArea").addEventListener('click', clickhandler);
         document.getElementById("GameArea").addEventListener('touchstart', handleTouchStart);
@@ -310,10 +312,13 @@ function handleTouchStart(evt) {
 }
 
 function click(e) {
+
+
     var moved = false;
     if ((TypeOnePlayer && (PlayersTurn == "Red" && Computer == "Black") || (PlayersTurn == "Black" && Computer == "Red")) || TypeTwoPlayer) {
-        var x = Math.floor((e.clientX - 10) / (Thecanvas.width / 8));
-        var y = Math.floor((e.clientY - 10) / (Thecanvas.height / 8));
+        const rect = myGameArea.canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientX - rect.left) / (Thecanvas.width / 8));
+        const y = Math.floor((e.clientY - rect.top) / (Thecanvas.height / 8));
         if (x >= 0 && x <= 7 && y >= 0 && y <= 7) {
             if (Mouse.Holds == "Nothing") {
                 if (PlayersTurn == "Red") {

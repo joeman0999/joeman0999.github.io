@@ -1,0 +1,86 @@
+{
+  "people": [
+    {
+      "id": "m3antayqlrf",
+      "name": "Joe"
+    },
+    {
+      "id": "in0s2ysqlrf",
+      "name": "Meghan"
+    }
+  ],
+  "recipes": [
+    {
+      "id": "9w6j3at706g",
+      "title": "Chicken Alfredo with Dumplings",
+      "type": "recipe",
+      "image": "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop",
+      "tags": [
+        "chicken",
+        "dumplings"
+      ],
+      "ingredients": [
+      ],
+      "steps": [
+      ],
+      "ratings": {
+        "m3antayqlrf": 4.5,
+        "in0s2ysqlrf": 4.5
+      },
+      "personNotes": {},
+      "favorite": true,
+      "items": [],
+      "created": 1759073043112,
+      "updated": 1759591443112
+    },
+    {
+      "id": "tc77hig706g",
+      "title": "Grilled Cheese and Tomato Soup",
+      "type": "recipe",
+      "url": "",
+      "image": "https://images.unsplash.com/photo-1600431521340-491eca880813?q=80&w=1200&auto=format&fit=crop",
+      "tags": [
+        "soup",
+        "sandwich",
+        "quick"
+      ],
+      "ingredients": [
+      ],
+      "steps": [
+      ],
+      "ratings": {
+        "m3antayqlrf": 2.5,
+        "in0s2ysqlrf": 2.5
+      },
+      "personNotes": {},
+      "favorite": false,
+      "items": [],
+      "created": 1759332243112,
+      "updated": 1759677843112
+    },
+    {
+      "id": "xb2i7ji706g",
+      "title": "Chicken Paprikash",
+      "type": "recipe",
+      "url": "",
+      "image": "https://images.unsplash.com/photo-1600431521340-491eca880813?q=80&w=1200&auto=format&fit=crop",
+      "tags": [
+        "chicken",
+        "dumplings"
+      ],
+      "ingredients": [
+      ],
+      "steps": [
+      ],
+      "ratings": {
+        "m3antayqlrf": 3,
+        "in0s2ysqlrf": 4
+      },
+      "personNotes": {},
+      "favorite": false,
+      "items": [],
+      "created": 1759505043112,
+      "updated": 1759760643112
+    }
+  ]
+}

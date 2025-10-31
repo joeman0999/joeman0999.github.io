@@ -8,25 +8,28 @@
 		<link rel="icon" href="../../favicon.png" type="image/png">
 	</head>
 	<body>
-		<h1>Blackjack</h1>
-	
-		<img class="preload" src="img/cards.png"/>
-		<button class="Menu-Button" onclick="location.href='../index.html'">Exit Game</button>
-		<div id="card-table">
-			<h3 id="bet1"></h3>
-			<h3 id="bet2"></h3>
-			<h3 id="bet3"></h3>
-			<h3 id="bet4"></h3>
-			<button id="deal">DEAL</button>
-			<button id="hit" hidden=true>HIT</button>
-			<button id="stay" hidden=true>STAY</button>
-			<button id="doubleDown" hidden=true>DOUBLE DOWN</button>
-			<button id="split" hidden=true>SPLIT</button>
-			<button id="insurance" hidden=true>INSURANCE</button>
-			<input id="initialBet" type="range" min="20" max="100" step="10" value="20">
-			<h3 id="money"></h3>
-			<h3 id="initialBetDisplay"></h3>
+		<script src="../navbar-component.js"></script>
+    	<site-navbar base=""></site-navbar>
+		<div id="GameArea">
+			<h1>Blackjack</h1>
+		
+			<img class="preload" src="img/cards.png"/>
+			<div id="card-table">
+				<h3 id="bet1"></h3>
+				<h3 id="bet2"></h3>
+				<h3 id="bet3"></h3>
+				<h3 id="bet4"></h3>
+				<button id="deal">DEAL</button>
+				<button id="hit" hidden=true>HIT</button>
+				<button id="stay" hidden=true>STAY</button>
+				<button id="doubleDown" hidden=true>DOUBLE DOWN</button>
+				<button id="split" hidden=true>SPLIT</button>
+				<button id="insurance" hidden=true>INSURANCE</button>
+				<input id="initialBet" type="range" min="20" max="100" step="10" value="20">
+				<h3 id="money"></h3>
+				<h3 id="initialBetDisplay"></h3>
 
+			</div>
 		</div>
 		<!-- load this at the bottom so the #card-table element exists -->
 		<script src="deckType.js"></script>

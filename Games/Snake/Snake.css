@@ -1,9 +1,14 @@
 canvas {
-  border: .5vmin solid #d3d3d3;
+  margin: 1.5vmin;
+  border: .5vmin solid green;
+  background-color: lightgreen;
 }
 
 body {
+  width: 100%;
   position: fixed;
+  margin: 0;
+  background-color: black;
 }
 
 button {

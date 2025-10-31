@@ -114,7 +114,7 @@ var myGameArea = {
         this.canvas.height = Thecanvas.height * Multiplier;
         this.context = this.canvas.getContext("2d");
 
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        document.body.insertBefore(this.canvas, document.body.childNodes[4]);
         this.frameNo = 0;
         if (TwoPlayers == false) {
             this.interval = setInterval(updateGameArea, 20);

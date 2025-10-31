@@ -12,35 +12,11 @@
 </head>
 
 <body>
+    <script src="navbar-component.js"></script>
+    <site-navbar base=""></site-navbar>
     <canvas id="space"></canvas>
     
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="../index.html" class="nav-logo">
-                <img src="../favicon.png" alt="Logo" class="nav-icon">
-                Joseph Oglio
-            </a>
-            <div class="nav-links">
-                <a id="HomeMenu" class="active" onclick="LoadGames('Home')">Games</a>
-                <a id="DesktopMenu" onclick="LoadGames('Desktop')">Desktop</a>
-                <a id="MobileMenu" onclick="LoadGames('Mobile')">Mobile</a>
-                <a id="MultiMenu" onclick="LoadGames('Multi')">Multiplayer</a>
-                <a id="A-ZMenu" onclick="LoadGames('A-Z')">A-Z</a>
-                <div class="dropdown">
-                    <span>Archived ▾</span>
-                    <div class="dropdown-content">
-                        <a href='Evolution/Evolution.html'>Evolution</a>
-                        <a href='Doggo/Doggo.html'>Doggo</a>
-                        <a href='https://joeman0999.herokuapp.com/'>Star Catcher</a>
-                        <a href='Love/Love.html'>Love Tap</a>
-                        <a href='JumpToSpace/JumpToSpace.html'>Jump To Space</a>
-                    </div>
-                </div>
-                <a id="ChangeLog" href="ChangeLog/ChangeLog.html">Change Log</a>
-            </div>
-        </div>
-    </nav>
-    
+
     <h1 id="Group-text">All Games</h1>
     <div id="GameArea" class="GameGroup">
         

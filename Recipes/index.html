@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recipe Tracker</title>
+  <meta name="description" content="A simple, private recipe tracker that runs entirely in your browser. Save, search, tag, and rate recipes. Data is stored in your browser (localStorage)." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root{
+      --bg: #0b1020;          /* dark indigo */
+      --panel: #141a33;       /* card */
+      --panel-2:#0f1530;      /* header/footer */
+      --text: #ecf1ff;        /* near white */
+      --muted:#b5c1ff;        /* soft indigo */
+      --brand:#7aa2ff;        /* primary */
+      --accent:#b388ff;       /* secondary */
+      --ok:#42d392;           /* green */
+      --warn:#ffcc66;         /* amber */
+      --danger:#ff6b6b;       /* red */
+      --card-shadow: 0 6px 30px rgba(0,0,0,.25);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-sm: 8px;
+    }
+    .light{
+      --bg: #f7f8fc;
+      --panel: #ffffff;
+      --panel-2:#ffffff;
+      --text: #1a2142;
+      --muted:#4b5a9a;
+      --brand:#3258ff;
+      --accent:#7b4cff;
+      --ok:#1a9f63;
+      --warn:#b7791f;
+      --danger:#e53e3e;
+      --card-shadow: 0 6px 24px rgba(24,39,75,.12);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:radial-gradient(1200px 800px at 100% -100%,rgba(122,162,255,.15),transparent 60%),
+      radial-gradient(800px 600px at -20% 20%,rgba(179,136,255,.15),transparent 60%), var(--bg); color:var(--text);
+      font: 16px/1.4 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    header{
+      position:sticky; top:0; z-index:5; backdrop-filter:saturate(1.2) blur(6px);
+      background:linear-gradient(180deg, rgba(20,26,51,.9), rgba(20,26,51,.65));
+      padding:14px 16px; border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .light header{background:rgba(255,255,255,.75)}
+    .wrap{max-width:1100px; margin:0 auto}
+    .row{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    h1{font-size:20px; margin:0; letter-spacing:.4px}
+    .muted{color:var(--muted)}
+    .spacer{flex:1}
+    input[type="search"], input[type="text"], input[type="url"], textarea, select{
+      background: var(--panel);
+      color: var(--text);
+      border:1px solid rgba(255,255,255,.08);
+      padding:10px 12px; border-radius:12px; outline: none; width:100%;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    .light input, .light textarea, .light select{border-color:rgba(20,26,51,.1); box-shadow: inset 0 0 0 1px rgba(0,0,0,.02)}
+    input::placeholder, textarea::placeholder{color:rgba(255,255,255,.5)}
+    .light input::placeholder, .light textarea::placeholder{color:#556}
+    .btn{
+      appearance:none; border:1px solid transparent; background:var(--brand); color:#fff; padding:10px 14px;
+      border-radius:12px; cursor:pointer; font-weight:600; box-shadow:var(--card-shadow); transition:transform .08s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.secondary{background:transparent; border-color:rgba(255,255,255,.18)}
+    .btn.ghost{background:transparent; border-color:transparent; box-shadow:none; color:var(--muted)}
+    .chip{display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; background:rgba(122,162,255,.12);
+      border:1px solid rgba(122,162,255,.25); color:var(--brand); font-weight:600; cursor:pointer}
+    .chip.active{background:var(--brand); color:#fff}
+    main{padding:22px 16px}
+    .grid{display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap:16px}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.08); border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--card-shadow);
+      display:flex; flex-direction:column; min-height:260px;
+    }
+    .light .card{border-color:rgba(20,26,51,.08)}
+    .thumb{aspect-ratio: 16/9; background:linear-gradient(135deg, rgba(122,162,255,.25), rgba(179,136,255,.25));
+      position:relative; overflow:hidden}
+    .thumb img{width:100%; height:100%; object-fit:cover; display:block}
+    .badge{position:absolute; top:10px; left:10px; background:rgba(0,0,0,.55); padding:4px 8px; border-radius:999px; font-size:12px}
+    .light .badge{background:rgba(255,255,255,.85); color:#222}
+    .content{padding:12px 14px; display:flex; flex-direction:column; gap:8px; flex:1}
+    .title{font-size:16px; font-weight:700; line-height:1.3}
+    .tags{display:flex; gap:8px; flex-wrap:wrap}
+    .card .actions{display:flex; gap:8px; align-items:center; margin-top:auto}
+    .stars{display:inline-flex; gap:2px; align-items:center}
+    .stars button{background:transparent; border:0; cursor:pointer; font-size:18px}
+
+    footer{padding:26px 16px; text-align:center; color:var(--muted)}
+
+    dialog{border:0; padding:0; border-radius:18px; width:min(720px, 92vw); background:var(--panel); color:var(--text); box-shadow:var(--card-shadow)}
+    dialog::backdrop{background:rgba(0,0,0,.5)}
+    .modal-head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid rgba(255,255,255,.08)}
+    .modal-body{padding:16px 18px}
+    .grid-two{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    .grid-two .full{grid-column:1/-1}
+    .help{font-size:12px; color:var(--muted)}
+
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+    .toolbar .section{display:flex; gap:8px; align-items:center}
+
+    .empty{border:1px dashed rgba(255,255,255,.18); padding:24px; border-radius:16px; text-align:center; color:var(--muted)}
+
+    .kbd{font:12px ui-monospace, SFMono-Regular, Menlo, Monaco; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+      padding:2px 6px; border-radius:6px}
+
+    .switch{position:relative; width:46px; height:28px; background:rgba(255,255,255,.15); border-radius:999px; cursor:pointer; display:inline-flex; align-items:center}
+    .switch input{appearance:none; width:100%; height:100%; margin:0}
+    .switch .dot{position:absolute; width:22px; height:22px; border-radius:999px; background:#fff; left:3px; transition:left .18s ease}
+    .switch input:checked + .dot{left:21px}
+
+    .note{font-size:13px; color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="row">
+        <h1>🍳 Recipe Tracker <span class="muted" id="count"></span></h1>
+        <div class="spacer"></div>
+        <div class="toolbar">
+          <div class="section" style="min-width:260px">
+            <input id="search" type="search" placeholder="Search recipes, tags, ingredients… ( / )" />
+          </div>
+          <div class="section">
+            <button class="btn" id="addBtn">＋ Add</button>
+            <button class="btn secondary" id="exportBtn" title="Download a JSON backup">Export</button>
+            <label class="btn secondary" for="importInput" title="Import from a JSON backup">Import</label>
+            <input id="importInput" type="file" accept="application/json" hidden />
+            <button class="btn secondary" id="managePeopleBtn" title="Add, rename, or remove people">People</button>
+            <label class="switch" title="Toggle light/dark">
+              <input id="themeToggle" type="checkbox" />
+              <span class="dot"></span>
+            </label>
+          </div>
+        </div>
+        <div class="row" id="activeFilters" style="width:100%; margin-top:10px"></div>
+        <div class="row" id="peopleBar" style="width:100%; margin-top:8px; gap:8px"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="tagBar" class="row" style="gap:8px; margin-bottom:8px"></div>
+    <div id="typeBar" class="row" style="gap:8px; margin-bottom:14px"></div>
+
+    <div id="grid" class="grid"></div>
+    <div id="emptyState" class="empty" style="display:none; margin-top:16px">
+      <p>No recipes yet. Click <b>＋ Add</b> to create one, or <b>Import</b> a backup JSON file.</p>
+      <p class="note">Everything is stored locally in your browser (not uploaded). To share between computers, use Export/Import.</p>
+    </div>
+  </main>
+
+  <!-- <footer>
+    <div class="wrap">
+      <div>Built for us ♥️</div>
+    </div>
+  </footer> -->
+
+  <!-- Add/Edit Modal -->
+  <dialog id="editModal">
+    <form method="dialog" id="editForm">
+      <div class="modal-head">
+        <strong id="modalTitle">Add Recipe</strong>
+        <button class="btn ghost" type="button" id="closeModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="grid-two">
+          <div>
+            <label>Title
+              <input required id="f_title" type="text" placeholder="e.g., Creamy Tuscan Chicken" />
+            </label>
+          </div>
+          <div>
+            <label>Type
+              <select id="f_type">
+                <option value="recipe">Recipe</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="ingredient">Ingredient</option>
+                <option value="side">Side</option>
+              </select>
+            </label>
+          </div>
+          <div>
+            <label>Source URL
+              <input id="f_url" type="url" placeholder="https://… (optional)" />
+            </label>
+          </div>
+          <div>
+            <label>Image URL
+              <input id="f_image" type="url" placeholder="https://… (optional)" />
+            </label>
+          </div>
+          <div>
+            <label>Tags (comma separated)
+              <input id="f_tags" type="text" placeholder="e.g., weeknight, pasta, vegetarian" />
+            </label>
+          </div>
+          <div class="full">
+            <label>Ingredients (one per line)
+              <textarea id="f_ingredients" rows="6" placeholder="2 tbsp olive oil
+3 cloves garlic, minced
+…"></textarea>
+            </label>
+          </div>
+          <div class="full">
+            <label>Steps (one per line)
+              <textarea id="f_steps" rows="6" placeholder="1) Heat oil…
+2) Add garlic…
+…"></textarea>
+            </label>
+          </div>
+          <div class="full">
+            <label>Ratings & personal notes by person
+              <div id="f_peopleRatings" class="row" style="gap:6px; flex-wrap:wrap"></div>
+            </label>
+          </div>
+          <div>
+            <label>Mood / Notes
+              <input id="f_notes" type="text" placeholder="e.g., We loved this with extra spinach" />
+            </label>
+          </div>
+        </div>
+        <div class="row" style="margin-top:12px; justify-content:space-between">
+          <!-- <div class="note">Tip: include a source link so you can jump back to the original recipe.</div> -->
+          <div class="row" style="gap:8px">
+            <button class="btn secondary" type="button" id="deleteBtn" style="display:none">Delete</button>
+            <button class="btn" type="submit">Save</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- View Modal -->
+  <dialog id="viewModal">
+    <div class="modal-head">
+      <strong id="v_title">Recipe</strong>
+      <div class="row">
+        <button class="btn secondary" id="v_edit">Edit</button>
+        <button class="btn ghost" id="v_close">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="row" style="gap:12px; align-items:flex-start; flex-wrap:wrap">
+        <img id="v_image" alt="" style="max-width:280px; border-radius:12px; display:none" />
+        <div style="flex:1; min-width:260px">
+          <div id="v_meta" class="note"></div>
+          <div id="v_tags" class="tags" style="margin:8px 0"></div>
+          <div class="row" style="gap:8px; flex-wrap:wrap">
+            <a id="v_source" class="btn secondary" href="#" target="_blank" rel="noopener">Open Source</a>
+            <button class="btn secondary" id="v_copy">Copy Ingredients</button>
+            <button class="btn secondary" id="v_print">Print</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px">
+        <h3>Ingredients</h3>
+        <ul id="v_ingredients"></ul>
+        <h3 style="margin-top:10px">Steps</h3>
+        <ol id="v_steps"></ol>
+        <div id="v_notes" class="note" style="margin-top:12px"></div>
+        <h3 style="margin-top:14px">Ratings</h3>
+        <div id="v_ratings" class="row" style="gap:8px; flex-wrap:wrap"></div>
+      </div>
+    </div>
+    <div id="itemsSection" class="modal-body" style="display:none; border-top:1px solid rgba(255,255,255,.08)">
+      <h3>Restaurant items</h3>
+      <div id="itemsList" style="margin:10px 0"></div>
+      <div class="row" style="gap:8px; align-items:flex-start; flex-wrap:wrap">
+        <input id="addItemName" type="text" placeholder="Add a dish (name)" style="min-width:220px"/>
+        <div id="addItemRatings" style="flex:1"></div>
+        <button class="btn" id="addItemBtn">Add Item</button>
+      </div>
+      <div class="note" style="margin-top:8px">Tip: Use person notes for preferences like spice level, toppings, etc.</div>
+    </div>
+  </dialog>
+
+  <!-- People Manager Modal -->
+  <dialog id="peopleModal">
+    <div class="modal-head">
+      <strong>People</strong>
+      <button class="btn ghost" id="closePeople">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="peopleList"></div>
+      <div class="row" style="gap:8px; margin-top:12px">
+        <input id="addPersonInput" type="text" placeholder="Add a person (name)"/>
+        <button class="btn" id="addPersonBtn">Add</button>
+      </div>
+      <div class="note" style="margin-top:10px">Use the chips above the grid to pick who is eating; cards sort by that group's average rating.</div>
+    </div>
+  </dialog>
+
+  <script>
+  // ---------- Data Layer with People, Per-Person Notes, Types & Restaurant Items ----------
+  const RECIPES_KEY = 'recipes-v3';
+  const PEOPLE_KEY = 'people-v1';
+  /** @type {Recipe[]} */
+  let RECIPES = [];
+  /** @type {Person[]} */
+  let PEOPLE = [];
+
+  let state = {
+    search: '',
+    activeTags: new Set(),
+    activeTypes: new Set(), // type filters
+    selectedPeople: new Set(), // diners to compute averages
+    viewId: null,
+    theme: localStorage.getItem('theme') || 'dark'
+  };
+
+  /** @typedef {{ id:string, name:string }} Person */
+  /** @typedef {('recipe'|'restaurant'|'ingredient'|'side')} RecipeType */
+  /** @typedef {{ id:string, title:string, type:RecipeType, url?:string, image?:string, tags:string[], ingredients:string[], steps:string[], ratings:Record<string, number>, personNotes:Record<string,string>, notes?:string, items?: Array<{id:string, name:string, tags:string[], ratings:Record<string,number>, notes:Record<string,string>, updated:number}>, created:number, updated:number, favorite?:boolean }} Recipe */
+
+  function load(){
+    try{
+      const rawR = localStorage.getItem(RECIPES_KEY);
+      const rawP = localStorage.getItem(PEOPLE_KEY);
+      PEOPLE = rawP ? JSON.parse(rawP) : [];
+      if(!Array.isArray(PEOPLE) || PEOPLE.length===0){ PEOPLE = [ {id: uid(), name:'Joe'}, {id: uid(), name:'Meghan'} ]; savePeople(); }
+      if(rawR){ RECIPES = JSON.parse(rawR); }
+      else { RECIPES = sampleData(); saveRecipes(); }
+
+      // Migrate from old format if present
+      const old = localStorage.getItem('recipes-v2') || localStorage.getItem('recipes-v1');
+      if(!rawR && old){
+        try{
+          const prev = JSON.parse(old);
+          if(Array.isArray(prev) && prev.length){
+            const [p1, p2] = PEOPLE;
+            RECIPES = prev.map(r=>({
+              id: r.id || uid(),
+              title: r.title,
+              type: r.type || 'recipe',
+              url: r.url, image: r.image,
+              tags: r.tags||[], ingredients: r.ingredients||[], steps: r.steps||[],
+              ratings: (()=>{ const m={}; if(r.ratings){ return r.ratings; } if(r.rating) m[p1.id]=Number(r.rating)||0; if(r.liked?.partner) m[p2.id]=Math.max(Number(r.rating)||0, 3); return m; })(),
+              personNotes: r.personNotes||{},
+              notes: r.notes||'', favorite: !!r.favorite,
+              items: r.items||[],
+              created: r.created||Date.now(), updated: r.updated||Date.now()
+            }));
+            saveRecipes();
+          }
+        }catch{ /* ignore */ }
+      }
+    }catch(e){ console.error(e); RECIPES = []; PEOPLE = []; }
+  }
+  function saveRecipes(){ localStorage.setItem(RECIPES_KEY, JSON.stringify(RECIPES)); }
+  function savePeople(){ localStorage.setItem(PEOPLE_KEY, JSON.stringify(PEOPLE)); }
+  function uid(){ return Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-4); }
+
+  // ---------- Rendering ----------
+  const grid = document.getElementById('grid');
+  const emptyState = document.getElementById('emptyState');
+  const count = document.getElementById('count');
+  const tagBar = document.getElementById('tagBar');
+  const typeBar = document.getElementById('typeBar');
+  const activeFilters = document.getElementById('activeFilters');
+  const peopleBar = document.getElementById('peopleBar');
+
+  function render(){
+    const list = filterAndSort();
+    count.textContent = `· ${list.length} recipes`;
+    grid.innerHTML = '';
+    emptyState.style.display = list.length ? 'none':'block';
+    for(const r of list){ grid.appendChild(card(r)); }
+
+    renderTagBar();
+    renderTypeBar();
+    renderActiveFilters();
+    renderPeopleBar();
+  }
+
+  function renderActiveFilters(){
+    activeFilters.innerHTML = '';
+    if(state.search){ activeFilters.appendChild(chipEl(`Search: "${state.search}"`, ()=>{ document.getElementById('search').value=''; state.search=''; render();})); }
+    for(const t of [...state.activeTags]){ activeFilters.appendChild(chipEl('#'+t, ()=>{ state.activeTags.delete(t); render(); })); }
+    if(state.activeTypes.size){ activeFilters.appendChild(chipEl('Type: '+[...state.activeTypes].join(', '), ()=>{ state.activeTypes.clear(); render(); })); }
+    if(state.selectedPeople.size){ activeFilters.appendChild(chipEl('Meal with: '+peopleNames([...state.selectedPeople]).join(', '), ()=>{ state.selectedPeople.clear(); render(); })); }
+  }
+
+  function renderPeopleBar(){
+    peopleBar.innerHTML = '';
+    const label = document.createElement('div'); label.className='note'; label.textContent='Meal with:'; peopleBar.appendChild(label);
+    for(const p of PEOPLE){ const el = document.createElement('span'); el.className='chip' + (state.selectedPeople.has(p.id)?' active':''); el.textContent=p.name; el.onclick=()=>{ togglePerson(p.id); }; peopleBar.appendChild(el); }
+  }
+
+  function renderTagBar(){
+    const tags = new Map(); for(const r of RECIPES){ for(const t of r.tags){ tags.set(t, (tags.get(t)||0)+1); } }
+    const entries = [...tags.entries()].sort((a,b)=> b[1]-a[1]).slice(0,20);
+    tagBar.innerHTML = '';
+    for(const [tag,count] of entries){ const el=document.createElement('span'); el.className='chip' + (state.activeTags.has(tag)?' active':''); el.textContent = `#${tag} (${count})`; el.onclick=()=>toggleTag(tag); tagBar.appendChild(el); }
+  }
+  function renderTypeBar(){
+    const types = ['recipe','restaurant','ingredient','side'];
+    typeBar.innerHTML = '';
+    const label = document.createElement('div'); label.className='note'; label.textContent='Type:'; typeBar.appendChild(label);
+    for(const t of types){ const el=document.createElement('span'); el.className='chip'+(state.activeTypes.has(t)?' active':''); el.textContent=t; el.onclick=()=>{ toggleType(t); }; typeBar.appendChild(el); }
+  }
+
+  function chipEl(text, onClose){ const div=document.createElement('span'); div.className='chip active'; div.innerHTML = `${text} <span style="opacity:.8">✕</span>`; div.onclick=onClose; return div; }
+
+  function toggleTag(tag){ if(state.activeTags.has(tag)) state.activeTags.delete(tag); else state.activeTags.add(tag); render(); }
+  function toggleType(type){ if(state.activeTypes.has(type)) state.activeTypes.delete(type); else state.activeTypes.add(type); render(); }
+  function togglePerson(id){ if(state.selectedPeople.has(id)) state.selectedPeople.delete(id); else state.selectedPeople.add(id); render(); }
+
+  function computedRating(r){
+    const entries = Object.entries(r.ratings||{});
+    if(!entries.length) return 0;
+    const chosen = state.selectedPeople.size? entries.filter(([pid])=> state.selectedPeople.has(pid)) : entries;
+    if(!chosen.length) return 0;
+    const avg = chosen.reduce((s,[,n])=> s + Number(n||0), 0) / chosen.length;
+    return avg;
+  }
+  function starLabel(avg){ if(!avg) return 'No rating'; const n = Math.round(avg); return '★'.repeat(n)+'☆'.repeat(5-n) + ` (${avg.toFixed(1)})`; }
+
+  function card(r){
+    const el = document.createElement('article'); el.className='card';
+    const t = document.createElement('div'); t.className='thumb';
+    if(r.image){ const img=document.createElement('img'); img.loading='lazy'; img.src=r.image; img.alt=''; t.appendChild(img); }
+    const b = document.createElement('span'); b.className='badge'; const avg=computedRating(r); b.textContent = `${starLabel(avg)} · ${r.type}`;
+    t.appendChild(b);
+    el.appendChild(t);
+
+    const c = document.createElement('div'); c.className='content';
+    const title = document.createElement('div'); title.className='title'; title.textContent = r.title; c.appendChild(title);
+    if(r.notes){ const n=document.createElement('div'); n.className='note'; n.textContent = r.notes; c.appendChild(n); }
+
+    const tags = document.createElement('div'); tags.className='tags';
+    r.tags.slice(0,6).forEach(tag=>{ const span=document.createElement('span'); span.className='chip'; span.textContent='#'+tag; span.onclick=(e)=>{ e.stopPropagation(); toggleTag(tag); }; tags.appendChild(span); });
+    c.appendChild(tags);
+
+    const actions = document.createElement('div'); actions.className='actions';
+    const openBtn = document.createElement('button'); openBtn.className='btn secondary'; openBtn.textContent='Open'; openBtn.onclick=(e)=>{ e.stopPropagation(); openView(r.id); };
+    const srcBtn = document.createElement('a'); srcBtn.className='btn secondary'; srcBtn.textContent='Source'; srcBtn.target='_blank'; srcBtn.rel='noopener'; srcBtn.href=r.url||'#';
+    const fav = document.createElement('button'); fav.className='btn ghost'; fav.title='Favorite'; fav.textContent = r.favorite ? '★' : '☆';
+    fav.onclick=(e)=>{ e.stopPropagation(); r.favorite=!r.favorite; r.updated=Date.now(); saveRecipes(); render(); };
+    actions.append(openBtn, srcBtn, fav);
+    c.appendChild(actions);
+
+    el.onclick=()=>openView(r.id);
+    return el;
+  }
+
+  function filterAndSort(){
+    let list = RECIPES.slice();
+    const q = state.search.trim().toLowerCase();
+    if(q){ list = list.filter(r=> r.title.toLowerCase().includes(q) || r.tags.join(' ').toLowerCase().includes(q) || r.ingredients.join('\n').toLowerCase().includes(q)); }
+    if(state.activeTags.size){ list = list.filter(r => [...state.activeTags].every(t=> r.tags.includes(t))); }
+    if(state.activeTypes.size){ list = list.filter(r => state.activeTypes.has(r.type)); }
+    list.sort((a,b)=> (b.favorite|0)-(a.favorite|0) || computedRating(b) - computedRating(a) || b.updated - a.updated);
+    return list;
+  }
+
+  // ---------- Add/Edit ----------
+  const editModal = document.getElementById('editModal');
+  const editForm = document.getElementById('editForm');
+  const deleteBtn = document.getElementById('deleteBtn');
+  const modalTitle = document.getElementById('modalTitle');
+  const peopleRatingsWrap = document.getElementById('f_peopleRatings');
+  const f_type = document.getElementById('f_type');
+
+  let editingId = null;
+
+  document.getElementById('addBtn').onclick = () => openEdit();
+  document.getElementById('closeModal').onclick = () => editModal.close();
+
+  function openEdit(id){
+    editingId = id || null;
+    modalTitle.textContent = id ? 'Edit' : 'Add';
+    deleteBtn.style.display = id ? '' : 'none';
+    const r = id ? RECIPES.find(x=>x.id===id) : null;
+    document.getElementById('f_title').value = r?.title || '';
+    document.getElementById('f_url').value = r?.url || '';
+    document.getElementById('f_image').value = r?.image || '';
+    document.getElementById('f_tags').value = r?.tags.join(', ') || '';
+    document.getElementById('f_ingredients').value = (r?.ingredients||[]).join('\n');
+    document.getElementById('f_steps').value = (r?.steps||[]).join('\n');
+    document.getElementById('f_notes').value = r?.notes || '';
+    f_type.value = r?.type || 'recipe';
+
+    // Build per-person rating + note inputs
+    peopleRatingsWrap.innerHTML = '';
+    for(const p of PEOPLE){
+      const group = document.createElement('div'); group.className='row'; group.style.gap='6px'; group.style.alignItems='center';
+      const name = document.createElement('span'); name.textContent=p.name+':'; name.style.minWidth='70px';
+      const sel = document.createElement('select'); sel.dataset.pid = p.id; sel.innerHTML = '<option value="0">–</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>'; sel.value = (r?.ratings?.[p.id] ?? 0);
+      const note = document.createElement('input'); note.type='text'; note.placeholder='personal note'; note.dataset.pid = p.id; note.dataset.kind='note'; note.value = r?.personNotes?.[p.id] || '';
+      group.append(name, sel, note); peopleRatingsWrap.appendChild(group);
+    }
+
+    editModal.showModal();
+  }
+
+  deleteBtn.onclick = () => {
+    if(editingId && confirm('Delete this entry?')){
+      RECIPES = RECIPES.filter(r=>r.id!==editingId);
+      saveRecipes(); editModal.close(); render();
+    }
+  }
+
+  editForm.onsubmit = (e)=>{
+    e.preventDefault();
+    const r = collectForm();
+    if(editingId){
+      const idx = RECIPES.findIndex(x=>x.id===editingId);
+      if(idx>-1){ RECIPES[idx] = {...RECIPES[idx], ...r, id:editingId, updated:Date.now()}; }
+    } else {
+      RECIPES.unshift({...r, id:uid(), created:Date.now(), updated:Date.now()});
+    }
+    saveRecipes(); editModal.close(); render();
+  }
+
+  function collectForm(){
+    const title = document.getElementById('f_title').value.trim();
+    const url = document.getElementById('f_url').value.trim();
+    const image = document.getElementById('f_image').value.trim();
+    const tags = document.getElementById('f_tags').value.split(',').map(s=>s.trim()).filter(Boolean).map(x=>x.toLowerCase());
+    const ingredients = document.getElementById('f_ingredients').value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const steps = document.getElementById('f_steps').value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const notes = document.getElementById('f_notes').value.trim();
+    const type = f_type.value || 'recipe';
+
+    // Per-person ratings + notes
+    const ratings = {}; const personNotes = {};
+    peopleRatingsWrap.querySelectorAll('select').forEach(sel=>{ const v=Number(sel.value||0); if(v>0) ratings[sel.dataset.pid]=v; });
+    peopleRatingsWrap.querySelectorAll('input[data-kind="note"]').forEach(inp=>{ const v=inp.value.trim(); if(v) personNotes[inp.dataset.pid]=v; });
+
+    return { title, type, url, image, tags, ingredients, steps, ratings, personNotes, notes };
+  }
+
+  // ---------- View Modal ----------
+  const viewModal = document.getElementById('viewModal');
+  const v_close = document.getElementById('v_close');
+  const v_title = document.getElementById('v_title');
+  const v_image = document.getElementById('v_image');
+  const v_source = document.getElementById('v_source');
+  const v_tags = document.getElementById('v_tags');
+  const v_meta = document.getElementById('v_meta');
+  const v_ing = document.getElementById('v_ingredients');
+  const v_steps = document.getElementById('v_steps');
+  const v_notes = document.getElementById('v_notes');
+  const v_edit = document.getElementById('v_edit');
+  const v_copy = document.getElementById('v_copy');
+  const v_print = document.getElementById('v_print');
+  const v_ratings = document.getElementById('v_ratings');
+  const addItemName = document.getElementById('addItemName');
+  const addItemBtn = document.getElementById('addItemBtn');
+  const addItemWrap = document.getElementById('addItemRatings');
+  const itemsList = document.getElementById('itemsList');
+
+  v_close.onclick = ()=>viewModal.close();
+
+  function openView(id){
+    const r = RECIPES.find(x=>x.id===id); if(!r) return;
+    state.viewId = id;
+    v_title.textContent = r.title;
+    if(r.image){ v_image.src=r.image; v_image.style.display='block'; } else { v_image.style.display='none'; }
+    v_source.href = r.url || '#'; v_source.style.display = r.url? '':'none';
+    v_tags.innerHTML = ''; r.tags.forEach(t=>{ const s=document.createElement('span'); s.className='chip'; s.textContent='#'+t; s.onclick=()=>{ toggleTag(t); viewModal.close(); }; v_tags.appendChild(s); });
+
+    const avg = computedRating(r);
+    const raterCount = state.selectedPeople.size ? [...state.selectedPeople].filter(pid=> r.ratings?.[pid]>0).length : Object.keys(r.ratings||{}).length;
+    v_meta.textContent = `${r.type} · ${starLabel(avg)} · ${raterCount} rating${raterCount===1?'':'s'} · Updated ${new Date(r.updated).toLocaleDateString()}`;
+
+    v_ing.innerHTML = r.ingredients.map(i=>`<li>${escapeHtml(i)}</li>`).join('');
+    v_steps.innerHTML = r.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join('');
+    v_notes.textContent = r.notes||'';
+
+    // Ratings by person (with personal notes)
+    v_ratings.innerHTML = '';
+    for(const p of PEOPLE){
+      const score = r.ratings?.[p.id] || 0; const personal = r.personNotes?.[p.id] || '';
+      const chip = document.createElement('span'); chip.className='chip'; chip.textContent = `${p.name}: ${score? '★'.repeat(score)+'☆'.repeat(5-score)+' ('+score+')' : '–'}${personal? ' · '+personal:''}`;
+      v_ratings.appendChild(chip);
+    }
+
+    // Restaurant items UI
+    if(r.type === 'restaurant'){
+      buildAddItemUI(r); renderItems(r); document.getElementById('itemsSection').style.display='block';
+    } else { document.getElementById('itemsSection').style.display='none'; }
+
+    v_edit.onclick = ()=>{ viewModal.close(); openEdit(id); };
+    v_copy.onclick = ()=>{ navigator.clipboard.writeText(r.ingredients.join('\n')).then(()=>{ v_copy.textContent='Copied!'; setTimeout(()=>v_copy.textContent='Copy Ingredients', 800); }); };
+    v_print.onclick = ()=>{ printRecipe(r); };
+
+    viewModal.showModal();
+  }
+
+  function printRecipe(r){
+    const avg = computedRating(r);
+    const html = `<!doctype html><title>${r.title}</title><style>body{font:16px/1.5 system-ui; padding:24px} h1{margin:0 0 4px} .muted{color:#555} ul, ol{margin:.5em 0 1em 1.2em}</style>
+    <h1>${escapeHtml(r.title)}</h1>
+    <div class="muted">${r.type} · ${starLabel(avg)}${r.url? ' · <a href="'+r.url+'">Source</a>':''} · ${r.tags.map(t=>'#'+t).join(' ')}</div>
+    <h3>Ingredients</h3><ul>${r.ingredients.map(i=>'<li>'+escapeHtml(i)+'</li>').join('')}</ul>
+    <h3>Steps</h3><ol>${r.steps.map(s=>'<li>'+escapeHtml(s)+'</li>').join('')}</ol>
+    ${r.notes? '<div><strong>Notes:</strong> '+escapeHtml(r.notes)+'</div>':''}`;
+    const w = window.open('', '_blank'); w.document.write(html); w.document.close(); w.focus(); w.print();
+  }
+
+  // ----- Restaurant Items helpers -----
+  function buildAddItemUI(r){
+    addItemWrap.innerHTML = '';
+    for(const p of PEOPLE){
+      const row = document.createElement('div'); row.className='row'; row.style.gap='6px'; row.style.alignItems='center';
+      const name = document.createElement('span'); name.textContent=p.name+':'; name.style.minWidth='70px';
+      const sel = document.createElement('select'); sel.dataset.pid=p.id; sel.innerHTML='<option value="0">–</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>';
+      const note = document.createElement('input'); note.type='text'; note.placeholder='note'; note.dataset.pid=p.id; note.dataset.kind='note';
+      row.append(name, sel, note); addItemWrap.appendChild(row);
+    }
+    addItemBtn.onclick = ()=>{
+      const name = addItemName.value.trim(); if(!name) return;
+      const item = { id: uid(), name, tags: [], ratings:{}, notes:{}, updated:Date.now() };
+      addItemWrap.querySelectorAll('select').forEach(s=>{ const v=Number(s.value||0); if(v>0) item.ratings[s.dataset.pid]=v; });
+      addItemWrap.querySelectorAll('input[data-kind="note"]').forEach(i=>{ const v=i.value.trim(); if(v) item.notes[i.dataset.pid]=v; });
+      if(!Array.isArray(r.items)) r.items=[];
+      r.items.unshift(item); r.updated=Date.now(); saveRecipes(); renderItems(r); addItemName.value=''; addItemWrap.querySelectorAll('select').forEach(s=>s.value='0'); addItemWrap.querySelectorAll('input').forEach(i=>i.value=''); render();
+    };
+  }
+
+  function renderItems(r){
+    itemsList.innerHTML='';
+    const items = (r.items||[]).slice().sort((a,b)=> (avgItem(b)-avgItem(a)) || b.updated-a.updated);
+    for(const it of items){
+      const row = document.createElement('div'); row.className='card'; row.style.padding='10px';
+      const top = document.createElement('div'); top.className='row'; top.style.justifyContent='space-between';
+      const name = document.createElement('div'); name.className='title'; name.textContent = it.name + ' · ' + starLabel(avgItem(it));
+      const del = document.createElement('button'); del.className='btn secondary'; del.textContent='Delete'; del.onclick=()=>{ if(confirm('Delete item?')){ r.items = r.items.filter(x=>x.id!==it.id); r.updated=Date.now(); saveRecipes(); renderItems(r); render(); } };
+      top.append(name, del); row.appendChild(top);
+
+      const prs = document.createElement('div'); prs.className='row'; prs.style.gap='8px'; prs.style.flexWrap='wrap';
+      for(const p of PEOPLE){
+        const score = it.ratings?.[p.id]||0; const note = it.notes?.[p.id]||'';
+        const chip = document.createElement('span'); chip.className='chip'; chip.textContent = `${p.name}: ${score? '★'.repeat(score)+'☆'.repeat(5-score)+' ('+score+')' : '–'}${note? ' · '+note:''}`;
+        prs.appendChild(chip);
+      }
+      row.appendChild(prs);
+      itemsList.appendChild(row);
+    }
+  }
+
+  function avgItem(it){
+    const entries = Object.entries(it.ratings||{});
+    const chosen = state.selectedPeople.size? entries.filter(([pid])=> state.selectedPeople.has(pid)) : entries;
+    if(!chosen.length) return 0; return chosen.reduce((s,[,n])=> s+Number(n||0),0)/chosen.length;
+  }
+
+  // ---------- Import/Export (Recipes + People) ----------
+  document.getElementById('exportBtn').onclick = ()=>{
+    const payload = { people: PEOPLE, recipes: RECIPES };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'recipes-and-people.json'; a.click(); URL.revokeObjectURL(url);
+  };
+  document.getElementById('importInput').onchange = async (e)=>{
+    const file = e.target.files?.[0]; if(!file) return; const text = await file.text();
+    try{
+      const data = JSON.parse(text);
+      if(Array.isArray(data)){
+        // old style: array of recipes only
+        RECIPES = data; saveRecipes(); alert('Imported '+RECIPES.length+' recipes (old format). People unchanged.');
+      } else if(data && Array.isArray(data.recipes) && Array.isArray(data.people)){
+        PEOPLE = data.people; RECIPES = data.recipes; savePeople(); saveRecipes(); alert('Imported '+RECIPES.length+' recipes and '+PEOPLE.length+' people.');
+      } else { throw new Error('Invalid file'); }
+      render();
+    }catch(err){ alert('Import failed: '+err.message); }
+    e.target.value = '';
+  }
+
+  // ---------- Search ----------
+  document.getElementById('search').addEventListener('input', (e)=>{ state.search = e.target.value; render(); });
+
+  // ---------- Theme ----------
+  const themeToggle = document.getElementById('themeToggle');
+  function applyTheme(){ if(state.theme==='light'){ document.body.classList.add('light'); themeToggle.checked=true; } else { document.body.classList.remove('light'); themeToggle.checked=false; } }
+  themeToggle.onchange = ()=>{ state.theme = themeToggle.checked? 'light':'dark'; localStorage.setItem('theme', state.theme); applyTheme(); };
+
+  // ---------- People Manager ----------
+  const manageBtn = document.getElementById('managePeopleBtn');
+  const peopleModal = document.getElementById('peopleModal');
+  const peopleList = document.getElementById('peopleList');
+  const addPersonInput = document.getElementById('addPersonInput');
+  const addPersonBtn = document.getElementById('addPersonBtn');
+  const closePeople = document.getElementById('closePeople');
+
+  manageBtn.onclick = ()=>{ renderPeopleList(); peopleModal.showModal(); };
+  closePeople.onclick = ()=> peopleModal.close();
+  addPersonBtn.onclick = ()=>{
+    const name = addPersonInput.value.trim(); if(!name) return;
+    PEOPLE.push({id: uid(), name}); savePeople(); addPersonInput.value=''; renderPeopleList(); renderPeopleBar(); render();
+  };
+
+  function renderPeopleList(){
+    peopleList.innerHTML = '';
+    for(const p of PEOPLE){
+      const row = document.createElement('div'); row.className='row'; row.style.justifyContent='space-between'; row.style.margin='6px 0';
+      const left = document.createElement('div'); left.textContent = p.name;
+      const right = document.createElement('div');
+      const rename = document.createElement('button'); rename.className='btn secondary'; rename.textContent='Rename';
+      const remove = document.createElement('button'); remove.className='btn secondary'; remove.textContent='Remove';
+      rename.onclick = ()=>{ const n = prompt('Rename person', p.name); if(!n) return; p.name = n.trim(); savePeople(); renderPeopleList(); renderPeopleBar(); render(); };
+      remove.onclick = ()=>{
+        if(!confirm('Remove '+p.name+'? Their ratings will be deleted from recipes.')) return;
+        for(const r of RECIPES){ if(r.ratings && r.ratings[p.id]!==undefined){ delete r.ratings[p.id]; } if(r.personNotes && r.personNotes[p.id]!==undefined){ delete r.personNotes[p.id]; } if(Array.isArray(r.items)){ for(const it of r.items){ if(it.ratings&&it.ratings[p.id]!==undefined) delete it.ratings[p.id]; if(it.notes&&it.notes[p.id]!==undefined) delete it.notes[p.id]; } } }
+        PEOPLE = PEOPLE.filter(x=>x.id!==p.id);
+        state.selectedPeople.delete(p.id);
+        savePeople(); saveRecipes(); renderPeopleList(); renderPeopleBar(); render();
+      };
+      right.append(rename, remove);
+      row.append(left, right); peopleList.appendChild(row);
+    }
+  }
+
+  // ---------- Utils ----------
+  function escapeHtml(s){ return s.replace(/[&<>\"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c])); }
+  function peopleNames(ids){ return ids.map(id=> PEOPLE.find(p=>p.id===id)?.name || 'Unknown'); }
+
+  function sampleData(){
+    const now = Date.now();
+    const [p1,p2] = PEOPLE;
+    return [
+      { id: uid(), type:'recipe', title: 'Creamy Tuscan Chicken', url:'https://example.com/tuscan-chicken', image:'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1200&auto=format&fit=crop',
+        tags:['chicken','weeknight','pasta'], ingredients:['2 tbsp olive oil','3 cloves garlic, minced','2 cups spinach','1 cup cream','2 chicken breasts','sun-dried tomatoes','parmesan'],
+        steps:['Season and sear chicken until golden.','Add garlic and tomatoes.','Stir in cream and simmer.','Fold in spinach and parmesan.'], ratings:{[p1.id]:5,[p2.id]:5}, personNotes:{}, notes:'Great with crusty bread.', created: now-86400000*8, updated: now-86400000*2, favorite:true },
+      { id: uid(), type:'ingredient', title: 'Five‑Minute Tahini Sauce', url:'', image:'', tags:['sauce','vegan','quick'],
+        ingredients:['1/2 cup tahini','1 lemon, juiced','1 clove garlic, grated','Water to thin','Salt'],
+        steps:['Whisk tahini with lemon and garlic.','Thin with water to desired consistency.','Season with salt.'], ratings:{[p1.id]:4}, personNotes:{}, notes:'Drizzle on bowls or roasted veg.', created: now-86400000*5, updated: now-86400000*1 },
+      { id: uid(), type:'restaurant', title: 'Taqueria El Sol', url:'', image:'https://images.unsplash.com/photo-1600431521340-491eca880813?q=80&w=1200&auto=format&fit=crop', tags:['mexican'],
+        ingredients:[], steps:[], ratings:{[p2.id]:4}, personNotes:{[p2.id]:'prefers steak fajitas'}, notes:'Neighborhood spot', items:[{id:uid(), name:'Carne Asada Tacos', tags:[], ratings:{[p1.id]:5,[p2.id]:4}, notes:{[p2.id]:'extra lime'}, updated: now-3600*1000}], created: now-86400000*3, updated: now-3600*1000 }
+    ];
+  }
+
+  // ---------- Init ----------
+  load(); applyTheme(); render();
+  </script>
+</body>
+</html>

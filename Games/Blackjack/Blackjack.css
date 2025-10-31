@@ -1,18 +1,25 @@
 html { 
-	background-color:#092E20; 
+	
 }
 
-body { 
+body {
+	background-color:#092E20;
+	margin: 0;
+}
+
+#GameArea { 
 	position:relative;
 	border-radius:8px; 
 	box-shadow:black 0px 0px 2px; 
 	width: 600px; 
-	background:#FFF; 
+	background:black;
+	color: white; 
 	margin:20px auto; 
 	border:solid 1px black; 
 	font-family: arial, sans-serif; 
 	padding:50px;  
 }
+
 #buttons {
 	text-align:center;
 }
@@ -35,14 +42,19 @@ h1 {
 	font-size:60px;
 	text-align:center;
 	padding:0px;
-	margin:10px auto;
+	margin:10px;
 }
 h3 {
 	position: absolute; 
 	right: 30;
 	font-size:30px;
-	margin:10px auto;
+	margin:10px;
 }
+
+input {
+	margin:10px;
+}
+
 #money {
 	padding-left:500px;
 }
