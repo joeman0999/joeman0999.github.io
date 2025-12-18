@@ -7,6 +7,9 @@
   <meta name="description" content="A simple, private recipe tracker that runs entirely in your browser. Save, search, tag, and rate recipes. Data is stored in your browser (localStorage)." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='0.9em' font-size='90'%3E%F0%9F%8D%B3%3C/text%3E%3C/svg%3E" />
   <style>
+    [hidden] {
+      display: none !important;
+    }
     :root{
       --bg: #0b1020;          /* dark indigo */
       --panel: #141a33;       /* card */
@@ -119,13 +122,31 @@
     .switch input:checked + .dot{left:21px}
 
     .note{font-size:13px; color:var(--muted)}
+
+    .nav-logo {
+      font-size: 1.2rem;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .nav-icon {
+      height: 1.2rem;
+      width: 1.2rem;
+      vertical-align: middle;
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap">
       <div class="row">
-        <h1>🍳 Recipe Tracker <span class="muted" id="count"></span></h1>
+        <a href="../index.html" class="nav-logo">
+                <img src="../favicon.png" alt="Logo" class="nav-icon">
+        </a>
+        <h1>Recipe Tracker <span class="muted" id="count"></span></h1>
         <div class="spacer"></div>
         <div class="toolbar">
           <div class="section" style="min-width:260px">
@@ -137,7 +158,8 @@
             <label class="btn secondary" for="importInput" title="Import from a JSON backup">Import</label>
             <input id="importInput" type="file" accept="application/json" hidden />
             <button class="btn secondary" id="managePeopleBtn" title="Add, rename, or remove people">People</button>
-            <label class="switch" title="Toggle light/dark">
+            <button class="btn secondary" id="signInBtn" title="Unlock and load recipes">Load Joe's Recipes</button>
+            <label class="switch" title="Toggle light/dark" hidden>
               <input id="themeToggle" type="checkbox" />
               <span class="dot"></span>
             </label>
@@ -328,7 +350,6 @@
       const rawR = localStorage.getItem(RECIPES_KEY);
       const rawP = localStorage.getItem(PEOPLE_KEY);
       PEOPLE = rawP ? JSON.parse(rawP) : [];
-      if(!Array.isArray(PEOPLE) || PEOPLE.length===0){ PEOPLE = [ {id: uid(), name:'Joe'}, {id: uid(), name:'Meghan'} ]; savePeople(); }
       if(rawR){ RECIPES = JSON.parse(rawR); }
       else { RECIPES = sampleData(); saveRecipes(); }
 
@@ -741,6 +762,45 @@
         ingredients:[], steps:[], ratings:{[p2.id]:4}, personNotes:{[p2.id]:'prefers steak fajitas'}, notes:'Neighborhood spot', items:[{id:uid(), name:'Carne Asada Tacos', tags:[], ratings:{[p1.id]:5,[p2.id]:4}, notes:{[p2.id]:'extra lime'}, updated: now-3600*1000}], created: now-86400000*3, updated: now-3600*1000 }
     ];
   }
+
+  const SIGN_IN_PASSWORD = 'hello'; // change if desired
+
+  document.getElementById('signInBtn').onclick = async () => {
+    const pw = prompt('Enter password:');
+    if (pw === null) return; // user cancelled
+
+    if (pw !== SIGN_IN_PASSWORD) {
+      alert('Incorrect password.');
+      return;
+    }
+
+    try {
+      const res = await fetch('./recipes-and-people.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Could not load recipes-and-people.json');
+
+      const data = await res.json();
+
+      // Reuse your existing import rules
+      if (Array.isArray(data)) {
+        // old format: recipes only
+        RECIPES = data;
+        saveRecipes();
+        alert(`Loaded ${RECIPES.length} recipes.`);
+      } else if (data && Array.isArray(data.recipes) && Array.isArray(data.people)) {
+        PEOPLE = data.people;
+        RECIPES = data.recipes;
+        savePeople();
+        saveRecipes();
+        alert(`Loaded ${RECIPES.length} recipes and ${PEOPLE.length} people.`);
+      } else {
+        throw new Error('Invalid data format.');
+      }
+
+      render();
+    } catch (err) {
+      alert('Sign in failed: ' + err.message);
+    }
+  };
 
   // ---------- Init ----------
   load(); applyTheme(); render();
