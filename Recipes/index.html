@@ -439,13 +439,18 @@
 
   function computedRating(r){
     const entries = Object.entries(r.ratings||{});
-    if(!entries.length) return 0;
+    if(!entries.length) return null;
     const chosen = state.selectedPeople.size? entries.filter(([pid])=> state.selectedPeople.has(pid)) : entries;
-    if(!chosen.length) return 0;
+    if(!chosen.length) return null;
     const avg = chosen.reduce((s,[,n])=> s + Number(n||0), 0) / chosen.length;
     return avg;
   }
-  function starLabel(avg){ if(!avg) return 'No rating'; const n = Math.round(avg); return '★'.repeat(n)+'☆'.repeat(5-n) + ` (${avg.toFixed(1)})`; }
+
+  function starLabel(avg){
+    if (avg == null) return 'No rating';
+    const n = Math.round(avg);
+    return '★'.repeat(n) + '☆'.repeat(5-n) + ` (${avg.toFixed(1)})`;
+  }
 
   function card(r){
     const el = document.createElement('article'); el.className='card';
@@ -517,7 +522,19 @@
     for(const p of PEOPLE){
       const group = document.createElement('div'); group.className='row'; group.style.gap='6px'; group.style.alignItems='center';
       const name = document.createElement('span'); name.textContent=p.name+':'; name.style.minWidth='70px';
-      const sel = document.createElement('select'); sel.dataset.pid = p.id; sel.innerHTML = '<option value="0">–</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>'; sel.value = (r?.ratings?.[p.id] ?? 0);
+      const sel = document.createElement('input');
+      sel.type = 'number';
+      sel.min = '0';
+      sel.max = '5';
+      sel.step = '0.1';          // allows any decimal
+      sel.placeholder = '–';     // dash = no rating
+      sel.dataset.pid = p.id;
+
+      if (r?.ratings?.[p.id] != null) {
+        sel.value = r.ratings[p.id];
+      } else {
+        sel.value = '';          // empty = no rating
+      }
       const note = document.createElement('input'); note.type='text'; note.placeholder='personal note'; note.dataset.pid = p.id; note.dataset.kind='note'; note.value = r?.personNotes?.[p.id] || '';
       group.append(name, sel, note); peopleRatingsWrap.appendChild(group);
     }
@@ -556,7 +573,15 @@
 
     // Per-person ratings + notes
     const ratings = {}; const personNotes = {};
-    peopleRatingsWrap.querySelectorAll('select').forEach(sel=>{ const v=Number(sel.value||0); if(v>0) ratings[sel.dataset.pid]=v; });
+    peopleRatingsWrap.querySelectorAll('input[type="number"]').forEach(inp=>{
+      const v = inp.value.trim();
+      if (v !== '') {
+        const n = Math.max(0, Math.min(5, Number(v)));
+        if (!Number.isNaN(n)) {
+          ratings[inp.dataset.pid] = n;
+        }
+      }
+    });
     peopleRatingsWrap.querySelectorAll('input[data-kind="note"]').forEach(inp=>{ const v=inp.value.trim(); if(v) personNotes[inp.dataset.pid]=v; });
 
     return { title, type, url, image, tags, ingredients, steps, ratings, personNotes, notes };
@@ -603,8 +628,8 @@
     // Ratings by person (with personal notes)
     v_ratings.innerHTML = '';
     for(const p of PEOPLE){
-      const score = r.ratings?.[p.id] || 0; const personal = r.personNotes?.[p.id] || '';
-      const chip = document.createElement('span'); chip.className='chip'; chip.textContent = `${p.name}: ${score? '★'.repeat(score)+'☆'.repeat(5-score)+' ('+score+')' : '–'}${personal? ' · '+personal:''}`;
+      const score = r.ratings?.[p.id] || null; const personal = r.personNotes?.[p.id] || '';
+      const chip = document.createElement('span'); chip.className='chip'; chip.textContent = `${p.name}: ${starLabel(score)}${personal? ' · '+personal:''}`;
       v_ratings.appendChild(chip);
     }
 
@@ -664,7 +689,8 @@
       const prs = document.createElement('div'); prs.className='row'; prs.style.gap='8px'; prs.style.flexWrap='wrap';
       for(const p of PEOPLE){
         const score = it.ratings?.[p.id]||0; const note = it.notes?.[p.id]||'';
-        const chip = document.createElement('span'); chip.className='chip'; chip.textContent = `${p.name}: ${score? '★'.repeat(score)+'☆'.repeat(5-score)+' ('+score+')' : '–'}${note? ' · '+note:''}`;
+        const chip = document.createElement('span'); chip.className='chip'; 
+        chip.textContent = `${p.name}: ${starLabel(score)}}`;
         prs.appendChild(chip);
       }
       row.appendChild(prs);
