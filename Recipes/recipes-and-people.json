@@ -11,6 +11,281 @@
   ],
   "recipes": [
     {
+      "title": "White Rice",
+      "type": "ingredient",
+      "url": "",
+      "image": "images/rice_instructions.jpg",
+      "tags": [],
+      "ingredients": [],
+      "steps": [],
+      "ratings": {
+        "m3antayqlrf": 5,
+        "in0s2ysqlrf": 5
+      },
+      "personNotes": {},
+      "notes": "",
+      "id": "pjufrr12q3m",
+      "created": 1766102914210,
+      "updated": 1766102922644
+    },
+    {
+      "title": "Garlic Bread Pasta",
+      "type": "recipe",
+      "url": "",
+      "image": "images/garlic_bread_pasta.jpg",
+      "tags": [],
+      "ingredients": [
+        "1 lb. cavatappi pasta",
+        "1/2 cup (1 stick) salted butter",
+        "3 tablespoons salted butter",
+        "3/4 cup dried breadcrumbs",
+        "1 tbsp. dried parsley",
+        "1 tsp. Italian seasoning",
+        "1/4 tsp. salt",
+        "1/4 tsp. pepper",
+        "3 garlic cloves, minced"
+      ],
+      "steps": [
+        "cook pasta according to package",
+        "melt 3 tbsp. butter over medium heat until browned, keep swirling pan so it doesn't burn",
+        "reduce heat to low and add breadcrumbs, parsley, Italian seasoning, salt, and pepper",
+        "stir",
+        "melt butter and garlic together",
+        "add pasta and garlic butter to bowl and toss",
+        "add breadcrumbs and toss to coat"
+      ],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "",
+      "id": "gzozteet904",
+      "created": 1766099112916,
+      "updated": 1766100295106
+    },
+    {
+      "title": "Meatball Parmesan Casserole",
+      "type": "recipe",
+      "url": "",
+      "image": "images/meatball_casserole.jpg",
+      "tags": [],
+      "ingredients": [
+        "1 bag frozen meatballs (24–28 oz) and cooked according to package directions",
+        "3 cups pasta sauce",
+        "2 cups shredded mozzarella cheese",
+        "1 cup shredded parmesan cheese",
+        "1-2 tsp. Italian seasoning to taste"
+      ],
+      "steps": [
+        "if the package states fully cooked, you may skip browning or pre-cooking. If they are raw, cook them fully according to package directions before assembling the casserole.",
+        "preheat oven to 350 F",
+        "spread 1 cup pasta sauce into the bottom of a 3 quart casserole dish",
+        "arrange the precooked meatballs on top",
+        "pour 2 cups pasta sauce on top to cover the meatballs",
+        "sprinkle with shredded mozzarella, parmesan, and Italian seasoning",
+        "bake for 15 minutes"
+      ],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "",
+      "id": "1k5mc85t3ej",
+      "created": 1766099105659,
+      "updated": 1766099946263
+    },
+    {
+      "title": "Sausage Egg and Cheese Breakfast Rollups",
+      "type": "recipe",
+      "url": "",
+      "image": "images/sausage_egg_cheese_rollups.jpg",
+      "tags": [],
+      "ingredients": [
+        "5 eggs",
+        "1 can (8 oz.) crescent dinner rolls",
+        "8 cooked breakfast sausage links",
+        "4 slices Cheddar cheese",
+        "salt and pepper to taste"
+      ],
+      "steps": [
+        "heat oven to 350 F",
+        "crack and beat eggs",
+        "reserve 2 tbsp. beaten eggs for brushing on crescent rolls",
+        "cook remaining eggs until scrambled on stovetop",
+        "unroll dough and separate into 8 triangles",
+        "cut cheese slices in half and place half on each triangle",
+        "top each with scrambled eggs and sausage",
+        "loosely roll up",
+        "place on ungreased cookie sheet",
+        "brush reserved beaten egg on top of each crescent",
+        "sprinkle salt and pepper over each",
+        "bake 15-18 minutes or until golden brown"
+      ],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "",
+      "id": "47y28ors4vg",
+      "created": 1766099060908,
+      "updated": 1766100582744
+    },
+    {
+      "title": "Hulk",
+      "type": "recipe",
+      "url": "",
+      "image": "images/Hulk.jpg",
+      "tags": [
+        "drink"
+      ],
+      "ingredients": [
+        "1/5 oz. UV Blue Raspberry vodka",
+        ".5 oz. blue curacao",
+        "1 can (8.4 oz) Red Bull (any flavor, blueberry recommended)",
+        "Possibly",
+        "7UP, Grizzly Energy Drink with a shot of vodka dropped in"
+      ],
+      "steps": [],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "",
+      "id": "bdt7vdellmg",
+      "created": 1766098756024,
+      "updated": 1766098877545
+    },
+    {
+      "title": "Fudge",
+      "type": "recipe",
+      "url": "",
+      "image": "images/fudge.jpg",
+      "tags": [],
+      "ingredients": [
+        "1 1/2 cups granulated sugar",
+        "2/3 cup Evaporated Milk",
+        "2 tbsp. butter",
+        "1/4 tsp. salt",
+        "2 cups miniature marshmallows",
+        "1 1/2 cups chocolate chips",
+        "1 tsp. vanilla extract"
+      ],
+      "steps": [
+        "Line a 8-inch square baking pan with foil.",
+        "In a medium, heavy-duty saucepan, combine sugar, evaporated milk, butter, and salt.",
+        "Over medium heat, bring to a full rolling boil, stirring constantly. Continue to boil, stirring constantly, for 4 to 5 minutes.",
+        "Remove from heat.",
+        "Stir in marshmallows, chocolate chips, and vanilla extract until all marshmallows are melted. Stir vigorously for 1 minute.",
+        "Immediately pour into prepared baking pan.",
+        "Refrigerate for 2 hours or until firm.",
+        "Lift from pan; remove foil. Cut into 48 pieces."
+      ],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "",
+      "id": "vomqacufaco",
+      "created": 1766095102248,
+      "updated": 1766097720498
+    },
+    {
+      "title": "Chocolate Chip Cookies",
+      "type": "recipe",
+      "url": "",
+      "image": "images/chocolate_chip_cookies.jpg",
+      "tags": [
+        "cookies"
+      ],
+      "ingredients": [
+        "3/8 cups all-purpose flour",
+        "1 tsp. baking soda",
+        "1 tsp. salt",
+        "1 cup (2 sticks) of softened butter",
+        "3/4 cup granulated sugar",
+        "3/4 cup packed brown sugar",
+        "1 tsp. vanilla extract",
+        "2 large eggs",
+        "2 cups chocolate chips"
+      ],
+      "steps": [
+        "preheat oven to 375 F",
+        "beat butter, granulated sugar, brown sugar, and vanilla extract until creamy",
+        "add eggs one at a time beating well after each addition",
+        "in a separate bowl combine flour, baking soda, and salt",
+        "beat in flour mixture to first mixture gradually",
+        "stir in chocolate chips",
+        "spoon out onto ungreased baking sheets",
+        "bake for 9-11 minutes or until golden brown",
+        "Cool on baking sheet for 2 minutes",
+        "remove to wire racks to cool completely",
+        "makes about 5 dozen cookies"
+      ],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "",
+      "id": "i75ko18f2oc",
+      "created": 1766095092300,
+      "updated": 1766097300678
+    },
+    {
+      "title": "Lava Cake",
+      "type": "recipe",
+      "url": "",
+      "image": "images/lava_cake.jpg",
+      "tags": [],
+      "ingredients": [],
+      "steps": [],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "",
+      "id": "libeno43emc",
+      "created": 1766086149828,
+      "updated": 1766086149828
+    },
+    {
+      "title": "Protein Chocolate Chip Cookies",
+      "type": "recipe",
+      "url": "",
+      "image": "images/protein_chocolate_chip_cookies.jpg",
+      "tags": [],
+      "ingredients": [
+        "1 cup flour",
+        "1/2 tsp. baking soda",
+        "1/4 tbsp. salt",
+        "1/2 cup high protein yogurt",
+        "1 egg",
+        "3 tbsp. brown sugar",
+        "1 tsp. vanilla extract",
+        "1/3 cup chocolate chips"
+      ],
+      "steps": [
+        "preheat oven to 350 F",
+        "Line a baking sheet with parchment paper",
+        "whisk together flour, baking soda, and salt",
+        "in another bowl whisk together yogurt, egg, brown sugar, and vanilla until smooth",
+        "add dry ingredients to the wet mixture and stir until combined",
+        "if the dough feels thick or crumbly add 1-2 tsp. milk or water to loosen slightly",
+        "add chocolate chips",
+        "scoop onto cookie sheet",
+        "bake 10-12 minutes until the edges are lightly golden and the centers are set",
+        "let cool 5-10 minutes"
+      ],
+      "ratings": {},
+      "personNotes": {},
+      "notes": "More cakey than cookie. Nice springy texture",
+      "id": "2kwe0kl2ci8",
+      "created": 1766086100432,
+      "updated": 1766098662028
+    },
+    {
+      "title": "Brownies",
+      "type": "recipe",
+      "url": "",
+      "image": "images/brownies.jpg",
+      "tags": [],
+      "ingredients": [],
+      "steps": [],
+      "ratings": {},
+      "personNotes": {
+        "in0s2ysqlrf": "No chocolate chips"
+      },
+      "notes": "",
+      "id": "mfz1d5lw1te",
+      "created": 1766085806642,
+      "updated": 1766085806642
+    },
+    {
       "title": "Manicotti",
       "type": "recipe",
       "url": "",
@@ -33,7 +308,8 @@
       "url": "",
       "image": "images/annies_white_mac_cheese.jpg",
       "tags": [
-        "mac&cheese"
+        "mac&cheese",
+        "pasta"
       ],
       "ingredients": [],
       "steps": [],
@@ -44,7 +320,7 @@
       "notes": "",
       "id": "o193i2m494w",
       "created": 1766082830144,
-      "updated": 1766082830144
+      "updated": 1766084180679
     },
     {
       "title": "Knorr Broccoli Mac&Cheese",
@@ -52,7 +328,8 @@
       "url": "",
       "image": "images/knorr_mac_cheese.jpg",
       "tags": [
-        "mac&cheese"
+        "mac&cheese",
+        "pasta"
       ],
       "ingredients": [],
       "steps": [],
@@ -63,7 +340,7 @@
       "notes": "",
       "id": "wpt6ptu3slj",
       "created": 1766082808711,
-      "updated": 1766082808711
+      "updated": 1766084193716
     },
     {
       "title": "Kraft Mac&Cheese",
@@ -71,7 +348,8 @@
       "url": "",
       "image": "images/kraft_mac_cheese.jpg",
       "tags": [
-        "mac&cheese"
+        "mac&cheese",
+        "pasta"
       ],
       "ingredients": [],
       "steps": [],
@@ -83,7 +361,7 @@
       "notes": "",
       "id": "y2qq2r6321m",
       "created": 1766082774298,
-      "updated": 1766082774298
+      "updated": 1766084186548
     },
     {
       "title": "Dairy Queen Blizzard",
@@ -153,7 +431,9 @@
       "type": "recipe",
       "url": "",
       "image": "images/chicken_patty_sandwich.jpg",
-      "tags": [],
+      "tags": [
+        "chicken"
+      ],
       "ingredients": [],
       "steps": [],
       "ratings": {
@@ -163,14 +443,16 @@
       "notes": "",
       "id": "cnyp9o1ynvw",
       "created": 1766082569324,
-      "updated": 1766082569324
+      "updated": 1766084222809
     },
     {
       "title": "Hamburger",
       "type": "recipe",
       "url": "",
       "image": "images/hamburger.jpg",
-      "tags": [],
+      "tags": [
+        "beef"
+      ],
       "ingredients": [],
       "steps": [],
       "ratings": {
@@ -182,14 +464,18 @@
       "notes": "",
       "id": "yvpv7fqyeiw",
       "created": 1766082557192,
-      "updated": 1766082557192
+      "updated": 1766084227149
     },
     {
       "title": "Tacos",
       "type": "recipe",
       "url": "",
       "image": "images/tacos.jpg",
-      "tags": [],
+      "tags": [
+        "chicken",
+        "beef",
+        "pork"
+      ],
       "ingredients": [],
       "steps": [],
       "ratings": {
@@ -199,31 +485,59 @@
       "notes": "",
       "id": "hxpa9p7xw1z",
       "created": 1766082533255,
-      "updated": 1766082533255
+      "updated": 1766084239605
     },
     {
       "title": "Protein Mac and Cheese",
       "type": "recipe",
       "url": "",
-      "image": "images/",
-      "tags": [],
-      "ingredients": [],
-      "steps": [],
+      "image": "images/protien-mac-and-cheese.jpg",
+      "tags": [
+        "mac&cheese",
+        "pasta",
+        "diet",
+        "quick"
+      ],
+      "ingredients": [
+        "3.5 cups elbow macaroni",
+        "1 cup cottage cheese",
+        "1 1/2 cups shredded cheddar cheese",
+        "1/2 cup unflavoured protein powder (optional)",
+        "1 cup milk",
+        "1 tbs cornstarch",
+        "1 tsp salt",
+        "Toppings:",
+        "1/2 cup panko",
+        "1 tbs olive oil",
+        "1/2 cup shredded cheddar cheese",
+        "1/4 cup chives, sliced"
+      ],
+      "steps": [
+        "Cook the elbow macaroni. Drain and set off to the side",
+        "In a blender or food processor, blend together cottage cheese, cheddar cheese, milk, protein powder, cornstarch, and salt until smooth.",
+        "Pour cheese mixture into a sauce pan, bring to a boil and reduce to a simmer. Allow the sauce to thicken for 3 minutes.",
+        "Pour cheese sauce over noodles and stir.",
+        "In a pan placed over medium heat, add in olive oil followed by panko crumbs. Toast until golden brown.",
+        "Serve mac and cheese and top with toasted panko, cheddar, and chives."
+      ],
       "ratings": {
+        "m3antayqlrf": 3,
         "in0s2ysqlrf": 2
       },
       "personNotes": {},
       "notes": "",
       "id": "wmwrag1xojw",
       "created": 1766082523532,
-      "updated": 1766082523532
+      "updated": 1766098143679
     },
     {
       "title": "Pulled Pork Sandwich",
       "type": "recipe",
       "url": "",
       "image": "images/pulled_pork.jpg",
-      "tags": [],
+      "tags": [
+        "pork"
+      ],
       "ingredients": [],
       "steps": [],
       "ratings": {
@@ -233,7 +547,7 @@
       "notes": "",
       "id": "5n7luu9wm3q",
       "created": 1766082473702,
-      "updated": 1766082473702
+      "updated": 1766084206537
     },
     {
       "title": "Pancakes",
@@ -260,7 +574,9 @@
       "type": "recipe",
       "url": "",
       "image": "images/spaghetti_meatballs.jpg",
-      "tags": [],
+      "tags": [
+        "pasta"
+      ],
       "ingredients": [],
       "steps": [],
       "ratings": {
@@ -270,16 +586,39 @@
       "notes": "",
       "id": "c3yljfyvhh1",
       "created": 1766082421045,
-      "updated": 1766082421045
+      "updated": 1766084156434
     },
     {
       "title": "Chicken Fried Rice",
       "type": "recipe",
       "url": "",
       "image": "images/chicken_fried_rice.jpg",
-      "tags": [],
-      "ingredients": [],
-      "steps": [],
+      "tags": [
+        "chicken"
+      ],
+      "ingredients": [
+        "3 boneless skinless chicken breasts",
+        "1 18 oz. bottle Teriyaki sauce",
+        "3 tbsp. vegetable oil",
+        "1 cup peas and carrots",
+        "1 onion chopped",
+        "2 tsp. minced garlic",
+        "2 eggs slightly beaten",
+        "3 cups cooked white rice (day old or leftover cold rice is best)",
+        "3-4 tbsp. soy sauce"
+      ],
+      "steps": [
+        "cook chicken covered in teriyaki sauce in a crock-pot on high heat for 3 hours. OR in an oven at 375 F for 35 minutes",
+        "once cooked cut into small pieces and set aside",
+        "heat the oil in a large skillet over medium high heat",
+        "add the peas carrots, onion, and garlic",
+        "stir fry until tender",
+        "lower the heat to medium low and push the mixture to one side of the pan",
+        "pour eggs on the other side of the skillet",
+        "stir fry until scrambled",
+        "now add rice and soy sauce and blend together well",
+        "stir in cooked chicken and cook until heated through"
+      ],
       "ratings": {
         "in0s2ysqlrf": 3
       },
@@ -287,7 +626,7 @@
       "notes": "",
       "id": "2m9d7byv479",
       "created": 1766082403845,
-      "updated": 1766082403845
+      "updated": 1766099578769
     },
     {
       "id": "9w6j3at706g",
@@ -344,8 +683,47 @@
         "chicken",
         "dumplings"
       ],
-      "ingredients": [],
-      "steps": [],
+      "ingredients": [
+        "FOR CHICKEN AND SAUCE",
+        "1 1/2 lb. boneless skinless chicken breasts",
+        "1–2 tbsp. oil",
+        "4 tablespoons Hungarian sweet paprika",
+        "3 tablespoons onion powder",
+        "2 teaspoons salt",
+        "1/4 tsp. pepper",
+        "32 oz. chicken broth",
+        "10 oz. sour cream",
+        "2 1/4 cups water",
+        "3/4 cup flour",
+        "FOR THE DUMPLINGS",
+        "6 eggs",
+        "4 cups flour",
+        "1 1/2 cups water",
+        "1/2 teaspoon salt"
+      ],
+      "steps": [
+        "Set a large pot of water on to boil for the dumplings.",
+        "De-fat, and tenderize chicken.",
+        "Cut into bite-sized pieces.",
+        "With oil, brown chicken in a large pan on medium-high heat (6–10 min).",
+        "Add paprika, onion powder, salt, pepper, and chicken broth to the chicken in the pan. Stir them to mix.",
+        "Bring to a boil and then lower heat to simmer and put a lid on and let simmer for 25 minutes.",
+        "In Tupperware with a lid mix together water, flour and sour cream for the chicken. Shake the mixture aggressively and set aside for later.",
+        "While chicken is simmering, mix eggs, flour, water, and salt for the dumplings together in a mixing bowl.",
+        "It should be a thick dry mix when you are done.",
+        "If it’s too gooey, add small amounts of flour until it is more dry.",
+        "With water boiling, turn down the heat to low.",
+        "Tip the mixing bowl until the dumpling dough rests at the edge. Using a butter knife, slice the dough from the lip of the bowl into small blobs and into the pot.",
+        "Continue this process until all of the dough has been used. This process takes about 3–5 minutes.",
+        "Dipping the knife occasionally into the boiling water will prevent dough from sticking to it.",
+        "Raise heat and boil dumplings for another 5–6 minutes or so.",
+        "The chicken should be about done simmering. Using a spoon, draw some of the chicken sauce and put it into the sour cream/flour/water mixture that you had set aside. This is important to prevent sour cream from curdling. Put the lid on and shake the mixture once more.",
+        "Repeat a few times. There should be no flour or sour cream chunks in the mixture.",
+        "Finally, stir the mixture into the chicken pan until consistent.",
+        "Bring the sauce to a boil, stirring occasionally, for sauce to thicken.",
+        "Drain the water from the dumplings.",
+        "Serve dumplings, sauce, and chicken together at desired proportions."
+      ],
       "ratings": {
         "m3antayqlrf": 3,
         "in0s2ysqlrf": 4
@@ -354,7 +732,8 @@
       "favorite": false,
       "items": [],
       "created": 1759505043112,
-      "updated": 1759760643112
+      "updated": 1766102463241,
+      "notes": ""
     }
   ]
 }
